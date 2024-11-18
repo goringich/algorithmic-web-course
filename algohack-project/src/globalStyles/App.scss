@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body {
+  font-family: $primary-font;
+  background-color: $background-color;
+}
+
+.App{
+  margin: 0 auto;
+  max-width: 1450px;
+  width: 100%;
+}
+
+h1, h2, h3 {
+  font-family: $secondary-font;
+}
+
+a {
+  position: relative;
+  text-decoration: none;
+  color: black;
+}
+
+a:hover{
+  text-decoration: none !important;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: black;
+  transition: width 0.5s ease, left 0.5s ease;
+  // transform: translateX(-50%);
+}
+
+a:hover::after {
+  width: 100%;
+  left: 0;
+}

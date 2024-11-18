@@ -1,0 +1,65 @@
+.header {
+  background-color: $background-color-none-use;
+  color: $black;
+  max-width: 1300px;
+  width: 100%;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  padding: 50px 75px;
+
+  nav {
+    display: flex;
+    justify-content: space-around;
+
+    a {
+      color: $black;
+      text-decoration: none;
+      
+      margin-right: 60px;
+
+      font-family: $primary-font;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.header__toggle{
+  border: 0px solid transparent !important;
+  outline: none !important;
+  background-color: $black !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid $black;
+  cursor: pointer;
+  transition: .1s linear;
+
+  img {
+    width: 15px;
+    height: 15px;
+    object-fit: cover;
+    transform: translate(5%, 5%);
+    transition: .1s linear;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+
+    // & img {
+    //   transform: scale(1.1) translate(5%, 5%);
+    // }
+  }
+}
+
+

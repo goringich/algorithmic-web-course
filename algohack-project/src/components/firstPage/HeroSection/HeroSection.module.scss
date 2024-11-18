@@ -1,0 +1,87 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px;
+  background-color: $background-color;
+  max-width: 1350px;
+  width: 100%;
+  margin: 0 auto;
+
+  .content {
+    max-width: 750px;
+    width: 100%;
+    
+    h1 {
+      font-family: $secondary-font;
+      margin: 0 !important;
+      font-size: 70px;
+      line-height: 1.2;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: $black;
+
+      .brand {
+        color: $pink;
+      }
+    }
+
+    p {
+      font-family: $primary-font;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 24px;
+      color: $black;
+      opacity: 0.6;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 15px 30px;
+      background-color: #a152f0;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+
+      &:hover {
+        background-color: #8b3dcc;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .image {
+    max-width: 650px;
+    width: 100%;
+    text-align: right;
+    position: relative;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    &__table, &__person{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+    }
+
+    &__table{
+
+    }
+
+    &__person{
+      z-index: 2;
+    
+    }
+  }
+}
