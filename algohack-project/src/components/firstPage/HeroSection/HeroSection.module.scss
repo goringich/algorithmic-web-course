@@ -60,6 +60,7 @@
   .image {
     max-width: 650px;
     width: 100%;
+    height: 400px;
     text-align: right;
     position: relative;
 
@@ -70,8 +71,8 @@
 
     &__table, &__person{
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 0%;
+      left: 0%;
       z-index: 1;
     }
 
@@ -80,8 +81,46 @@
     }
 
     &__person{
+      cursor: pointer;
       z-index: 2;
-    
+      left: 20%;
+      top: -10%;
     }
+  }
+}
+
+
+.levitate {
+  transform-origin: center;
+  animation: none; 
+  cursor: pointer;
+  transform: translateY(0);
+  transition: transform .5s linear;
+  animation: levitate 3s ease-in-out infinite;
+  animation-play-state: paused;
+
+  &.hover {
+    transform: translateY(-10px);
+    transition: transform .5s linear;
+  }
+  
+  &.animating {
+    transition: transform .5s linear;
+    animation: levitate 3s ease-in-out infinite;
+    animation-play-state: running;
+  }
+}
+
+
+  
+@keyframes levitate {
+  0% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+  100% {
+    transform: translateY(-10px);
   }
 }
