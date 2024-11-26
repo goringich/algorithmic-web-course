@@ -9,8 +9,11 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "./src//globalStyles/variables.scss";`,
+        additionalData: `@use "./src/globalStyles/variables.scss" as *;`, 
       },
     },
+  },
+  build: {
+    sourcemap: true, // Включает генерацию Source Maps
   },
 });

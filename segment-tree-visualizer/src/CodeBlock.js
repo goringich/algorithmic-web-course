@@ -1,8 +1,8 @@
 import React from "react";
-import Highlight, { Prism, themes } from "prism-react-renderer";
+import { Highlight, Prism, themes } from "prism-react-renderer";
 
 // Используем тему nightOwl (или другую доступную)
-const theme = themes.nightOwl;
+const theme = themes.vsDark;
 
 const CodeBlock = ({ code, language }) => {
   return (

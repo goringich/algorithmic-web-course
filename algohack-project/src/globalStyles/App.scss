@@ -2,8 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 body {
-  font-family: $primary-font;
-  background-color: $background-color;
+  font-family: var(--primary-font);
+  background-color: var(--background-color);
 }
 
 .App{
@@ -13,7 +13,7 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: $secondary-font;
+  font-family: var(--secondary-font);
 }
 
 a {
@@ -33,7 +33,7 @@ a::after {
   bottom: 0;
   width: 0;
   height: 2px;
-  background: black;
+  background: var(--black);
   transition: width 0.5s ease, left 0.5s ease;
   // transform: translateX(-50%);
 }

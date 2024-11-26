@@ -1,52 +1,49 @@
 import React from "react";
-import { Stage, Layer, Rect, Text, Line } from "react-konva";
+import { Stage, Layer, Circle, Text, Line } from "react-konva";
 
-const NODE_WIDTH = 50;
-const NODE_HEIGHT = 30;
+const NODE_RADIUS = 30;
 
 const SegmentTree = ({ nodes, width, height }) => {
   return (
     <Stage width={width} height={height}>
       <Layer>
+        {/* Линии между узлами */}
+        {nodes.map((node) =>
+          node.children.map((childId) => {
+            const child = nodes.find((n) => n.id === childId);
+            return (
+              <Line
+                key={`${node.id}-${childId}`}
+                points={[node.x, node.y + NODE_RADIUS, child.x, child.y - NODE_RADIUS]}
+                stroke="#A259FF"
+                strokeWidth={2}
+                lineCap="round"
+              />
+            );
+          })
+        )}
+
+        {/* Узлы дерева */}
         {nodes.map((node) => (
           <React.Fragment key={node.id}>
-            <Rect
+            <Circle
               x={node.x}
               y={node.y}
-              width={NODE_WIDTH}
-              height={NODE_HEIGHT}
-              fill="lightblue"
-              cornerRadius={5}
+              radius={NODE_RADIUS}
+              fill="#A259FF"
               stroke="black"
-              strokeWidth={1}
+              strokeWidth={2}
+              shadowBlur={10}
+              shadowColor="rgba(0, 0, 0, 0.2)"
             />
             <Text
-              x={node.x + 5}
-              y={node.y + 5}
-              text={node.label}
-              fontSize={16}
-              fill="black"
-            />
-          </React.Fragment>
-        ))}
-        {nodes.map((node) => (
-          <React.Fragment key={node.id}>
-            <Rect
-              x={node.x}
-              y={node.y}
-              width={NODE_WIDTH}
-              height={NODE_HEIGHT}
-              fill={node.highlighted ? "yellow" : "lightblue"}
-              cornerRadius={5}
-              stroke="black"
-              strokeWidth={1}
-            />
-            <Text
-              x={node.x + 5}
-              y={node.y + 5}
+              x={node.x - NODE_RADIUS / 2}
+              y={node.y - NODE_RADIUS / 2}
               text={`${node.label}\n(${node.value})`}
-              fontSize={16}
-              fill="black"
+              fontSize={12}
+              fontStyle="bold"
+              fill="white"
+              align="center"
             />
           </React.Fragment>
         ))}

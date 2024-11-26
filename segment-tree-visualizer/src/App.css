@@ -36,3 +36,94 @@
     transform: rotate(360deg);
   }
 }
+
+/* Основной стиль для текста */
+.container {
+  text-align: center;
+  font-family: "Montserrat", Arial, sans-serif;
+}
+
+.title {
+  color: #372b62;
+  margin-bottom: 20px;
+}
+
+/* Стиль для холста */
+.tree-container {
+  width: 100vw; /* Полная ширина окна */
+  height: 100vh; /* Полная высота окна */
+  position: relative;
+  overflow: hidden; /* Убираем лишние элементы за границами */
+}
+
+/* Стиль для заголовка */
+.title {
+  color: #372b62;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+
+/* Стили для кнопок */
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.button.add {
+  background-color: #a259ff;
+  color: white;
+  margin-right: 10px;
+}
+
+.button.add:hover {
+  background-color: #7a3fff;
+}
+
+.button.subtract {
+  background-color: #ff5959;
+  color: white;
+}
+
+.button.subtract:hover {
+  background-color: #e53e3e;
+}
+
+/* Стили для модального окна */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.modal h3 {
+  margin-bottom: 10px;
+}
+
+.modal input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  width: 100%;
+  font-size: 16px;
+}
+
+/* Стили для контейнера дерева */
+.tree-container {
+  position: relative;
+  margin: 0 auto;
+}

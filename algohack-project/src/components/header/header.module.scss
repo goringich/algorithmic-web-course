@@ -1,6 +1,6 @@
 .header {
-  background-color: $background-color;
-  color: $black;
+  background-color: var(--background-color);
+  color: var(--black);
   max-width: 1300px;
   width: 100%;
   display: flex;
@@ -13,12 +13,12 @@
     justify-content: space-around;
 
     a {
-      color: $black;
+      color: var(--black);
       text-decoration: none;
       
       margin-right: 60px;
 
-      font-family: $primary-font;
+      font-family: var(--primary-font);
       font-style: normal;
       font-weight: 500;
       font-size: 20px;
@@ -29,6 +29,7 @@
       
       &:hover {
         text-decoration: underline;
+        // text-decoration-color: var(--black);
       }
     }
   }
@@ -37,11 +38,11 @@
 .header__toggle{
   border: 0px solid transparent !important;
   outline: none !important;
-  background-color: $black !important;
+  background-color: var(--black) !important;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid $black;
+  border: 2px solid var(--black);
   cursor: pointer;
   transition: .1s linear;
 

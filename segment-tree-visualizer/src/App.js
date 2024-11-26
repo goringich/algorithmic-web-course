@@ -1,5 +1,6 @@
 import React from "react";
 import CodeBlock from "./CodeBlock";
+import SegmentTreeVisualizer from "./SegmentTreeVisualizer"
 
 const cppCode = `
 #include <iostream>
@@ -18,7 +19,8 @@ function App() {
   return (
     <div className="App" style={{ padding: "20px" }}>
       <h2>Beautiful C++ Code with Syntax Highlighting</h2>
-      <CodeBlock code={cppCode} language="cpp" />
+      {/* <CodeBlock code={cppCode} language="cpp" /> */}
+      <SegmentTreeVisualizer/>
     </div>
   );
 }

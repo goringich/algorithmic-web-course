@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './header.module.scss';
-import img1 from '../../assets/images/MainPage/Vector.png'
-// import { useTheme } from '../../context/ThemeContext';
+import img1 from '../../assets/images/MainPage/Vector.png';
+import img2 from '../../assets/images/Vector.svg'
+import { useTheme } from '../../context/ThemeContext';
 
 const Header = () => {
-  // const { theme, toggleTheme } = useTheme();
-
+  const { isDarkTheme, toggleTheme } = useTheme();
+  // mui
   return (
     <header className={styles.header}>
       <img src="" alt="" className={styles.header__logo} />
@@ -17,8 +18,9 @@ const Header = () => {
       {/* <button onClick={toggleTheme}>
         {theme === 'light' ? 'Темная тема' : 'Светлая тема'}
       </button> */}
-      <button className={styles.header__toggle} >
-        <img src={img1} alt="" />
+      {/* deqdd */}
+      <button className={styles.header__toggle} onClick={toggleTheme}>
+        <img src={isDarkTheme ? img2 : img1} alt="" />
       </button>
     </header>
   );
