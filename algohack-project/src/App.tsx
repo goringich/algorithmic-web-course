@@ -3,7 +3,7 @@ import React, {useState, useEffect, createContext} from "react";
 import './globalStyles/App.scss';
 import Header from './components/header/Header';
 import { ThemeProvider } from './context/ThemeContext';
-import HeroSection from './components/firstPage/HeroSection/HeroSection';
+import HeroSection from './components/mainPage/HeroSection/HeroSection';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
