@@ -12,7 +12,7 @@ const Header = () => {
       <img src="" alt="" className={styles.header__logo} />
       <nav>
         <a href="#about">О нас</a>
-        <a href="#content">Содержание</a>
+        <a href="CourseContent">Содержание</a>
         <a href="#faq">Вопросы</a>
       </nav>
       {/* <button onClick={toggleTheme}>
