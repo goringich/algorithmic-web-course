@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import styles from './CoursePage.module.scss';
 
 interface CourseSection {
   title: string;
