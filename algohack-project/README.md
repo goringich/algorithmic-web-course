@@ -6,6 +6,21 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### npm run dev
+
+Starts the app in development mode.
+Open http://localhost:3000 in your browser to view it.
+The page will reload automatically when you make changes to the source files.
+Check the console for any linting errors or warnings during development.
+
+To use this command, ensure that the dev script is defined in the package.json file as follows:
+
+"scripts": {
+  "dev": "react-scripts start"
+}
+
+If the dev script is not already added, you can include it manually before running the command.
+
 ### `npm start`
 
 Runs the app in the development mode.\
