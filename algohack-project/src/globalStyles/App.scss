@@ -20,25 +20,30 @@ a {
   position: relative;
   text-decoration: none;
   color: black;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background: var(--black);
+    transition: width 0.5s ease, left 0.5s ease;
+    // transform: translateX(-50%);
+  }
+
+  &:hover{
+    text-decoration: none !important;
+
+    &::after {
+      width: 100%;
+      left: 0;
+    }
+  }
 }
 
-a:hover{
-  text-decoration: none !important;
-}
 
-a::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background: var(--black);
-  transition: width 0.5s ease, left 0.5s ease;
-  // transform: translateX(-50%);
-}
 
-a:hover::after {
-  width: 100%;
-  left: 0;
-}
+
+
