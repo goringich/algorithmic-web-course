@@ -54,17 +54,17 @@ const CourseContent: React.FC = () => {
   }
 
   return (
-    <div className="course-content">
+    <div className={styles.course__content}>
       <h1>Содержание курса</h1>
       <div>
         {courseContent.map((section, index) => (
           <div key={index}>
-            <div className="section-title" onClick = {() => toggleSection(index)}>
+            <div className={styles.section__title} onClick = {() => toggleSection(index)}>
               <h2>{section.title}</h2>
               <span>{openSection === index ? '▲' : '▼'}</span>
             </div>
             {openSection === index && (
-              <ul className="subsections">
+              <ul className={styles.subsections}>
                 {section.subSections.map((sub, idx) => (
                   <li key={idx}>{sub}</li>
                 ))}
