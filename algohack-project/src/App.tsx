@@ -5,6 +5,7 @@ import Header from './components/header/Header';
 import { ThemeProvider } from './context/ThemeContext';
 import HeroSection from './components/mainPage/HeroSection/HeroSection';
 import CoursePage from './components/coursePage/CoursePage';
+import AboutPage from './pages/aboutPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HeroSection/>} />
             <Route path="/CourseContent" element={<CoursePage/>} />
+            <Route path="/AboutPage" element={<AboutPage/>} />
           </Routes>
         </div>
       </BrowserRouter>

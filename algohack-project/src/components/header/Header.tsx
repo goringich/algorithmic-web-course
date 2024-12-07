@@ -11,7 +11,7 @@ const Header = () => {
     <header className={styles.header}>
       <img src="" alt="" className={styles.header__logo} />
       <nav>
-        <a href="#about">О нас</a>
+        <a href="AboutPage">О нас</a>
         <a href="CourseContent">Содержание</a>
         <a href="#faq">Вопросы</a>
       </nav>
