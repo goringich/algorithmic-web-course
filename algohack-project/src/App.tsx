@@ -26,7 +26,7 @@ function App() {
         <div className={`App `}>
           <Header toggleTheme={toggleTheme}/>
           <Suspense fallback={
-            <div>Loading...</div>
+            <div>Loading223...</div>
           }>
             <Routes>
               <Route path="/" element={<HeroSection/>} />

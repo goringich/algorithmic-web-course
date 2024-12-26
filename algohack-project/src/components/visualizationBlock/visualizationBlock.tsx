@@ -1,16 +1,20 @@
-import React, {lazy, Suspense} from 'react';
+import React, { lazy, Suspense } from 'react';
+import Levitate from '../levitate/Levitate';
+
+const fakeDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Задержка применяется именно к SegmentTreeVisualizer
 const SegmentTreeVisualizer = lazy(() =>
-  import('../../visualizations/SegmentTreeVisualizer')
+  fakeDelay(3000).then(() => import('../../visualizations/SegmentTreeVisualizer'))
 );
 
 const VisualizationBlock = () => {
   return (
     <Suspense fallback={
-      <div>Loading...</div>
+      <Levitate></Levitate>
     }>
       <SegmentTreeVisualizer />
     </Suspense>
-
   );
 };
 
