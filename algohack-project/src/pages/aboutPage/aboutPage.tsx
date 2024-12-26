@@ -3,7 +3,8 @@ import "swiper/css";
 import "swiper/css/navigation"; 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import TeamMemberCard from "../components/teamMemberCard/TeamMemberCard";
+import styles from "./aboutPage.module.scss";
+import TeamMemberCard from "../../components/teamMemberCard/TeamMemberCard";
 
 interface TeamMember {
   name: string;

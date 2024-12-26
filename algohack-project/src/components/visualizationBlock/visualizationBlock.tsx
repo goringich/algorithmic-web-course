@@ -7,4 +7,4 @@ const visualizationBlock = () => {
   );
 };
 
-export default HeroSection;
+export default visualizationBlock;

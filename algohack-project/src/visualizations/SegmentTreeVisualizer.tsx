@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SegmentTree } from "./../JS_complied_algorithms/SegmentTree";
+import { SegmentTree } from "../assets/JS_complied_algorithms/SegmentTree";
 import { Stage, Layer, Circle, Text, Line } from "react-konva";
 
 const SegmentTreeVisualizer = () => {

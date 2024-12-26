@@ -3,9 +3,10 @@ import React, {useState, useEffect, createContext} from "react";
 import './globalStyles/App.scss';
 import Header from './components/header/Header';
 import { ThemeProvider } from './context/ThemeContext';
-import HeroSection from './components/mainPage/HeroSection/HeroSection';
-import CoursePage from './components/coursePage/CoursePage';
-import AboutPage from './pages/aboutPage';
+import HeroSection from './pages/mainPage/HeroSection/HeroSection';
+import CoursePage from './pages/coursePage/CoursePage';
+import AboutPage from './pages/aboutPage/aboutPage';
+import AlgorithmsPage from './pages/algorithmsPage/algorithmsPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -25,6 +26,8 @@ function App() {
             <Route path="/" element={<HeroSection/>} />
             <Route path="/CourseContent" element={<CoursePage/>} />
             <Route path="/AboutPage" element={<AboutPage/>} />
+            <Route path="/AboutPage" element={<AboutPage/>} />
+            <Route path="/algorithmsPage" element={<AlgorithmsPage/>} />
           </Routes>
         </div>
       </BrowserRouter>
