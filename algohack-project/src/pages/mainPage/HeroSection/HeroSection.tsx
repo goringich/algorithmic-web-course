@@ -1,36 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './HeroSection.module.scss';
-import person from '../../../assets/images/MainPage/anime-person/Character&device.png';
+import Levitate from "../../../components/levitate/Levitate"
 import table from '../../../assets/images/MainPage/anime-person/Group 3490.png';
 
-const Levitate = () => {
-  const [isHovering, setIsHovering] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-    setTimeout(() => setIsAnimating(true), 500);
-  };
-
-  const handleMouseLeave = () => {
-    setTimeout(() => setIsAnimating(false), 500);
-    setIsHovering(false);
-  };
-
-  return (
-    <img
-      className={`
-        ${styles.image__person} 
-        ${styles.levitate} 
-        ${isHovering ? styles.hover : ''} 
-        ${isAnimating ? styles.animating : ''}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      src={person}
-      alt="Person sitting with a laptop"
-    />
-  );
-};
 const HeroSection = () => {
   return (
     <section className={styles.hero}>

@@ -15,10 +15,6 @@ const Header = () => {
         <a href="CourseContent">Содержание</a>
         <a href="#faq">Вопросы</a>
       </nav>
-      {/* <button onClick={toggleTheme}>
-        {theme === 'light' ? 'Темная тема' : 'Светлая тема'}
-      </button> */}
-      {/* deqdd */}
       <button className={styles.header__toggle} onClick={toggleTheme}>
         <img src={isDarkTheme ? img2 : img1} alt="" />
       </button>

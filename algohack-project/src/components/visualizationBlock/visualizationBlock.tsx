@@ -1,10 +1,17 @@
-import React from 'react';
-import SegmentTreeVisualizer from "../../visualizations/SegmentTreeVisualizer"
+import React, {lazy, Suspense} from 'react';
+const SegmentTreeVisualizer = lazy(() =>
+  import('../../visualizations/SegmentTreeVisualizer')
+);
 
-const visualizationBlock = () => {
+const VisualizationBlock = () => {
   return (
-    <SegmentTreeVisualizer />
+    <Suspense fallback={
+      <div>Loading...</div>
+    }>
+      <SegmentTreeVisualizer />
+    </Suspense>
+
   );
 };
 
-export default visualizationBlock;
+export default VisualizationBlock;
