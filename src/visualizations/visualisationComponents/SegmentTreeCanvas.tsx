@@ -1,7 +1,7 @@
 // src/components/SegmentTreeCanvas.js
 import React from "react";
 import { Stage, Layer, Line } from "react-konva";
-import SegmentTreeNode from "../../assets/JS_complied_algorithms/SegmentTreeWithPath.js/index.js";
+import SegmentTreeNode from "../../components/segmentTreeNode/SegmentTreeNode";
 import PropTypes from "prop-types";
 
 const SegmentTreeCanvas = ({

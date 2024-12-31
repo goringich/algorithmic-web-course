@@ -1,16 +1,50 @@
 // src/components/SegmentTreeVisualizer/useSegmentTree.js
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Konva from "konva";
-import { SegmentTree } from "../../assets/JS_complied_algorithms/segment_tree.js";
+
+// Path to your WebAssembly and its JS wrapper
+import createSegmentTreeModule from '../../assets/JS_complied_algorithms/segment_tree.js';
 
 const MAX_LEAVES = 16;
 
 const UseSegmentTree = (initialData) => {
   const shapeRefs = useRef({});
   const [data, setData] = useState(initialData);
-  const [segmentTree, setSegmentTree] = useState(new SegmentTree(initialData));
-  const [nodes, setNodes] = useState(segmentTree.getTreeForVisualization());
+  const [segmentTree, setSegmentTree] = useState(null); // Will hold the Wasm SegmentTree instance
+  const [nodes, setNodes] = useState([]);
   const [parentMap, setParentMap] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const wasmModuleRef = useRef(null);
+
+  // Load WebAssembly module and initialize SegmentTree
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadWasm = async () => {
+      try {
+        const wasmModule = await initSegmentTreeModule(); // Initialize the Wasm module
+        wasmModuleRef.current = wasmModule;
+        if (isMounted) {
+          const st = new wasmModule.SegmentTree(initialData);
+          setSegmentTree(st);
+          const visNodes = st.get_tree_for_visualization(); // Assuming this returns JS-compatible data
+          setNodes(visNodes);
+          const map = buildParentMap(visNodes);
+          setParentMap(map);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error loading WebAssembly module:", error);
+        setIsLoading(false);
+      }
+    };
+
+    loadWasm();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialData]);
 
   // Animation Functions
   const animateNodeMove = (nodeId, newX, newY) => {
@@ -72,7 +106,7 @@ const UseSegmentTree = (initialData) => {
 
   // Refresh Nodes after tree update
   const refreshNodes = (updatedTree) => {
-    const newVisNodes = updatedTree.getTreeForVisualization();
+    const newVisNodes = updatedTree.get_tree_for_visualization(); // Assuming this returns JS-compatible data
 
     // Animate disappearance of removed nodes
     setNodes((prev) => {
@@ -109,9 +143,14 @@ const UseSegmentTree = (initialData) => {
 
   // Update Tree with New Data
   const updateTreeWithNewData = (newData) => {
-    const newST = new SegmentTree(newData);
-    setSegmentTree(newST);
-    refreshNodes(newST);
+    if (!segmentTree) return;
+
+    try {
+      segmentTree.update_data(newData); // Assuming update_data mutates the tree
+      refreshNodes(segmentTree);
+    } catch (error) {
+      console.error("Error updating SegmentTree:", error);
+    }
   };
 
   // Add Element
@@ -131,7 +170,9 @@ const UseSegmentTree = (initialData) => {
   };
 
   // Highlight Path from Leaf to Root
-  const highlightPathFromLeaf = (leafNodeId, setNodes) => {
+  const highlightPathFromLeaf = (leafNodeId) => {
+    if (!leafNodeId || !parentMap) return;
+
     let currentId = leafNodeId;
     let prevId = null;
 
@@ -197,6 +238,7 @@ const UseSegmentTree = (initialData) => {
     animateNodeMove,
     animateNodeAppear,
     animateNodeDisappear,
+    isLoading, // Indicates if Wasm module is still loading
   };
 };
 
