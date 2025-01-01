@@ -4,6 +4,10 @@
 body {
   font-family: var(--primary-font);
   background-color: var(--background-color);
+
+  &.theme-initializing {
+    visibility: hidden;
+  }
 }
 
 .App{

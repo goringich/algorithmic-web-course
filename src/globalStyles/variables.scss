@@ -1,35 +1,3 @@
-// variables.scss
-
-// Color variable
-// Светлая тема
-// $primary-color: #9b59b6;
-// $background-color: #F2F0F0;
-// $background-color-none-use: #dddddd;
-// $black: #000;
-// $secondary-color: #fff;
-// $pink: #B13EEA;
-
-
-
-
-
-
-// Светлая тема
-// $light-primary-color: #9b59b6;
-// $light-background-color: #F2F0F0;
-// $light-background-color-none-use: #dddddd;
-// $light-black: #000;
-// $light-secondary-color: #fff;
-// $light-pink: #B13EEA;
-
-// // Тёмная тема
-// $dark-primary-color: #8e44ad;
-// $dark-background-color: #1a1a1a;
-// $dark-background-color-none-use: #333333;
-// $dark-black: #fff;
-// $dark-secondary-color: #ccc;
-// $dark-pink: #9c27b0;
-
 :root {
   // Fonts
   --primary-font: 'Comfortaa', cursive;
@@ -39,7 +7,8 @@
   --base-spacing: 16px;
   --border-radius: 8px;
 
-  --primary-color: #9b59b6; /* Светлая тема по умолчанию */
+  // Default light theme variables
+  --primary-color: #9b59b6; 
   --background-color: #F2F0F0;
   --background-color-none-use: #dddddd;
   --black: #000;
@@ -47,7 +16,7 @@
   --pink: #B13EEA;
 }
 
-.theme-dark {
+html.theme-dark {
   --primary-color: #8e44ad;
   --background-color: #2A2431;
   --background-color-none-use: #333333;
@@ -55,53 +24,3 @@
   --secondary-color: #ccc;
   --pink: #CA71F6;
 }
-
-
-// @mixin theme($theme) {
-//   @if $theme == light {
-//     $primary-color: $light-primary-color !global;
-//     $background-color: $light-background-color !global;
-//     $secondary-color: $light-secondary-color !global;
-//     $pink: $light-pink !global;
-//     $black: $light-black !global;
-//   } @else if $theme == dark {
-//     $primary-color: $dark-primary-color !global;
-//     $background-color: $dark-background-color !global;
-//     $secondary-color: $dark-secondary-color !global;
-//     $pink: $dark-pink !global;
-//     $black: $dark-black !global;
-//   } @else {
-//     @error "Неизвестная тема: #{$theme}";
-//   }
-// }
-
-// .theme-light {
-//   @include theme(light);
-// }
-
-// .theme-dark {
-//   @include theme(dark);
-// }
-
-
-// .App {
-//   &.light-theme {
-//     // Устанавливаем переменные для светлой темы
-//     $primary-color: $light-primary-color;
-//     $background-color: $light-background-color;
-//     $background-color-none-use: $light-background-color-none-use;
-//     $black: $light-black;
-//     $secondary-color: $light-secondary-color;
-//     $pink: $light-pink;
-//   }
-
-//   &.dark-theme {
-//     // Устанавливаем переменные для тёмной темы
-//     $primary-color: $dark-primary-color;
-//     $background-color: $dark-background-color;
-//     $background-color-none-use: $dark-background-color-none-use;
-//     $black: $dark-black;
-//     $secondary-color: $dark-secondary-color;
-//     $pink: $dark-pink;
-//   }
-// }
