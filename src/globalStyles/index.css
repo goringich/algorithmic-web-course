@@ -13,5 +13,5 @@ code {
 }
 
 * {
- transition: color, background-color .3s ease-in-out; 
+ transition: color, background-color .3s ease-in-out !important; 
 }

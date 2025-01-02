@@ -1,7 +1,8 @@
 // src/components/SegmentTreeVisualizer/useSegmentTree.js
 import { useState, useRef, useEffect } from "react";
 import Konva from "konva";
-// import { loadSegmentTreeModule } from '../../utils/loadSegmentTreeModule';
+import createSegmentTreeModule from '../../assets/JS_complied_algorithms/segment_tree.wasm';
+
 
 const MAX_LEAVES = 16;
 
@@ -20,7 +21,11 @@ const UseSegmentTree = (initialData) => {
 
     const loadWasm = async () => {
       try {
-        const wasmModule = await import '../../utils/loadSegmentTreeModule';
+        const wasmUrl = '../../assets/JS_complied_algorithms/segment_tree.wasm';
+        const wasmModule = await WebAssembly.instantiateStreaming(fetch(wasmUrl), imports);
+        console.log('Экспортируемые функции:', Object.keys(wasmModule));
+        console.log(wasmModule);
+
         wasmModuleRef.current = wasmModule;
 
         // Устанавливаем массив данных

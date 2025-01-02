@@ -1,4 +1,4 @@
-declare module 'segment_tree.js' {
+declare module '../assets/JS_complied_algorithms/segment_tree.js' {
   type SegmentTreeModule = {
     setArray: (arr: number[]) => void;
     buildTree: (node: number, start: number, end: number) => void;
