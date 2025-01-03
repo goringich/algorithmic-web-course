@@ -32,7 +32,7 @@ export default class SegmentTreeWasm {
       // Передаём в C++
       module.setArray(vectorInt);
       
-      // Очищаем вручную (иначе утечка памяти!)
+      // Очищаем вручную (иначе утечка памяти)
       vectorInt.delete();
       
       return module;
