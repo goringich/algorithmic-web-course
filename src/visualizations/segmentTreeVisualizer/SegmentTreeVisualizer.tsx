@@ -9,7 +9,8 @@ import { SegmentTreeCanvas } from "../visualisationComponents/segmentTreeCanvas/
 import { AddElementForm } from "../visualisationComponents/addElementForm/AddElementForm";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/editNodeModal/EditNodeModal";
-import useHighlightPath from '../visualisationComponents/highlightPathFromLeaf/useHighlightPath'; // Ensure correct path
+import useHighlightPath from '../visualisationComponents/highlightPathFromLeaf/useHighlightPath';
+import { buildParentMap, animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../visualisationComponents/nodeAnimations/NodeAnimations'; // Импортируем функции
 
 export interface VisNode {
   id: string;
@@ -29,13 +30,13 @@ export default function SegmentTreeVisualizer() {
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const [stageSize, setStageSize] = useState({ width: 800, height: 1200 });
 
-  // Now instead of useSegmentTree
+  // Использование нового хука
   const [data, setData] = useState([5, 8, 6, 3, 2, 7, 2, 6]);
   const [segmentTree, setSegmentTree] = useState<SegmentTreeWasm | null>(null);
 
-  // Store nodes for visualization
+  // Хранение узлов для отображения
   const [nodes, setNodes] = useState<VisNode[]>([]);
-  // parentMap — childId -> parentId mapping
+  // parentMap — карта childId -> parentId
   const [parentMap, setParentMap] = useState<Record<string, string>>({});
 
   const [newValue, setNewValue] = useState("");
@@ -52,10 +53,10 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  // Initialize the useHighlightPath hook
+  // Инициализация хука подсветки
   const highlightPathFromLeaf = useHighlightPath({ parentMap, setNodes });
 
-  // 1) On first render, create the WASM wrapper and build the tree
+  // 1) При первом рендере создаём WASM-обёртку и строим дерево
   useEffect(() => {
     const st = new SegmentTreeWasm(data);
     setSegmentTree(st);
@@ -64,10 +65,11 @@ export default function SegmentTreeVisualizer() {
       const initialNodes = await st.getTreeForVisualization();
       setNodes(initialNodes);
       setParentMap(buildParentMap(initialNodes));
+      console.log('Инициализированные узлы:', initialNodes);
     })();
-  }, []);
+  }, [data]);
 
-  // 2) On canvas resize
+  // 2) При ресайзе холста
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -81,64 +83,7 @@ export default function SegmentTreeVisualizer() {
   }, []);
 
   // --------------------------------------------------------------------------------------------
-  // Helpers
-  const buildParentMap = (newNodes: VisNode[]) => {
-    const map: Record<string, string> = {};
-    for (const node of newNodes) {
-      for (const childId of node.children) {
-        map[childId] = node.id;
-      }
-    }
-    return map;
-  };
-
-  const animateNodeMove = (nodeId: string, newX: number, newY: number) => {
-    const shape = shapeRefs.current[nodeId];
-    if (!shape) return;
-    new Konva.Tween({
-      node: shape,
-      duration: 0.5,
-      x: newX,
-      y: newY,
-      easing: Konva.Easings.EaseInOut
-    }).play();
-  };
-
-  const animateNodeAppear = (nodeId: string, finalX: number, finalY: number) => {
-    const shape = shapeRefs.current[nodeId];
-    if (!shape) return;
-    shape.scale({ x: 0, y: 0 });
-    shape.y(finalY - 50);
-    new Konva.Tween({
-      node: shape,
-      duration: 0.5,
-      scaleX: 1,
-      scaleY: 1,
-      y: finalY,
-      easing: Konva.Easings.EaseOut
-    }).play();
-  };
-
-  const animateNodeDisappear = (nodeId: string, callback?: () => void) => {
-    const shape = shapeRefs.current[nodeId];
-    if (!shape) {
-      if (callback) callback();
-      return;
-    }
-    new Konva.Tween({
-      node: shape,
-      duration: 0.5,
-      scaleX: 0,
-      scaleY: 0,
-      easing: Konva.Easings.EaseIn,
-      onFinish: () => {
-        if (callback) callback();
-      }
-    }).play();
-  };
-
-  // --------------------------------------------------------------------------------------------
-  // Function to rebuild the tree: creates a new ST, or updates it, and calls refreshNodes(...) for animations
+  // Функция для перестроения дерева
   const updateTreeWithNewData = async (newData: number[]) => {
     setData(newData);
 
@@ -149,43 +94,44 @@ export default function SegmentTreeVisualizer() {
   };
 
   // --------------------------------------------------------------------------------------------
-  // Update nodes by calling st.getTreeForVisualization()
+  // Обновляем nodes через вызов st.getTreeForVisualization()
   const refreshNodes = async (st: SegmentTreeWasm) => {
     const newVisNodes = await st.getTreeForVisualization();
+    console.log('Обновлённые узлы:', newVisNodes);
 
-    // 1) Animate disappearance for nodes not present in newVisNodes
+    // 1) Анимация исчезновения для узлов, которых нет в newVisNodes
     setNodes((prev) => {
       const removed = prev.filter(
         (oldNode) => !newVisNodes.some((n) => n.id === oldNode.id)
       );
-      removed.forEach((rn) => animateNodeDisappear(rn.id));
+      removed.forEach((rn) => animateNodeDisappear(rn.id, shapeRefs.current));
       return prev;
     });
 
-    // 2) Update "nodes" state and animate movement / appearance
+    // 2) Обновляем state "nodes" и анимируем перемещение / появление
     setNodes((prevNodes) => {
       newVisNodes.forEach((newN) => {
         const oldNode = prevNodes.find((p) => p.id === newN.id);
         if (oldNode) {
           if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
-            animateNodeMove(newN.id, newN.x, newN.y);
+            animateNodeMove(newN.id, newN.x, newN.y, shapeRefs.current);
           }
         } else {
           setTimeout(() => {
-            animateNodeAppear(newN.id, newN.x, newN.y);
+            animateNodeAppear(newN.id, newN.x, newN.y, shapeRefs.current);
           }, 50);
         }
       });
       return newVisNodes;
     });
 
-    // 3) Update parentMap
+    // 3) Обновляем parentMap
     const map = buildParentMap(newVisNodes);
     setParentMap(map);
   };
 
   // --------------------------------------------------------------------------------------------
-  // Adding a new element
+  // Добавление нового элемента
   const handleAddElement = async () => {
     if (newValue === "") return;
     const value = parseInt(newValue, 10);
@@ -203,16 +149,16 @@ export default function SegmentTreeVisualizer() {
   };
 
   // --------------------------------------------------------------------------------------------
-  // Update the selected leaf node's value
+  // Обновление значения выбранного листа
   const handleUpdate = async () => {
     if (!selectedNode || !segmentTree) return;
     const [start, end] = selectedNode.range;
     if (start !== end) return;
 
-    // Call WASM update(index, value)
+    // вызываем WASM update(index, value)
     await segmentTree.update(start, delta);
 
-    // Then rebuild the visualization
+    // затем перестраиваем визуализацию
     await refreshNodes(segmentTree);
 
     const leafNode = nodes.find(
@@ -228,15 +174,15 @@ export default function SegmentTreeVisualizer() {
   };
 
   // --------------------------------------------------------------------------------------------
-  // Remove the selected leaf
+  // Удаление выбранного листа
   const handleRemoveLeaf = async () => {
     if (!selectedNode) return;
     const [start, end] = selectedNode.range;
     if (start !== end) return;
 
     const pos = selectedNode.range[0];
-    // Animate disappearance
-    animateNodeDisappear(selectedNode.id, async () => {
+    // Анимация исчезновения
+    animateNodeDisappear(selectedNode.id, shapeRefs.current, async () => {
       const newArr = [...data];
       newArr.splice(pos, 1);
       await updateTreeWithNewData(newArr);
@@ -245,9 +191,9 @@ export default function SegmentTreeVisualizer() {
   };
 
   // --------------------------------------------------------------------------------------------
-  // Node click handler
+  // Обработчик клика по узлу
   const handleNodeClick = (node: VisNode) => {
-    // Only leaves
+    // Только листы
     if (node.range[0] === node.range[1]) {
       setSelectedNode(node);
       setDelta(node.value);
@@ -255,13 +201,13 @@ export default function SegmentTreeVisualizer() {
   };
 
   // --------------------------------------------------------------------------------------------
-  // Snackbar handlers
+  // Обработчики Snackbar
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
   // --------------------------------------------------------------------------------------------
-  // Styles
+  // Стили
   const circleColor = "#4B7BEC";
   const highlightColor = "#FFC107";
   const selectedColor = "#34B3F1";
