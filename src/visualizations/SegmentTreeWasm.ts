@@ -17,12 +17,29 @@ export default class SegmentTreeWasm {
   private modulePromise: Promise<any>;
 
   constructor(array: number[]) {
+    if (!Array.isArray(array) || !array.every((x) => typeof x === "number")) {
+      throw new Error("Ошибка: передан некорректный массив чисел в SegmentTreeWasm.");
+    }
     this.array = array.slice();
+    console.log("Перед передачей в setArray:", this.array);
+    console.log("Тип данных:", typeof this.array);
     this.modulePromise = createSegmentTreeModule().then((module: any) => {
-      module.setArray(this.array);
+      const vectorInt = new module.VectorInt();
+      
+      // Явно заполняем его значениями
+      this.array.forEach((val) => vectorInt.push_back(val));
+    
+      // Передаём в C++
+      module.setArray(vectorInt);
+      
+      // Очищаем вручную (иначе утечка памяти!)
+      vectorInt.delete();
+      
       return module;
     });
+    
   }
+  
 
   async update(index: number, value: number): Promise<void> {
     const module = await this.modulePromise;
