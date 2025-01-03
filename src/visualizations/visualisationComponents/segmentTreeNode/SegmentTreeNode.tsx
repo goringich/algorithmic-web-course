@@ -51,7 +51,7 @@ export function SegmentTreeNode({
            ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
            ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
-  console.log(`Node: ${node.label}, Depth: ${depth}, DepthFactor: ${depthFactor}, Color: ${fillColor}`);
+  // console.log(`Node: ${node.label}, Depth: ${depth}, DepthFactor: ${depthFactor}, Color: ${fillColor}`);
 
 
   return (
