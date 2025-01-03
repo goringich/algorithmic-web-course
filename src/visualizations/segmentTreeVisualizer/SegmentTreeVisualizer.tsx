@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Konva from "konva";
-import { useSegmentTree } from "./UseSegmentTree";
+import SegmentTreeWasm from "../segmentTreeWasm"; 
 import { useDrag } from "./UseDrag";
 import { SegmentTreeCanvas } from "../visualisationComponents/SegmentTreeCanvas";
 import { AddElementForm } from "../../components/addElementForm/AddElementForm";
@@ -26,8 +26,13 @@ export default function SegmentTreeVisualizer() {
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const [stageSize, setStageSize] = useState({ width: 800, height: 1200 });
 
-  const { data, segmentTree, rebuildTree } = useSegmentTree([5, 8, 6, 3, 2, 7, 2, 6]);
-  const [nodes, setNodes] = useState<VisNode[]>(segmentTree.getTreeForVisualization());
+  // === Теперь вместо useSegmentTree ===
+  const [data, setData] = useState([5, 8, 6, 3, 2, 7, 2, 6]);
+  const [segmentTree, setSegmentTree] = useState<SegmentTreeWasm | null>(null);
+
+  // Храним узлы для отображения
+  const [nodes, setNodes] = useState<VisNode[]>([]);
+  // parentMap — карта childId -> parentId
   const [parentMap, setParentMap] = useState<Record<string, string>>({});
 
   const [newValue, setNewValue] = useState("");
@@ -44,6 +49,19 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
+  // 1) При первом рендере создаём WASM-обёртку и строим дерево
+  useEffect(() => {
+    const st = new SegmentTreeWasm(data);
+    setSegmentTree(st);
+
+    (async () => {
+      const initialNodes = await st.getTreeForVisualization();
+      setNodes(initialNodes);
+      setParentMap(buildParentMap(initialNodes));
+    })();
+  }, []);
+
+  // 2) При ресайзе холста
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -56,6 +74,8 @@ export default function SegmentTreeVisualizer() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // --------------------------------------------------------------------------------------------
+  // Helpers
   const buildParentMap = (newNodes: VisNode[]) => {
     const map: Record<string, string> = {};
     for (const node of newNodes) {
@@ -111,16 +131,35 @@ export default function SegmentTreeVisualizer() {
     }).play();
   };
 
-  const refreshNodes = (updatedTree: any) => {
-    const newVisNodes = updatedTree.getTreeForVisualization();
+  // --------------------------------------------------------------------------------------------
+  // Функция для «перестроения» (rebuild) дерева: создаёт новый ST, либо обновляет (по желанию),
+  // и вызывает refreshNodes(...) для анимаций
+  const updateTreeWithNewData = async (newData: number[]) => {
+    setData(newData);
+
+    const st = new SegmentTreeWasm(newData);
+    setSegmentTree(st);
+
+    await refreshNodes(st);
+  };
+
+  // --------------------------------------------------------------------------------------------
+  // Обновляем nodes через вызов st.getTreeForVisualization()
+  const refreshNodes = async (st: SegmentTreeWasm) => {
+    const newVisNodes = await st.getTreeForVisualization();
+
+    // 1) Анимация исчезновения для узлов, которых нет в newVisNodes
     setNodes((prev) => {
-      const removed = prev.filter((oldNode) => !newVisNodes.some((n: VisNode) => n.id === oldNode.id));
+      const removed = prev.filter(
+        (oldNode) => !newVisNodes.some((n) => n.id === oldNode.id)
+      );
       removed.forEach((rn) => animateNodeDisappear(rn.id));
       return prev;
     });
 
+    // 2) Обновляем state "nodes" и анимируем перемещение / появление
     setNodes((prevNodes) => {
-      newVisNodes.forEach((newN: VisNode) => {
+      newVisNodes.forEach((newN) => {
         const oldNode = prevNodes.find((p) => p.id === newN.id);
         if (oldNode) {
           if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
@@ -135,105 +174,137 @@ export default function SegmentTreeVisualizer() {
       return newVisNodes;
     });
 
+    // 3) Обновляем parentMap
     const map = buildParentMap(newVisNodes);
     setParentMap(map);
   };
 
-  const updateTreeWithNewData = (newData: number[]) => {
-    rebuildTree(newData);
-    refreshNodes(segmentTree);
-  };
-
-  const handleAddElement = () => {
+  // --------------------------------------------------------------------------------------------
+  // Добавление нового элемента
+  const handleAddElement = async () => {
     if (newValue === "") return;
     const value = parseInt(newValue, 10);
     if (isNaN(value)) return;
+
     if (data.length >= MAX_LEAVES) {
       alert("Превышен лимит (16) листьев.");
       setNewValue("");
       return;
     }
+
     const updatedData = [...data, value];
-    updateTreeWithNewData(updatedData);
+    await updateTreeWithNewData(updatedData);
     setNewValue("");
   };
 
+  // --------------------------------------------------------------------------------------------
+  // Подсветка пути (highlight) от листа к корню
   const highlightPathFromLeaf = (leafNodeId: string) => {
     let currentId: string | undefined = leafNodeId;
     let prevId: string | null = null;
     setNodes((old) => old.map((n) => ({ ...n, isHighlighted: false })));
     const pathIds: string[] = [];
+
     while (currentId) {
       pathIds.push(currentId);
       const pId = parentMap[currentId];
       if (!pId || pId === currentId) break;
       currentId = pId;
     }
+
     let i = 0;
     const interval = setInterval(() => {
       if (prevId) {
-        setNodes((old) => old.map((node) =>
-          node.id === prevId ? { ...node, isHighlighted: false } : node
-        ));
+        setNodes((old) =>
+          old.map((node) =>
+            node.id === prevId ? { ...node, isHighlighted: false } : node
+          )
+        );
       }
       if (i < pathIds.length) {
         const currentHighlightId = pathIds[i];
-        setNodes((old) => old.map((node) =>
-          node.id === currentHighlightId ? { ...node, isHighlighted: true } : node
-        ));
+        setNodes((old) =>
+          old.map((node) =>
+            node.id === currentHighlightId ? { ...node, isHighlighted: true } : node
+          )
+        );
         prevId = currentHighlightId;
         i++;
       } else {
         clearInterval(interval);
         setTimeout(() => {
           if (prevId) {
-            setNodes((old) => old.map((node) =>
-              node.id === prevId ? { ...node, isHighlighted: false } : node
-            ));
+            setNodes((old) =>
+              old.map((node) =>
+                node.id === prevId ? { ...node, isHighlighted: false } : node
+              )
+            );
           }
         }, 800);
       }
     }, 800);
   };
 
-  const handleUpdate = () => {
-    if (!selectedNode) return;
+  // --------------------------------------------------------------------------------------------
+  // Обновляем значение выбранного листа
+  const handleUpdate = async () => {
+    if (!selectedNode || !segmentTree) return;
     const [start, end] = selectedNode.range;
     if (start !== end) return;
-    segmentTree.update(start, delta);
-    refreshNodes(segmentTree);
-    const leafNode = nodes.find((n) => n.range[0] === start && n.range[1] === end);
+
+    // вызываем WASM update(index, value)
+    await segmentTree.update(start, delta);
+
+    // затем перестраиваем визуализацию
+    await refreshNodes(segmentTree);
+
+    const leafNode = nodes.find(
+      (n) => n.range[0] === start && n.range[1] === end
+    );
     if (leafNode) {
       highlightPathFromLeaf(leafNode.id);
     }
+
     setSnackbarMessage(`Значение узла [${start},${end}] обновлено до ${delta}`);
     setSnackbarOpen(true);
     setSelectedNode(null);
   };
 
-  const handleRemoveLeaf = () => {
-    if (selectedNode && selectedNode.range[0] === selectedNode.range[1]) {
-      const pos = selectedNode.range[0];
-      animateNodeDisappear(selectedNode.id, () => {
-        const newArr = [...data];
-        newArr.splice(pos, 1);
-        updateTreeWithNewData(newArr);
-      });
-      setSelectedNode(null);
-    }
+  // --------------------------------------------------------------------------------------------
+  // Удаляем выбранный лист
+  const handleRemoveLeaf = async () => {
+    if (!selectedNode) return;
+    const [start, end] = selectedNode.range;
+    if (start !== end) return;
+
+    const pos = selectedNode.range[0];
+    // Анимация исчезновения
+    animateNodeDisappear(selectedNode.id, async () => {
+      const newArr = [...data];
+      newArr.splice(pos, 1);
+      await updateTreeWithNewData(newArr);
+    });
+    setSelectedNode(null);
   };
 
+  // --------------------------------------------------------------------------------------------
+  // Клик по узлу
   const handleNodeClick = (node: VisNode) => {
+    // только лист
     if (node.range[0] === node.range[1]) {
       setSelectedNode(node);
       setDelta(node.value);
     }
   };
 
+  // --------------------------------------------------------------------------------------------
+  // Snackbar
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
+  // --------------------------------------------------------------------------------------------
+  // Стиль
   const circleColor = "#4B7BEC";
   const highlightColor = "#FFC107";
   const selectedColor = "#34B3F1";
@@ -259,11 +330,13 @@ export default function SegmentTreeVisualizer() {
       padding="20px"
       boxSizing="border-box"
       bgcolor="#f8f9fa"
-      onMouseMove={(e) => handleEditBoxMouseMove(e, stageSize.width, stageSize.height, 300, 150)}
+      onMouseMove={(e) =>
+        handleEditBoxMouseMove(e, stageSize.width, stageSize.height, 300, 150)
+      }
       onMouseUp={handleEditBoxMouseUp}
     >
       <Typography variant="h4" marginBottom={2} sx={{ fontWeight: "bold" }}>
-        Segment Tree Visualizer
+        Segment Tree Visualizer (WASM)
       </Typography>
 
       <AddElementForm

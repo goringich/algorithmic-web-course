@@ -5,8 +5,9 @@ import wasm from 'vite-plugin-wasm';
 export default defineConfig({
   plugins: [react(), wasm()],
   // server: {
-  //   middlewareMode: true,
-  //   port: 3000,
+  //   mimeTypes: {
+  //     'application/wasm': ['wasm']
+  //   }
   // },
   css: {
     preprocessorOptions: {
