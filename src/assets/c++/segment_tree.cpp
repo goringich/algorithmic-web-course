@@ -70,6 +70,8 @@ std::vector<int> getTree() {
 
 // Связываем функции с JavaScript
 EMSCRIPTEN_BINDINGS(segment_tree_module) {
+    emscripten::register_vector<int>("VectorInt"); // имя в JS, любое
+
     emscripten::function("buildTree", &buildTree);
     emscripten::function("updateTree", &updateTree);
     emscripten::function("queryTree", &queryTree);
