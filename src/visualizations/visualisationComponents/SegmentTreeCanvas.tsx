@@ -28,6 +28,21 @@ interface SegmentTreeCanvasProps {
   onNodeClick: (node: NodeData) => void;
 }
 
+function calculateDepth(node: NodeData, nodesMap: Record<string, NodeData>): number {
+  let depth = 0;
+  let current = node;
+
+  while (true) {
+    const parent = Object.values(nodesMap).find((n) => n.children.includes(current.id));
+    if (!parent) break; // Если родителя нет, это корень, глубина зафиксирована
+    depth++;
+    current = parent;
+  }
+
+  return depth;
+}
+
+
 export function SegmentTreeCanvas({
   nodes,
   shapeRefs,
@@ -42,6 +57,8 @@ export function SegmentTreeCanvas({
   getTextColor,
   onNodeClick
 }: SegmentTreeCanvasProps) {
+  const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
+
   return (
     <Stage width={stageSize.width} height={stageSize.height}>
       <Layer>
@@ -67,10 +84,13 @@ export function SegmentTreeCanvas({
           if (node.isHighlighted) fillColor = highlightColor;
           else if (selectedNodeId === node.id) fillColor = selectedColor;
           const strokeW = isLeaf ? leafStrokeWidth : internalNodeStrokeWidth;
+
+          const depth = calculateDepth(node, nodesMap);
+          
           return (
             <SegmentTreeNode
               key={node.id}
-              node={node}
+              node={{ ...node, depth }}
               shapeRef={(el) => (shapeRefs.current[node.id] = el)}
               onNodeClick={onNodeClick}
               fillColor={fillColor}
