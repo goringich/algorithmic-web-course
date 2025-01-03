@@ -3,10 +3,10 @@ import { Box, Typography } from "@mui/material";
 import Konva from "konva";
 import SegmentTreeWasm from "../segmentTreeWasm"; 
 import { useDrag } from "./UseDrag";
-import { SegmentTreeCanvas } from "../visualisationComponents/SegmentTreeCanvas";
-import { AddElementForm } from "../../components/addElementForm/AddElementForm";
+import { SegmentTreeCanvas } from "../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas";
+import { AddElementForm } from "../visualisationComponents/addElementForm/AddElementForm";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
-import { EditNodeModal } from "../../components/editNodeModal/EditNodeModal";
+import { EditNodeModal } from "../visualisationComponents/editNodeModal/EditNodeModal";
 
 interface VisNode {
   id: string;

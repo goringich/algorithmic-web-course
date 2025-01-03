@@ -60,7 +60,22 @@ export function EditNodeModal({
         Перетащи меня
       </Box>
       <Typography variant="h6" sx={{ fontWeight: "bold", marginTop: 1 }}>
-        Лист: {selectedNode.label}
+        Узел: {selectedNode.label}
+      </Typography>
+      <Typography variant="body2" sx={{ marginTop: 1 }}>
+        <strong>ID:</strong> {selectedNode.id}
+      </Typography>
+      <Typography variant="body2">
+        <strong>Координаты:</strong> ({selectedNode.x}, {selectedNode.y})
+      </Typography>
+      <Typography variant="body2">
+        <strong>Диапазон:</strong> [{selectedNode.range[0]}, {selectedNode.range[1]}]
+      </Typography>
+      <Typography variant="body2">
+        <strong>Значение:</strong> {selectedNode.value}
+      </Typography>
+      <Typography variant="body2">
+        <strong>Дети:</strong> {selectedNode.children.length > 0 ? selectedNode.children.join(", ") : "Нет"}
       </Typography>
       <TextField
         type="number"

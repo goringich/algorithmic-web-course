@@ -32,17 +32,15 @@ export function SegmentTreeNode({
 
   const maxDepth = 6;
 
-  // Проверяем, есть ли у узла глубина, иначе ставим 0
+  // We check if the node has depth, otherwise we set 0
   const depth = node.depth !== undefined ? node.depth : 0;
 
-  // Используем нелинейное масштабирование для увеличения разницы
+  // We use non-linear scaling to increase the difference.
   const depthFactor = Math.pow(Math.min(depth / maxDepth, 1), 0.7);
 
-  // Цвета градиента (тёмно-синий → светло-голубой)
-  const minColor = [10, 10, 120];  // Очень тёмно-синий
-  const maxColor = [180, 220, 255]; // Светло-голубой
+  const minColor = [10, 10, 120];  
+  const maxColor = [180, 220, 255]; 
 
-  // Функция интерполяции цвета
   const interpolateColor = (min: number, max: number, factor: number) => 
     Math.round(min + (max - min) * factor);
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Layer, Line, Stage } from "react-konva";
-import { SegmentTreeNode } from "../../components/segmentTreeNode/SegmentTreeNode";
+import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 
 interface NodeData {
   id: string;
@@ -34,7 +34,7 @@ function calculateDepth(node: NodeData, nodesMap: Record<string, NodeData>): num
 
   while (true) {
     const parent = Object.values(nodesMap).find((n) => n.children.includes(current.id));
-    if (!parent) break; // Если родителя нет, это корень, глубина зафиксирована
+    if (!parent) break; // If there is no parent, it is the root, the depth is fixed
     depth++;
     current = parent;
   }
@@ -86,7 +86,7 @@ export function SegmentTreeCanvas({
           const strokeW = isLeaf ? leafStrokeWidth : internalNodeStrokeWidth;
 
           const depth = calculateDepth(node, nodesMap);
-          
+
           return (
             <SegmentTreeNode
               key={node.id}
