@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Stage, Layer, Circle, Text, Line } from "react-konva";
 import { TextField, Button, Box, Typography, Snackbar, Alert } from "@mui/material";
 import Konva from "konva";
-import { SegmentTree } from "../assets/JS_complied_algorithms/SegmentTreeClean";
+import SegmentTree from "../assets/JS_complied_algorithms/SegmentTreeClean.js";
 
 // Максимальное количество листьев
 const MAX_LEAVES = 16;

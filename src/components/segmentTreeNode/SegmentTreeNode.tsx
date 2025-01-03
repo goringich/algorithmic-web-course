@@ -1,31 +1,41 @@
-// src/components/SegmentTreeNode.js
 import React from "react";
 import { Circle, Text } from "react-konva";
+import Konva from "konva";
 
-const SegmentTreeNode = ({
+interface NodeData {
+  id: string;
+  x: number;
+  y: number;
+  range: [number, number];
+  label: string;
+  value: number;
+  children: string[];
+  isHighlighted?: boolean;
+}
+
+interface SegmentTreeNodeProps {
+  node: NodeData;
+  shapeRef: (el: Konva.Circle | null) => void;
+  onNodeClick: (node: NodeData) => void;
+  fillColor: string;
+  strokeWidth: number;
+  textColor: string;
+}
+
+export function SegmentTreeNode({
   node,
-  isHighlighted,
-  isSelected,
-  onClick,
   shapeRef,
-  getTextColor,
-  circleColor,
-  highlightColor,
-  selectedColor,
-  leafStrokeWidth,
-  internalNodeStrokeWidth,
-}) => {
-  const isLeaf = node.range[0] === node.range[1];
-  // Determine fill color based on state
-  let fillColor = circleColor;
-  if (isHighlighted) fillColor = highlightColor;
-  else if (isSelected) fillColor = selectedColor;
-
-  // Determine stroke width
-  const strokeW = isLeaf ? leafStrokeWidth : internalNodeStrokeWidth;
+  onNodeClick,
+  fillColor,
+  strokeWidth,
+  textColor
+}: SegmentTreeNodeProps) {
+  const handleClick = () => {
+    onNodeClick(node);
+  };
 
   return (
-    <React.Fragment>
+    <>
       <Circle
         ref={shapeRef}
         x={node.x}
@@ -33,10 +43,8 @@ const SegmentTreeNode = ({
         radius={30}
         fill={fillColor}
         stroke="black"
-        strokeWidth={strokeW}
-        listening={true}
-        onClick={onClick}
-        // Change cursor on hover
+        strokeWidth={strokeWidth}
+        onClick={handleClick}
         onMouseEnter={(e) => {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "pointer";
@@ -45,7 +53,6 @@ const SegmentTreeNode = ({
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "default";
         }}
-        // Shadows for aesthetics
         shadowColor="#000"
         shadowBlur={4}
         shadowOffset={{ x: 2, y: 2 }}
@@ -56,12 +63,10 @@ const SegmentTreeNode = ({
         y={node.y - 15}
         text={`${node.label}\n(${node.value})`}
         fontSize={12}
-        fill={getTextColor(fillColor)}
+        fill={textColor}
         align="center"
         width={50}
       />
-    </React.Fragment>
+    </>
   );
-};
-
-export default SegmentTreeNode;
+}
