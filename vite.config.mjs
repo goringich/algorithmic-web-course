@@ -4,9 +4,10 @@ import wasm from 'vite-plugin-wasm';
 
 export default defineConfig({
   plugins: [react(), wasm()],
-  server: {
-    port: 3000,
-  },
+  // server: {
+  //   middlewareMode: true,
+  //   port: 3000,
+  // },
   css: {
     preprocessorOptions: {
       scss: {
@@ -18,4 +19,5 @@ export default defineConfig({
     target: 'esnext',
     sourcemap: true, // Включает генерацию Source Maps
   },
+  assetsInclude: ['**/*.wasm'],
 });

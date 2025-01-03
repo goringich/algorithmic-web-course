@@ -2982,14 +2982,6 @@ for (const prop of Object.keys(Module)) {
 }
 );
 })();
-
-if (typeof Module !== 'undefined' && !Module['wasmBinaryFile']) {
-  Module['wasmBinaryFile'] = './segment_tree.wasm';
-}
-
-
-
-
 if (typeof exports === 'object' && typeof module === 'object') {
   module.exports = createSegmentTreeModule;
   // This default export looks redundant, but it allows TS to import this
@@ -2997,5 +2989,3 @@ if (typeof exports === 'object' && typeof module === 'object') {
   module.exports.default = createSegmentTreeModule;
 } else if (typeof define === 'function' && define['amd'])
   define([], () => createSegmentTreeModule);
-
-export default createSegmentTreeModule;
