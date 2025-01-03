@@ -21,7 +21,7 @@ interface VisNode {
 
 const MAX_LEAVES = 16;
 
-export default function SegmentTreeVisualizerNew() {
+export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const [stageSize, setStageSize] = useState({ width: 800, height: 1200 });

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import styles from "./algorithmsPage.module.scss"
 import contents from "../../assets/dataBase/TitlesData.json"
-// import VisualizationBlock from "../../components/visualizationBlock/VisualizationBlock"
-import SegmentTreeVisualizerNew from "../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizerNew";
-// import SegmentTreeVisualizer from "../../visualizations/SegmentTreeVisualizerAllCode"
+import SegmentTreeVisualizer from "../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
 
 interface Section {
   title: string;
@@ -76,8 +74,7 @@ const ContentPage: React.FC = () => {
               )}
               {activeTab === "визуализация" && (
                 <>
-                 <SegmentTreeVisualizerNew />
-                 {/* <SegmentTreeVisualizer /> */}
+                 <SegmentTreeVisualizer />
                  <div>{activeSection.visualization || "Визуализация не доступна"}</div>
                 </>
               )}
