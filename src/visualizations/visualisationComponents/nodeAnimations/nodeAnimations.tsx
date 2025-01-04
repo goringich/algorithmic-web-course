@@ -9,7 +9,13 @@ export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
       map[childId] = node.id;
     }
   }
-  console.log('parentMap построен:', map);
+
+  // Root have not got parent, therefore we add it
+  const rootNode = newNodes.find(node => !Object.values(map).includes(node.id));
+  if (rootNode) {
+    map[rootNode.id] = null;  
+  }
+  // console.log('parentMap построен:', map);
   return map;
 };
 

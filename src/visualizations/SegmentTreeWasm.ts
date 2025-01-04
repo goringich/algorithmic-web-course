@@ -21,8 +21,8 @@ export default class SegmentTreeWasm {
       throw new Error("Ошибка: передан некорректный массив чисел в SegmentTreeWasm.");
     }
     this.array = array.slice();
-    console.log("Перед передачей в setArray:", this.array);
-    console.log("Тип данных:", typeof this.array);
+    // console.log("Перед передачей в setArray:", this.array);
+    // console.log("Тип данных:", typeof this.array);
     this.modulePromise = createSegmentTreeModule().then((module: any) => {
       const vectorInt = new module.VectorInt();
       
@@ -54,7 +54,26 @@ export default class SegmentTreeWasm {
 
   async getTreeForVisualization(): Promise<SegmentTreeNodeData[]> {
     const module = await this.modulePromise;
-    const rawTree: number[] = module.getTree();
+    
+    const rawTreeVector = module.getTree();
+    console.log("Сырые данные дерева из WebAssembly:", rawTreeVector);
+
+
+    // Проверяем, есть ли у объекта `size` и `get`
+    if (!rawTreeVector || typeof rawTreeVector.size !== "function" || typeof rawTreeVector.get !== "function") {
+      console.error("Ошибка: `getTree()` вернул неподдерживаемый формат", rawTreeVector);
+      return [];
+    }
+
+    // Преобразуем `VectorInt` в обычный массив `number[]`
+    const rawTree: number[] = [];
+    for (let i = 0; i < rawTreeVector.size(); i++) {
+      rawTree.push(rawTreeVector.get(i));
+    }
+
+    // Лог преобразованного массива
+    console.log("Преобразованный массив rawTree:", rawTree);
+
 
     const nodes: SegmentTreeNodeData[] = [];
     const idCounter = { current: 0 };

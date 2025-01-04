@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Layer, Line, Stage } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 
@@ -58,6 +58,15 @@ export function SegmentTreeCanvas({
   onNodeClick
 }: SegmentTreeCanvasProps) {
   const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
+  const layerRef = useRef<any>(null);
+
+  useEffect(() => {
+    console.log("Обновление nodes:", nodes);
+    if (layerRef.current) {
+      layerRef.current.batchDraw();
+    }
+  }, [nodes]);
+  
 
   return (
     <Stage width={stageSize.width} height={stageSize.height}>

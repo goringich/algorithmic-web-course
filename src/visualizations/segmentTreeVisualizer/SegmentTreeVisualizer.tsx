@@ -63,6 +63,8 @@ export default function SegmentTreeVisualizer() {
 
     (async () => {
       const initialNodes = await st.getTreeForVisualization();
+      // console.log("Полученные узлы:", initialNodes); 
+      // console.log("Полученные узлы:", JSON.stringify(initialNodes, null, 2));
       setNodes(initialNodes);
       setParentMap(buildParentMap(initialNodes));
       console.log('Инициализированные узлы:', initialNodes);
@@ -221,6 +223,8 @@ export default function SegmentTreeVisualizer() {
     if (fill === circleColor) return "#fff";
     return "#fff";
   };
+
+  if (!segmentTree) return <div>Loading...</div>;
 
   return (
     <Box
