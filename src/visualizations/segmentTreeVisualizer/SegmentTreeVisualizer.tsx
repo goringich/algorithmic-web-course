@@ -28,7 +28,7 @@ const MAX_LEAVES = 16;
 export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
-  const [stageSize, setStageSize] = useState({ width: 800, height: 1200 });
+  const [stageSize, setStageSize] = useState({ width: 1200, height: 1200 });
 
   // Использование нового хука
   const [data, setData] = useState([5, 8, 6, 3, 2, 7, 2, 6]);
@@ -67,7 +67,7 @@ export default function SegmentTreeVisualizer() {
       // console.log("Полученные узлы:", JSON.stringify(initialNodes, null, 2));
       setNodes(initialNodes);
       setParentMap(buildParentMap(initialNodes));
-      console.log('Инициализированные узлы:', initialNodes);
+      // console.log('Инициализированные узлы:', initialNodes);
     })();
   }, [data]);
 
@@ -101,6 +101,8 @@ export default function SegmentTreeVisualizer() {
     const newVisNodes = await st.getTreeForVisualization();
     console.log('Обновлённые узлы:', newVisNodes);
 
+    const newParentMap = buildParentMap(newVisNodes);
+
     // 1) Анимация исчезновения для узлов, которых нет в newVisNodes
     setNodes((prev) => {
       const removed = prev.filter(
@@ -116,7 +118,7 @@ export default function SegmentTreeVisualizer() {
         const oldNode = prevNodes.find((p) => p.id === newN.id);
         if (oldNode) {
           if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
-            animateNodeMove(newN.id, newN.x, newN.y, shapeRefs.current);
+            animateNodeMove(newN.id, newN.x, newN.y, shapeRefs.current, newParentMap);
           }
         } else {
           setTimeout(() => {
@@ -128,8 +130,7 @@ export default function SegmentTreeVisualizer() {
     });
 
     // 3) Обновляем parentMap
-    const map = buildParentMap(newVisNodes);
-    setParentMap(map);
+    setParentMap(newParentMap);
   };
 
   // --------------------------------------------------------------------------------------------

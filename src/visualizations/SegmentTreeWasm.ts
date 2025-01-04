@@ -56,12 +56,11 @@ export default class SegmentTreeWasm {
     const module = await this.modulePromise;
     
     const rawTreeVector = module.getTree();
-    console.log("Сырые данные дерева из WebAssembly:", rawTreeVector);
-
+    // console.log("Сырые данные дерева из WebAssembly:", rawTreeVector);
 
     // Проверяем, есть ли у объекта `size` и `get`
     if (!rawTreeVector || typeof rawTreeVector.size !== "function" || typeof rawTreeVector.get !== "function") {
-      console.error("Ошибка: `getTree()` вернул неподдерживаемый формат", rawTreeVector);
+      // console.error("Ошибка: `getTree()` вернул неподдерживаемый формат", rawTreeVector);
       return [];
     }
 
@@ -72,7 +71,7 @@ export default class SegmentTreeWasm {
     }
 
     // Лог преобразованного массива
-    console.log("Преобразованный массив rawTree:", rawTree);
+    // console.log("Преобразованный массив rawTree:", rawTree);
 
 
     const nodes: SegmentTreeNodeData[] = [];

@@ -61,7 +61,7 @@ export function SegmentTreeCanvas({
   const layerRef = useRef<any>(null);
 
   useEffect(() => {
-    console.log("Обновление nodes:", nodes);
+    // console.log("Обновление nodes:", nodes);
     if (layerRef.current) {
       layerRef.current.batchDraw();
     }

@@ -44,14 +44,17 @@ export function SegmentTreeNode({
   const interpolateColor = (min: number, max: number, factor: number) => 
     Math.round(min + (max - min) * factor);
 
+  // console.log(`Node: ${node.id}, isHighlighted: ${node.isHighlighted}`);
+
   // Вычисляем цвет узла
-  const fillColor = node.isHighlighted
+  const fillColor = node.isHighlighted === true
     ? "orange"
     : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, 
            ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
            ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
   // console.log(`Node: ${node.label}, Depth: ${depth}, DepthFactor: ${depthFactor}, Color: ${fillColor}`);
+  // console.log(`Node Rendered: ${node.id}, isHighlighted: ${node.isHighlighted}`);
 
 
   return (
