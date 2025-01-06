@@ -32,15 +32,17 @@ function calculateDepth(node: NodeData, nodesMap: Record<string, NodeData>): num
   let depth = 0;
   let current = node;
 
-  while (true) {
+  while (current && nodesMap[current.id]) {
     const parent = Object.values(nodesMap).find((n) => n.children.includes(current.id));
-    if (!parent) break; // If there is no parent, it is the root, the depth is fixed
+    if (!parent) break;
     depth++;
     current = parent;
   }
 
   return depth;
 }
+
+
 
 
 export function SegmentTreeCanvas({

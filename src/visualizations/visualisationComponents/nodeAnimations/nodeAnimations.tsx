@@ -112,7 +112,7 @@ export const animateNodeDisappear = (
     if (callback) callback();
     return;
   }
-  
+
   new Konva.Tween({
     node: shape,
     duration: 0.5,
@@ -120,6 +120,7 @@ export const animateNodeDisappear = (
     scaleY: 0,
     easing: Konva.Easings.EaseIn,
     onFinish: () => {
+      delete shapeRefs[nodeId];
       if (callback) callback();
     }
   }).play();

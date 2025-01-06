@@ -109,8 +109,9 @@ export default function SegmentTreeVisualizer() {
         (oldNode) => !newVisNodes.some((n) => n.id === oldNode.id)
       );
       removed.forEach((rn) => animateNodeDisappear(rn.id, shapeRefs.current));
-      return prev;
+      return newVisNodes; 
     });
+    
 
     // 2) Обновляем state "nodes" и анимируем перемещение / появление
     setNodes((prevNodes) => {

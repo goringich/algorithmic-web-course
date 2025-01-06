@@ -47,11 +47,12 @@ export function SegmentTreeNode({
   // console.log(`Node: ${node.id}, isHighlighted: ${node.isHighlighted}`);
 
   // Вычисляем цвет узла
-  const fillColor = node.isHighlighted === true
-    ? "orange"
-    : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, 
-           ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
-           ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
+  const fillColor = node.isHighlighted
+  ? "orange"
+  : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, 
+         ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
+         ${interpolateColor(minColor[2], maxColor[2], depthFactor)})` || "#4B7BEC";
+
 
   // console.log(`Node: ${node.label}, Depth: ${depth}, DepthFactor: ${depthFactor}, Color: ${fillColor}`);
   // console.log(`Node Rendered: ${node.id}, isHighlighted: ${node.isHighlighted}`);
