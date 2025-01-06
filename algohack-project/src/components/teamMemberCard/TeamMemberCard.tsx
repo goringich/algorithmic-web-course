@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './TeamMemberCard.module.scss';
+import { Card, CardMedia, CardContent, Typography, Button, Divider, Box } from "@mui/material";
 
 interface TeamMemberProps {
   name: string;
@@ -17,24 +17,37 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
   imageUrl,
 }) => {
   return (
-    <div className={styles.team__member__card}>
-      {/* left side with image*/}
-      <div className={styles.team__member__card__image__container}>
-        <img src={imageUrl} alt={name} className={styles.team__member__card__image} />
-      </div>
-
-      {/* right side with text */}
-      <div className={styles.team__member__card__content}>
-        <h2 className={styles.team__member__card__name}>{name}</h2>
-        <h3 className={styles.team__member__card__role}>{role}</h3>
-        <hr className={styles.team__member__card__divider} />
-        <p className={styles.team__member__card__description}>{description}</p>
-        <p className={styles.team__member__card__skills}>
+    <Card sx={{ maxWidth: 345, borderRadius: 4, boxShadow: 3, overflow: 'hidden' }}>
+      {/* Image */}
+      <CardMedia
+        component="img"
+        height="200"
+        image={imageUrl}
+        alt={name}
+      />
+      {/* Content */}
+      <CardContent>
+        <Typography variant="h6" component="div" gutterBottom>
+          {name}
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+          {role}
+        </Typography>
+        <Divider sx={{ marginY: 1 }} />
+        <Typography variant="body2" color="text.secondary" paragraph>
+          {description}
+        </Typography>
+        <Typography variant="body2" color="text.primary">
           <strong>Навыки:</strong> {skills.join(", ")}
-        </p>
-        <button className={styles.team__member__card__button}>Связаться с нами</button>
-      </div>
-    </div>
+        </Typography>
+      </CardContent>
+      {/* Button */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+        <Button variant="contained" color="primary">
+          Связаться с нами
+        </Button>
+      </Box>
+    </Card>
   );
 };
 
