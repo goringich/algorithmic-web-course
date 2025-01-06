@@ -1,5 +1,3 @@
-// src/utils/buildParentMap.ts
-
 import { VisNode } from '../../VisNode';
 
 export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {

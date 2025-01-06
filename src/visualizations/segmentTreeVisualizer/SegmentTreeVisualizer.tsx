@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { useDrag } from "./UseDrag";
+import { useDrag } from "./components/UseDrag";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/editNodeModal/EditNodeModal";
 import useHighlightPath from '../visualisationComponents/highlightPathFromLeaf/useHighlightPath';
@@ -9,15 +9,15 @@ import Header from './components/Header';
 import Controls from './components/Controls';
 import TreeArea from './components/TreeArea';
 import useSegmentTree from './UseSegmentTree'; 
-import { animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations'; // Добавляем импорт
- 
+import { animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations'; 
+import TreeStructure from "../visualisationComponents/treeStructure/TreeStructure";
 
 const MAX_LEAVES = 16;
 
 export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
-  const [stageSize, setStageSize] = useState({ width: 1200, height: 1200 });
+  const [stageSize, setStageSize] = useState({ width: 1200, height: 500 });
 
   const [data, setData] = useState([5, 8, 6, 3, 2, 7, 2, 6]);
   const [selectedNode, setSelectedNode] = useState<VisNode | null>(null);
@@ -35,14 +35,13 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  // Используем кастомный хук для управления деревом
+  // кастомный хук для управления деревом
   const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } = useSegmentTree({ initialData: data, shapeRefs });
 
   // Инициализация хука подсветки с передачей nodes
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
-  // --------------------------------------------------------------------------------------------
-  // Добавление нового элемента
+  // новый элемент
   const handleAddElement = async () => {
     if (newValue === "") return;
     const value = parseInt(newValue, 10);
@@ -56,41 +55,35 @@ export default function SegmentTreeVisualizer() {
 
     const updatedData = [...data, value];
     await updateTreeWithNewData(updatedData);
-    setData(updatedData); // Обновляем локальное состояние данных
+    setData(updatedData);
     setNewValue("");
   };
 
-  // --------------------------------------------------------------------------------------------
-  // Обновление значения выбранного листа
+  // обновляем значение листа
   const handleUpdate = async () => {
     if (!selectedNode) return;
     const [start, end] = selectedNode.range;
     if (start !== end) return;
 
-    // Обновляем массив данных
     const updatedData = [...data];
-    updatedData[start] = delta; // Предполагается, что start — это индекс в массиве data
+    updatedData[start] = delta; 
 
-    // Обновляем состояние данных
     setData(updatedData);
 
-    // Обновляем сегментное дерево с новыми данными
     await updateTreeWithNewData(updatedData);
 
-    // Находим обновлённый узел для подсветки пути
+    // обновлённый узел для подсветки пути
     const leafNode = nodes.find(n => n.range[0] === start && n.range[1] === end);
     if (leafNode) {
       highlightPathFromLeaf(leafNode.id);
     }
 
-    // Отображаем уведомление
+    // уведомление
     setSnackbarMessage(`Значение узла [${start},${end}] обновлено до ${delta}`);
     setSnackbarOpen(true);
     setSelectedNode(null);
   };
 
-  // --------------------------------------------------------------------------------------------
-  // Удаление выбранного листа
   const handleRemoveLeaf = async () => {
     if (!selectedNode) return;
     const [start, end] = selectedNode.range;
@@ -98,33 +91,27 @@ export default function SegmentTreeVisualizer() {
 
     const pos = selectedNode.range[0];
 
-    // Анимация исчезновения
     animateNodeDisappear(selectedNode.id, shapeRefs.current, async () => {
       const newArr = [...data];
       newArr.splice(pos, 1);
       await updateTreeWithNewData(newArr);
-      setData(newArr); // Обновляем локальное состояние данных
+      setData(newArr); 
     });
     setSelectedNode(null);
   };
 
-  // --------------------------------------------------------------------------------------------
-  // Обработчик клика по узлу
   const handleNodeClick = (node: VisNode) => {
-    // Только листы
+    // только листы
     if (node.range[0] === node.range[1]) {
       setSelectedNode(node);
       setDelta(node.value);
     }
   };
 
-  // --------------------------------------------------------------------------------------------
-  // Обработчики Snackbar
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
-  // --------------------------------------------------------------------------------------------
   // Стили
   const circleColor = "#4B7BEC";
   const highlightColor = "#FFC107";
@@ -156,10 +143,8 @@ export default function SegmentTreeVisualizer() {
       }
       onMouseUp={handleEditBoxMouseUp}
     >
-      {/* Используем Header компонент */}
       <Header />
 
-      {/* Используем Controls компонент */}
       <Controls
         newValue={newValue}
         setNewValue={setNewValue}
@@ -167,7 +152,6 @@ export default function SegmentTreeVisualizer() {
         disabled={data.length >= MAX_LEAVES}
       />
 
-      {/* Используем TreeArea компонент */}
       <TreeArea
         nodes={nodes}
         shapeRefs={shapeRefs}
@@ -199,12 +183,7 @@ export default function SegmentTreeVisualizer() {
         onClose={handleCloseSnackbar}
       />
 
-      {/* Временный компонент для отладки структуры дерева */}
-      {/* Удалите его после завершения отладки */}
-      <Box mt={4} width="80%">
-        <Typography variant="h6">Tree Structure (parentMap)</Typography>
-        <pre>{JSON.stringify(parentMap, null, 2)}</pre>
-      </Box>
+      <TreeStructure parentMap={parentMap}/>
     </Box>
   );
 }
