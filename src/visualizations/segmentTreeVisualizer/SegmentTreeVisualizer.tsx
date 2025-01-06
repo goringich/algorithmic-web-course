@@ -53,8 +53,8 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  // Инициализация хука подсветки
-  const highlightPathFromLeaf = useHighlightPath({ parentMap, setNodes });
+  // Инициализация хука подсветки с передачей nodes
+  const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
   // 1) При первом рендере создаём WASM-обёртку и строим дерево
   useEffect(() => {
@@ -96,42 +96,46 @@ export default function SegmentTreeVisualizer() {
   };
 
   // --------------------------------------------------------------------------------------------
-  // Обновляем nodes через вызов st.getTreeForVisualization()
+  // Обновляем nodes и parentMap через вызов st.getTreeForVisualization()
   const refreshNodes = async (st: SegmentTreeWasm) => {
     const newVisNodes = await st.getTreeForVisualization();
     console.log('Обновлённые узлы:', newVisNodes);
+  
+    let newParentMap = buildParentMap(newVisNodes);
 
-    const newParentMap = buildParentMap(newVisNodes);
-
-    // 1) Анимация исчезновения для узлов, которых нет в newVisNodes
-    setNodes((prev) => {
-      const removed = prev.filter(
-        (oldNode) => !newVisNodes.some((n) => n.id === oldNode.id)
-      );
-      removed.forEach((rn) => animateNodeDisappear(rn.id, shapeRefs.current));
-      return newVisNodes; 
-    });
-    
-
-    // 2) Обновляем state "nodes" и анимируем перемещение / появление
-    setNodes((prevNodes) => {
-      newVisNodes.forEach((newN) => {
-        const oldNode = prevNodes.find((p) => p.id === newN.id);
-        if (oldNode) {
-          if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
-            animateNodeMove(newN.id, newN.x, newN.y, shapeRefs.current, newParentMap);
-          }
-        } else {
-          setTimeout(() => {
-            animateNodeAppear(newN.id, newN.x, newN.y, shapeRefs.current);
-          }, 50);
-        }
+    // Проверяем узлы, у которых нет родителя в newParentMap
+    const orphanNodes = newVisNodes.filter(node => !newParentMap[node.id]);
+    if (orphanNodes.length > 0) {
+      console.warn("Orphan nodes detected, fixing structure.", orphanNodes);
+  
+      // Присоединяем сиротские узлы к первому узлу дерева (или к главному корню)
+      orphanNodes.forEach(node => {
+        newParentMap[node.id] = newVisNodes[0].id;
       });
-      return newVisNodes;
+    }
+
+    // Анимация исчезновения удалённых узлов
+    const removedNodes = nodes.filter(oldNode => !newVisNodes.some(n => n.id === oldNode.id));
+    removedNodes.forEach(rn => animateNodeDisappear(rn.id, shapeRefs.current));
+
+    // Анимация перемещения и появления узлов
+    newVisNodes.forEach(newN => {
+      const oldNode = nodes.find(p => p.id === newN.id);
+      if (oldNode) {
+        if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
+          animateNodeMove(newN.id, newN.x, newN.y, shapeRefs.current, newParentMap);
+        }
+      } else {
+        setTimeout(() => {
+          animateNodeAppear(newN.id, newN.x, newN.y, shapeRefs.current);
+        }, 50);
+      }
     });
 
-    // 3) Обновляем parentMap
+    // Обновляем parentMap и nodes
     setParentMap(newParentMap);
+    setNodes(newVisNodes);
+    console.log("Final fixed parentMap after refresh:", newParentMap);
   };
 
   // --------------------------------------------------------------------------------------------
@@ -165,7 +169,12 @@ export default function SegmentTreeVisualizer() {
     // затем перестраиваем визуализацию
     await refreshNodes(segmentTree);
 
-    const leafNode = nodes.find(
+    // Найти обновлённый узел после перестроения дерева
+    const updatedNodes = await segmentTree.getTreeForVisualization();
+    setNodes(updatedNodes);
+    setParentMap(buildParentMap(updatedNodes)); // Обновить parentMap
+
+    const leafNode = updatedNodes.find(
       (n) => n.range[0] === start && n.range[1] === end
     );
     if (leafNode) {
@@ -285,6 +294,13 @@ export default function SegmentTreeVisualizer() {
         message={snackbarMessage}
         onClose={handleCloseSnackbar}
       />
+
+      {/* Временный компонент для отладки структуры дерева */}
+      {/* Удалите его после завершения отладки */}
+      <Box mt={4} width="80%">
+        <Typography variant="h6">Tree Structure (parentMap)</Typography>
+        <pre>{JSON.stringify(parentMap, null, 2)}</pre>
+      </Box>
     </Box>
   );
 }

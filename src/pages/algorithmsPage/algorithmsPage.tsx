@@ -75,6 +75,7 @@ const ContentPage: React.FC = () => {
               {activeTab === "визуализация" && (
                 <>
                  <SegmentTreeVisualizer />
+                 
                  <div>{activeSection.visualization || "Визуализация не доступна"}</div>
                 </>
               )}

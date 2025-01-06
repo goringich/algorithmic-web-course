@@ -1,11 +1,12 @@
-import Konva from "konva";
-import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer'; 
+// src/visualisationComponents/nodeAnimations/NodeAnimations.tsx
 
-// Builds a ParentMap map, where the key is the ID of the child node, the value is the ID of the parent node.
+import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
+
+// Функция для построения карты родителей (childId -> parentId)
 export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
   const map: Record<string, string> = {};
 
-  // Map each child to its parent
+  // Связываем каждого ребенка с родителем
   for (const node of newNodes) {
     for (const childId of node.children) {
       if (map[childId] && map[childId] !== node.id) {
@@ -15,55 +16,48 @@ export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
     }
   }
 
-  // Assign self-reference for root nodes (nodes without a parent)
-  newNodes.forEach(node => {
-    if (!map[node.id]) {
-      map[node.id] = node.id; // Self-reference indicates a root node
-    }
-  });
+  // Определяем корневые узлы (узлы без родителей)
+  const rootNodes = newNodes.filter(node => map[node.id] === undefined);
 
-  // Identify root nodes
-  const rootNodes = newNodes.filter(node => map[node.id] === node.id);
-
-  if (rootNodes.length === 1) {
-    console.log(`Root detected: ${rootNodes[0].id}`);
-  } else if (rootNodes.length > 1) {
-    console.error("Multiple root nodes detected:", rootNodes.map(n => n.id));
-  } else {
+  if (rootNodes.length === 0) {
     console.error("No root node found in the tree");
+  } else if (rootNodes.length > 1) {
+    console.warn("Multiple root nodes detected:", rootNodes.map(n => n.id));
+    // Присоединяем все дополнительные корни к первому корню
+    const trueRoot = rootNodes[0];
+    rootNodes.slice(1).forEach(root => {
+      map[root.id] = trueRoot.id;
+      console.log(`Reassigning root node ${root.id} to true root ${trueRoot.id}`);
+    });
+  }
+
+  // Назначаем самореференцию для истинного корня
+  if (rootNodes.length > 0) {
+    const trueRoot = rootNodes[0];
+    map[trueRoot.id] = trueRoot.id;
+    console.log(`True root detected: ${trueRoot.id}`);
   }
 
   console.log("Final parentMap:", map);
   return map;
 };
 
-
-
-// Animates the node's movement to the new coordinates.
+// Функции анимации (примеры)
 export const animateNodeMove = (
   nodeId: string,
   newX: number,
   newY: number,
   shapeRefs: Record<string, Konva.Circle>,
-  parentMap?: Record<string, string> // Make parentMap optional
+  parentMap: Record<string, string>
 ): void => {
-  if (!parentMap) {
-    console.error("animateNodeMove called with undefined parentMap");
-    return;
-  }
-
   const shape = shapeRefs[nodeId];
   if (!shape) {
     console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
     return;
   }
 
-  if (!(nodeId in parentMap)) {
-    console.error(`Node ${nodeId} not found in parentMap`);
-    return;
-  }
-
-  if (parentMap[nodeId] === nodeId) { // Corrected root check
+  if (parentMap[nodeId] === nodeId) { // Проверка на корень
+    console.log(`Корневой узел ${nodeId} перемещается без анимации.`);
     shape.position({ x: newX, y: newY });
     return;
   }
@@ -77,31 +71,27 @@ export const animateNodeMove = (
   }).play();
 };
 
-
-
-
-// Animates the appearance of a node.
 export const animateNodeAppear = (
   nodeId: string,
-  finalX: number,
-  finalY: number,
+  x: number,
+  y: number,
   shapeRefs: Record<string, Konva.Circle>
 ): void => {
   const shape = shapeRefs[nodeId];
-  if (!shape) return;
-  shape.scale({ x: 0, y: 0 });
-  shape.y(finalY - 50);
-  new Konva.Tween({
-    node: shape,
+  if (!shape) {
+    console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
+    return;
+  }
+
+  shape.opacity(0);
+  shape.position({ x, y });
+  shape.to({
+    opacity: 1,
     duration: 0.5,
-    scaleX: 1,
-    scaleY: 1,
-    y: finalY,
-    easing: Konva.Easings.EaseOut
-  }).play();
+    easing: Konva.Easings.EaseInOut
+  });
 };
 
-// Animates the node to disappear.
 export const animateNodeDisappear = (
   nodeId: string,
   shapeRefs: Record<string, Konva.Circle>,
@@ -109,19 +99,18 @@ export const animateNodeDisappear = (
 ): void => {
   const shape = shapeRefs[nodeId];
   if (!shape) {
-    if (callback) callback();
+    console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
     return;
   }
 
-  new Konva.Tween({
-    node: shape,
+  shape.to({
+    opacity: 0,
     duration: 0.5,
-    scaleX: 0,
-    scaleY: 0,
-    easing: Konva.Easings.EaseIn,
+    easing: Konva.Easings.EaseInOut,
     onFinish: () => {
+      shape.destroy();
       delete shapeRefs[nodeId];
       if (callback) callback();
     }
-  }).play();
+  });
 };
