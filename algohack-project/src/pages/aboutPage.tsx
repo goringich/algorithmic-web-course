@@ -1,5 +1,9 @@
 import React from "react";
-import { Box, Grid, Typography, Container } from "@mui/material";
+import { Typography, Container } from "@mui/material";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 import TeamMemberCard from "../components/teamMemberCard/TeamMemberCard";
 
 interface TeamMember {
@@ -27,29 +31,38 @@ const teamMembers: TeamMember[] = [
     skills: ["Node.js", "Express", "MongoDB", "Python"],
     imageUrl: "https://via.placeholder.com/150",
   },
+  {
+    name: "Смирнова Анна",
+    role: "Frontend Developer",
+    description:
+      "Студентка 2-го курса НИУ ВШЭ 'Программная инженерия'. Участник международных соревнований по веб-разработке.",
+    skills: ["React", "JavaScript", "TypeScript", "CSS"],
+    imageUrl: "https://via.placeholder.com/150",
+  },
 ];
 
 const AboutPage: React.FC = () => {
   return (
-    <Container maxWidth="lg" sx={{ paddingY: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Наша команда
-      </Typography>
-      <Box sx={{ marginY: 4 }}>
-        <Grid container spacing={3} justifyContent="center">
-          {teamMembers.map((member, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <TeamMemberCard
-                name={member.name}
-                role={member.role}
-                description={member.description}
-                skills={member.skills}
-                imageUrl={member.imageUrl}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+    <Container maxWidth="md" sx={{ paddingY: 4 }}>
+      <Swiper
+        modules={[Navigation]}
+        navigation
+        spaceBetween={20}
+        slidesPerView={1}
+        style={{ marginTop: 20 }}
+      >
+        {teamMembers.map((member, index) => (
+          <SwiperSlide key={index}>
+            <TeamMemberCard
+              name={member.name}
+              role={member.role}
+              description={member.description}
+              skills={member.skills}
+              imageUrl={member.imageUrl}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </Container>
   );
 };
