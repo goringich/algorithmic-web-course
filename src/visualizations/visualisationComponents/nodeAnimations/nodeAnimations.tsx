@@ -1,5 +1,3 @@
-// src/visualisationComponents/nodeAnimations/NodeAnimations.tsx
-
 import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
 
 // Функция для построения карты родителей (childId -> parentId)

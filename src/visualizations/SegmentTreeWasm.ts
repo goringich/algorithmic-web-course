@@ -1,5 +1,6 @@
-// SegmentTreeWasm.ts
-// Путь уточни под себя
+// src/SegmentTreeWasm.ts
+// Путь уточните под свою структуру
+
 import createSegmentTreeModule from "../assets/JS_complied_algorithms/segment_tree.mjs";
 
 interface SegmentTreeNodeData {
@@ -21,8 +22,6 @@ export default class SegmentTreeWasm {
       throw new Error("Ошибка: передан некорректный массив чисел в SegmentTreeWasm.");
     }
     this.array = array.slice();
-    // console.log("Перед передачей в setArray:", this.array);
-    // console.log("Тип данных:", typeof this.array);
     this.modulePromise = createSegmentTreeModule().then((module: any) => {
       const vectorInt = new module.VectorInt();
       
@@ -37,9 +36,17 @@ export default class SegmentTreeWasm {
       
       return module;
     });
-    
   }
-  
+
+  // Добавляем метод setData
+  async setData(newData: number[]): Promise<void> {
+    const module = await this.modulePromise;
+    const vectorInt = new module.VectorInt();
+    newData.forEach((val) => vectorInt.push_back(val));
+    module.setArray(vectorInt);
+    vectorInt.delete();
+    this.array = newData.slice();
+  }
 
   async update(index: number, value: number): Promise<void> {
     const module = await this.modulePromise;
@@ -56,8 +63,6 @@ export default class SegmentTreeWasm {
     const module = await this.modulePromise;
     
     const rawTreeVector = module.getTree();
-    // console.log("Сырые данные дерева из WebAssembly:", rawTreeVector);
-
     // Проверяем, есть ли у объекта `size` и `get`
     if (!rawTreeVector || typeof rawTreeVector.size !== "function" || typeof rawTreeVector.get !== "function") {
       // console.error("Ошибка: `getTree()` вернул неподдерживаемый формат", rawTreeVector);
@@ -72,7 +77,6 @@ export default class SegmentTreeWasm {
 
     // Лог преобразованного массива
     // console.log("Преобразованный массив rawTree:", rawTree);
-
 
     const nodes: SegmentTreeNodeData[] = [];
     const idCounter = { current: 0 };
