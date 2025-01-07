@@ -1,55 +1,52 @@
 import React from "react";
-import { Typography, Container } from "@mui/material";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import "./AboutPage.scss";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import TeamMemberCard from "../components/teamMemberCard/TeamMemberCard";
+import { Container } from "@mui/material";
 
-interface TeamMember {
-  name: string;
-  role: string;
-  description: string;
-  skills: string[];
-  imageUrl: string;
-}
-
-const teamMembers: TeamMember[] = [
+const teamMembers = [
   {
     name: "Чезрякова Юлия",
     role: "Team leader",
     description:
       "Студентка 2-го курса НИУ ВШЭ 'Компьютерные науки и технологии'. Призер международного фестиваля хакатонов 'Технострелка'.",
     skills: ["C/C++", "Python", "Java", "SQL", "Figma"],
-    imageUrl: "https://via.placeholder.com/150",
+    imageUrl: "https://via.placeholder.com/451x671",
   },
   {
-    name: "Иванов Иван",
+    name: "Иван Иванов",
     role: "Backend Developer",
     description:
-      "Студент 3-го курса НИУ ВШЭ 'Информатика и программирование'. Участник международных хакатонов.",
-    skills: ["Node.js", "Express", "MongoDB", "Python"],
-    imageUrl: "https://via.placeholder.com/150",
-  },
-  {
-    name: "Смирнова Анна",
-    role: "Frontend Developer",
-    description:
-      "Студентка 2-го курса НИУ ВШЭ 'Программная инженерия'. Участник международных соревнований по веб-разработке.",
-    skills: ["React", "JavaScript", "TypeScript", "CSS"],
-    imageUrl: "https://via.placeholder.com/150",
+      "Студент 3-го курса НИУ ВШЭ. Разрабатывает серверные приложения и микросервисы.",
+    skills: ["Node.js", "Express", "MongoDB", "PostgreSQL"],
+    imageUrl: "https://via.placeholder.com/451x671",
   },
 ];
 
 const AboutPage: React.FC = () => {
   return (
-    <Container maxWidth="md" sx={{ paddingY: 4 }}>
+    <Container
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "16px 0",
+      }}
+    >
       <Swiper
         modules={[Navigation]}
         navigation
         spaceBetween={20}
         slidesPerView={1}
-        style={{ marginTop: 20 }}
+        style={{
+          width: 1200,
+          height: 780,
+          marginBottom: "4px",
+        }}
       >
         {teamMembers.map((member, index) => (
           <SwiperSlide key={index}>
@@ -63,6 +60,13 @@ const AboutPage: React.FC = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+      <div
+        style={{
+          marginTop: "0px",
+          textAlign: "center",
+        }}
+      >
+      </div>
     </Container>
   );
 };

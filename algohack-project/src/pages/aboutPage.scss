@@ -1,0 +1,15 @@
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000000; /* Цвет стрелок */
+  font-size: 24px; /* Размер стрелок */
+  width: 100px; //зона кликаюельности стрелок
+  height: 21px;
+}
+
+.swiper-button-next {
+  right: 10px; /* Смещение вправо за границы слайдера */
+}
+
+.swiper-button-prev {
+  left: 10px; /* Смещение влево за границы слайдера */
+}
