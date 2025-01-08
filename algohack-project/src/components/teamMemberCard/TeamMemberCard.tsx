@@ -1,4 +1,5 @@
 import React from "react";
+import styles2 from "./TeamMemberCard.module.scss";
 import { Card, CardMedia, CardContent, Typography, Button, Divider, Box } from "@mui/material";
 
 interface TeamMemberProps {
@@ -22,6 +23,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
         display: "flex",
         width: 987, // Задаем фиксированную ширину карточки
         height: 761, // Задаем фиксированную высоту карточки
+        backgroundColor: "#EADDFF",
         borderRadius: 4,
         boxShadow: 3,
         margin: "auto", // Центрируем карточку
@@ -36,31 +38,35 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
           width: 451, // Фиксированная ширина изображения
           height: 671, // Фиксированная высота изображения
           margin: "auto 0", // Вертикальное выравнивание изображения
+          marginLeft: "44px", // Фиксированный отступ слева
+          display: "flex",
         }}
       />
       {/* Правая часть с текстом */}
-      <Box
+      <Box 
         sx={{
           flex: 1,
           padding: 3,
           display: "flex",
+          marginTop: "40px",
           flexDirection: "column",
-          justifyContent: "space-between",
-          backgroundColor: "#f9f9f9", // Светлый фон для контраста
-        }}
+          justifyContent: "space-between"
+        }} 
       >
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom>
+          <Typography variant="h5" component="div" gutterBottom className={styles2.name} >
             {name}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+          <Typography variant="subtitle1" gutterBottom className={styles2.role}
+          >
             {role}
           </Typography>
-          <Divider sx={{ marginY: 2 }} />
-          <Typography variant="body2" color="text.secondary" paragraph>
+          <Divider sx={{ marginY: 2, borderBottomWidth: 2, borderColor: "black" }} />
+          <Typography variant="body2" paragraph className={styles2.description}
+          >
             {description}
           </Typography>
-          <Typography variant="body2" color="text.primary">
+          <Typography variant="body2" className={styles2.skills}>
             <strong>Навыки:</strong> {skills.join(", ")}
           </Typography>
         </CardContent>
@@ -74,5 +80,5 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
     </Card>
   );
 };
-
+console.log(styles);
 export default TeamMemberCard;

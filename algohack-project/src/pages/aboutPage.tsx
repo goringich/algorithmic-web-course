@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import TeamMemberCard from "../components/teamMemberCard/TeamMemberCard";
 import { Container } from "@mui/material";
+import photo_Juls from "../assets/images/AboutPage/image.jpg";
 
 const teamMembers = [
   {
@@ -14,7 +15,7 @@ const teamMembers = [
     description:
       "Студентка 2-го курса НИУ ВШЭ 'Компьютерные науки и технологии'. Призер международного фестиваля хакатонов 'Технострелка'.",
     skills: ["C/C++", "Python", "Java", "SQL", "Figma"],
-    imageUrl: "https://via.placeholder.com/451x671",
+    imageUrl: photo_Juls,
   },
   {
     name: "Иван Иванов",
