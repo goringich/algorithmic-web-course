@@ -1,5 +1,5 @@
 import React from "react";
-import styles2 from "./TeamMemberCard.module.scss";
+import styles_aboutPage from "./TeamMemberCard.module.scss";
 import { Card, CardMedia, CardContent, Typography, Button, Divider, Box } from "@mui/material";
 
 interface TeamMemberProps {
@@ -54,19 +54,19 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
         }} 
       >
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom className={styles2.name} >
+          <Typography variant="h5" component="div" gutterBottom className={styles_aboutPage.name} >
             {name}
           </Typography>
-          <Typography variant="subtitle1" gutterBottom className={styles2.role}
+          <Typography variant="subtitle1" gutterBottom className={styles_aboutPage.role}
           >
             {role}
           </Typography>
           <Divider sx={{ marginY: 2, borderBottomWidth: 2, borderColor: "black" }} />
-          <Typography variant="body2" paragraph className={styles2.description}
+          <Typography variant="body2" paragraph className={styles_aboutPage.description}
           >
             {description}
           </Typography>
-          <Typography variant="body2" className={styles2.skills}>
+          <Typography variant="body2" className={styles_aboutPage.skills}>
             <strong>Навыки:</strong> {skills.join(", ")}
           </Typography>
         </CardContent>
@@ -80,5 +80,4 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
     </Card>
   );
 };
-console.log(styles);
 export default TeamMemberCard;
