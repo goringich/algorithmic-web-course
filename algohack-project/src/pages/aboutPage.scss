@@ -13,3 +13,18 @@
 .swiper-button-prev {
   left: 10px; /* Смещение влево за границы слайдера */
 }
+
+.button{
+  background-color: #B13EEA !important;
+  font-family: "Comfortaa", sans-serif !important;
+  color: #FFFFFF !important;
+  text-transform: none !important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  margin-top: -75px; /* Настройка вертикального положения */
+}

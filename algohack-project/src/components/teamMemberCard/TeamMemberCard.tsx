@@ -1,5 +1,5 @@
 import React from "react";
-import styles_aboutPage from "./TeamMemberCard.module.scss";
+import styles_card from "./TeamMemberCard.module.scss";
 import { Card, CardMedia, CardContent, Typography, Button, Divider, Box } from "@mui/material";
 
 interface TeamMemberProps {
@@ -54,28 +54,22 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
         }} 
       >
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom className={styles_aboutPage.name} >
+          <Typography variant="h5" component="div" gutterBottom className={styles_card.name} >
             {name}
           </Typography>
-          <Typography variant="subtitle1" gutterBottom className={styles_aboutPage.role}
+          <Typography variant="subtitle1" gutterBottom className={styles_card.role}
           >
             {role}
           </Typography>
           <Divider sx={{ marginY: 2, borderBottomWidth: 2, borderColor: "black" }} />
-          <Typography variant="body2" paragraph className={styles_aboutPage.description}
+          <Typography variant="body2" paragraph className={styles_card.description}
           >
             {description}
           </Typography>
-          <Typography variant="body2" className={styles_aboutPage.skills}>
+          <Typography variant="body2" className={styles_card.skills}>
             <strong>Навыки:</strong> {skills.join(", ")}
           </Typography>
         </CardContent>
-        {/* Кнопка */}
-        <Box sx={{ display: "flex", justifyContent: "flex-start", marginTop: 2 }}>
-          <Button variant="contained" color="primary">
-            Связаться с нами
-          </Button>
-        </Box>
       </Box>
     </Card>
   );

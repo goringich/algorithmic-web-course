@@ -5,7 +5,7 @@ import "./AboutPage.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import TeamMemberCard from "../components/teamMemberCard/TeamMemberCard";
-import { Container } from "@mui/material";
+import { Button } from "@mui/material";
 import photo_Juls from "../assets/images/AboutPage/image.jpg";
 
 const teamMembers = [
@@ -29,46 +29,76 @@ const teamMembers = [
 
 const AboutPage: React.FC = () => {
   return (
-    <Container
+    <div
       style={{
+        position: "relative", // Для размещения кнопки внутри этого контейнера
+        width: "100%",
+        height: "100vh", // Высота на всю страницу
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "16px 0",
+        justifyContent: "center", // Центрирование карточки по горизонтали
+        alignItems: "center", // Центрирование карточки по вертикали
       }}
     >
-      <Swiper
-        modules={[Navigation]}
-        navigation
-        spaceBetween={20}
-        slidesPerView={1}
-        style={{
-          width: 1200,
-          height: 780,
-          marginBottom: "4px",
-        }}
-      >
-        {teamMembers.map((member, index) => (
-          <SwiperSlide key={index}>
-            <TeamMemberCard
-              name={member.name}
-              role={member.role}
-              description={member.description}
-              skills={member.skills}
-              imageUrl={member.imageUrl}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {/* Контейнер с карточкой */}
       <div
         style={{
-          marginTop: "0px",
-          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "1200px",
+          height: "780px",
+          zIndex: 1, // Задаем базовый слой
         }}
       >
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          spaceBetween={20}
+          slidesPerView={1}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {teamMembers.map((member, index) => (
+            <SwiperSlide key={index}>
+              <TeamMemberCard
+                name={member.name}
+                role={member.role}
+                description={member.description}
+                skills={member.skills}
+                imageUrl={member.imageUrl}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
-    </Container>
+
+      {/* Контейнер с кнопкой */}
+      <div
+        style={{
+          position: "absolute", // Позиционируем относительно родительского div
+          right: "20px", // Расстояние от правого края
+          top: "50%", // Располагаем по центру
+          transform: "translateY(700%)", // Смещаем вниз от центра
+          zIndex: 2, // Поверх всех других слоев
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#B13EEA",
+            color: "#fff",
+            textTransform: "none",
+            fontFamily: "Comfortaa, sans-serif",
+          }}
+        >
+          Связаться с нами
+        </Button>
+      </div>
+    </div>
   );
 };
 
