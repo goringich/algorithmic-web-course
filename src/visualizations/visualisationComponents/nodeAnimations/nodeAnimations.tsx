@@ -1,6 +1,5 @@
 import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
 
-// Функции анимации (примеры)
 export const animateNodeMove = (
   nodeId: string,
   newX: number,
@@ -20,7 +19,7 @@ export const animateNodeMove = (
     shape.to({
       x: newX,
       y: newY,
-      duration: 0.5 // Короткая анимация, чтобы не было резкого скачка
+      duration: 0.5
     });
     return;
   }

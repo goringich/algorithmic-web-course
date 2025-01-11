@@ -8,7 +8,7 @@ import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode
 import Header from './components/Header';
 import Controls from './components/Controls';
 import TreeArea from './components/TreeArea';
-import useSegmentTree from './UseSegmentTree'; 
+import useSegmentTree from './useSegmentTree/UseSegmentTree'; 
 import { animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations'; 
 import TreeStructure from "../visualisationComponents/treeStructure/TreeStructure";
 
@@ -64,25 +64,33 @@ export default function SegmentTreeVisualizer() {
     if (!selectedNode) return;
     const [start, end] = selectedNode.range;
     if (start !== end) return;
-
+  
     const updatedData = [...data];
-    updatedData[start] = delta; 
-
+    updatedData[start] = delta;
     setData(updatedData);
-
+  
     await updateTreeWithNewData(updatedData);
-
-    // обновлённый узел для подсветки пути
-    const leafNode = nodes.find(n => n.range[0] === start && n.range[1] === end);
-    if (leafNode) {
+  
+    setTimeout(() => {
+      const leafNode = nodes.find(n => n.range[0] === start && n.range[1] === end);
+      if (!leafNode) {
+        console.error(`Leaf node for range [${start}, ${end}] not found.`);
+        return;
+      }
+  
+      if (Object.keys(parentMap).length === 0) {
+        console.warn("Skipping highlight: parentMap is empty.");
+        return;
+      }
+  
       highlightPathFromLeaf(leafNode.id);
-    }
-
-    // уведомление
+    }, 50);
+  
     setSnackbarMessage(`Значение узла [${start},${end}] обновлено до ${delta}`);
     setSnackbarOpen(true);
     setSelectedNode(null);
   };
+  
 
   const handleRemoveLeaf = async () => {
     if (!selectedNode) return;

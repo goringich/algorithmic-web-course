@@ -1,8 +1,10 @@
+// hooks/useSegmentTree.ts
 import { useState, useCallback, useEffect } from 'react';
-import SegmentTreeWasm from '../SegmentTreeWasm';
-import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode';
-import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations';
-import { buildParentMap } from '../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import SegmentTreeWasm from '../../SegmentTreeWasm';
+import { VisNode } from '../../visualisationComponents/nodeAnimations/types/VisNode';
+import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../visualisationComponents/nodeAnimations/nodeAnimations';
+import { buildParentMap } from '../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+
 interface UseSegmentTreeProps {
   initialData: number[];
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
@@ -11,7 +13,7 @@ interface UseSegmentTreeProps {
 interface UseSegmentTreeReturn {
   nodes: VisNode[];
   parentMap: Record<string, string>;
-  updateTreeWithNewData: (newData: number[]) => Promise<void>;
+  updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
   setParentMap: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
@@ -40,10 +42,10 @@ const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSeg
   }, [initializeTree]);
 
   // Функция для перестроения дерева
-  const updateTreeWithNewData = useCallback(async (newData: number[]) => {
+  const updateTreeWithNewData = useCallback(async (newData: number[]): Promise<VisNode[] | null> => {
     if (!segmentTree) {
       console.error("SegmentTreeWasm instance is not initialized.");
-      return;
+      return null;
     }
 
     try {
@@ -87,8 +89,11 @@ const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSeg
       setParentMap(newParentMap);
       setNodes(newVisNodes);
       console.log("Final fixed parentMap after refresh:", newParentMap);
+
+      return newVisNodes;
     } catch (error) {
       console.error("Ошибка при обновлении дерева:", error);
+      return null;
     }
   }, [nodes, segmentTree, shapeRefs]);
 
