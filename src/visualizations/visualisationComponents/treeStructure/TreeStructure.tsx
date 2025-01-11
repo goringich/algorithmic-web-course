@@ -1,5 +1,3 @@
-// src/components/TreeStructure.tsx
-
 import React from 'react';
 
 interface TreeStructureProps {

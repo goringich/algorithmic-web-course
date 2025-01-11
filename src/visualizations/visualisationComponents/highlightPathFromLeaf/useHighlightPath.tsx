@@ -1,5 +1,3 @@
-// src/visualisationComponents/highlightPathFromLeaf/useHighlightPath.tsx
-
 import { useRef, useEffect } from 'react';
 import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
 

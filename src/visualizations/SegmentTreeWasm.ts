@@ -1,6 +1,3 @@
-// src/SegmentTreeWasm.ts
-// Путь уточните под свою структуру
-
 import createSegmentTreeModule from "../assets/JS_complied_algorithms/segment_tree.mjs";
 
 interface SegmentTreeNodeData {

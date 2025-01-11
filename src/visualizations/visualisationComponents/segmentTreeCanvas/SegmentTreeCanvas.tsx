@@ -43,8 +43,6 @@ function calculateDepth(node: NodeData, nodesMap: Record<string, NodeData>): num
 }
 
 
-
-
 export function SegmentTreeCanvas({
   nodes,
   shapeRefs,

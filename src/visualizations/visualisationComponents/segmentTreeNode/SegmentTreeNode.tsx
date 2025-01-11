@@ -32,10 +32,10 @@ export function SegmentTreeNode({
 
   const maxDepth = 6;
 
-  // We check if the node has depth, otherwise we set 0
+  // check if the node has depth, otherwise we set 0
   const depth = node.depth !== undefined ? node.depth : 0;
 
-  // We use non-linear scaling to increase the difference.
+  // use non-linear scaling to increase the difference.
   const depthFactor = Math.pow(Math.min(depth / maxDepth, 1), 0.7);
 
   const minColor = [10, 10, 120];  

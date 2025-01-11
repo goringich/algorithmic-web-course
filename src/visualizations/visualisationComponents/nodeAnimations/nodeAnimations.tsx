@@ -1,45 +1,5 @@
 import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
 
-// Функция для построения карты родителей (childId -> parentId)
-export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
-  const map: Record<string, string> = {};
-
-  // Связываем каждого ребенка с родителем
-  for (const node of newNodes) {
-    for (const childId of node.children) {
-      if (map[childId] && map[childId] !== node.id) {
-        console.warn(`Node ${childId} has multiple parents: ${map[childId]} and ${node.id}`);
-      }
-      map[childId] = node.id;
-    }
-  }
-
-  // Определяем корневые узлы (узлы без родителей)
-  const rootNodes = newNodes.filter(node => map[node.id] === undefined);
-
-  if (rootNodes.length === 0) {
-    console.error("No root node found in the tree");
-  } else if (rootNodes.length > 1) {
-    console.warn("Multiple root nodes detected:", rootNodes.map(n => n.id));
-    // Присоединяем все дополнительные корни к первому корню
-    const trueRoot = rootNodes[0];
-    rootNodes.slice(1).forEach(root => {
-      map[root.id] = trueRoot.id;
-      console.log(`Reassigning root node ${root.id} to true root ${trueRoot.id}`);
-    });
-  }
-
-  // Назначаем самореференцию для истинного корня
-  if (rootNodes.length > 0) {
-    const trueRoot = rootNodes[0];
-    map[trueRoot.id] = trueRoot.id;
-    console.log(`True root detected: ${trueRoot.id}`);
-  }
-
-  console.log("Final parentMap:", map);
-  return map;
-};
-
 // Функции анимации (примеры)
 export const animateNodeMove = (
   nodeId: string,
@@ -49,20 +9,26 @@ export const animateNodeMove = (
   parentMap: Record<string, string>
 ): void => {
   const shape = shapeRefs[nodeId];
+
   if (!shape) {
     console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
     return;
   }
 
-  if (parentMap[nodeId] === nodeId) { // Проверка на корень
+  if (parentMap[nodeId] === nodeId) {
     console.log(`Корневой узел ${nodeId} перемещается без анимации.`);
-    shape.position({ x: newX, y: newY });
+    shape.to({
+      x: newX,
+      y: newY,
+      duration: 0.5 // Короткая анимация, чтобы не было резкого скачка
+    });
     return;
   }
+  
 
   new Konva.Tween({
     node: shape,
-    duration: 0.5,
+    duration: 2,
     x: newX,
     y: newY,
     easing: Konva.Easings.EaseInOut
@@ -81,11 +47,10 @@ export const animateNodeAppear = (
     return;
   }
 
-  shape.opacity(0);
-  shape.position({ x, y });
+  shape.setAttrs({ x, y, opacity: 0 });
   shape.to({
     opacity: 1,
-    duration: 0.5,
+    duration: 1,
     easing: Konva.Easings.EaseInOut
   });
 };
@@ -103,12 +68,15 @@ export const animateNodeDisappear = (
 
   shape.to({
     opacity: 0,
-    duration: 0.5,
+    duration: 1,
     easing: Konva.Easings.EaseInOut,
     onFinish: () => {
-      shape.destroy();
-      delete shapeRefs[nodeId];
-      if (callback) callback();
+      setTimeout(() => {
+        shape.destroy();
+        delete shapeRefs[nodeId];
+        if (callback) callback();
+      }, 100); 
     }
   });
+  
 };
