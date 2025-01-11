@@ -1,11 +1,13 @@
+// nodeAnimations.tsx
 import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
+import Konva from 'konva';
 
 export const animateNodeMove = (
-  nodeId: string,
+  nodeId: number,
   newX: number,
   newY: number,
-  shapeRefs: Record<string, Konva.Circle>,
-  parentMap: Record<string, string>
+  shapeRefs: Record<number, Konva.Circle>,
+  parentMap: Record<number, number>
 ): void => {
   const shape = shapeRefs[nodeId];
 
@@ -14,31 +16,39 @@ export const animateNodeMove = (
     return;
   }
 
-  if (parentMap[nodeId] === nodeId) {
+  // Проверяем, является ли узел корневым (самореференцией)
+  const isRoot = parentMap[nodeId] === nodeId;
+
+  if (isRoot) {
     console.log(`Корневой узел ${nodeId} перемещается без анимации.`);
     shape.to({
       x: newX,
       y: newY,
-      duration: 0.5
+      duration: 0.5,
+      onFinish: () => {
+        // Дополнительные действия после перемещения (если необходимо)
+      }
     });
-    return;
+  } else {
+    // Анимация перемещения узла с использованием Tween
+    new Konva.Tween({
+      node: shape,
+      duration: 0.5,
+      x: newX,
+      y: newY,
+      easing: Konva.Easings.EaseInOut,
+      onFinish: () => {
+        // Дополнительные действия после анимации (если необходимо)
+      }
+    }).play();
   }
-  
-
-  new Konva.Tween({
-    node: shape,
-    duration: 2,
-    x: newX,
-    y: newY,
-    easing: Konva.Easings.EaseInOut
-  }).play();
 };
 
 export const animateNodeAppear = (
-  nodeId: string,
+  nodeId: number,
   x: number,
   y: number,
-  shapeRefs: Record<string, Konva.Circle>
+  shapeRefs: Record<number, Konva.Circle>
 ): void => {
   const shape = shapeRefs[nodeId];
   if (!shape) {
@@ -46,17 +56,21 @@ export const animateNodeAppear = (
     return;
   }
 
-  shape.setAttrs({ x, y, opacity: 0 });
+  // Устанавливаем начальные атрибуты для анимации появления
+  shape.position({ x, y });
+  shape.opacity(0);
+  
+  // Анимация появления узла
   shape.to({
     opacity: 1,
-    duration: 1,
+    duration: 0.5,
     easing: Konva.Easings.EaseInOut
   });
 };
 
 export const animateNodeDisappear = (
-  nodeId: string,
-  shapeRefs: Record<string, Konva.Circle>,
+  nodeId: number,
+  shapeRefs: Record<number, Konva.Circle>,
   callback?: () => void
 ): void => {
   const shape = shapeRefs[nodeId];
@@ -65,17 +79,21 @@ export const animateNodeDisappear = (
     return;
   }
 
+  // Анимация исчезновения узла
   shape.to({
     opacity: 0,
-    duration: 1,
+    duration: 0.5,
     easing: Konva.Easings.EaseInOut,
     onFinish: () => {
-      setTimeout(() => {
-        shape.destroy();
-        delete shapeRefs[nodeId];
-        if (callback) callback();
-      }, 100); 
+      // Удаляем форму из сцены Konva
+      shape.remove();
+      
+      // Удаляем ссылку на форму из shapeRefs
+      delete shapeRefs[nodeId];
+      console.log(`Shape '${nodeId}' removed from canvas`);
+
+      // Выполняем обратный вызов, если он предоставлен
+      if (callback) callback();
     }
   });
-  
 };

@@ -1,10 +1,11 @@
+// SegmentTreeVisualizer.tsx
 import React, { useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { useDrag } from "./components/UseDrag";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
-import useHighlightPath from '../visualisationComponents/highlightPathFromLeaf/useHighlightPath';
-import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode';
+import useHighlightPath from "../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
+import { VisNode } from "../visualisationComponents/nodeAnimations/types/VisNode"
 import Header from './components/Header';
 import Controls from './components/Controls';
 import TreeArea from './components/TreeArea';
@@ -41,14 +42,23 @@ export default function SegmentTreeVisualizer() {
   // Инициализация хука подсветки с передачей nodes
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
-  // Новый элемент
+  // Добавление нового элемента
   const handleAddElement = async () => {
-    if (newValue === "") return;
+    if (newValue.trim() === "") {
+      setSnackbarMessage("Введите значение для нового элемента.");
+      setSnackbarOpen(true);
+      return;
+    }
     const value = parseInt(newValue, 10);
-    if (isNaN(value)) return;
+    if (isNaN(value)) {
+      setSnackbarMessage("Неверный формат числа.");
+      setSnackbarOpen(true);
+      return;
+    }
 
     if (data.length >= MAX_LEAVES) {
-      alert("Превышен лимит (16) листьев.");
+      setSnackbarMessage("Превышен лимит (16) листьев.");
+      setSnackbarOpen(true);
       setNewValue("");
       return;
     }
@@ -64,23 +74,31 @@ export default function SegmentTreeVisualizer() {
     setNewValue("");
   };
 
-  // Обновляем значение листа
+  // Обновление значения листа
   const handleUpdate = async () => {
-    if (!selectedNode) return;
+    if (!selectedNode) {
+      setSnackbarMessage("Выберите узел для обновления.");
+      setSnackbarOpen(true);
+      return;
+    }
     const [start, end] = selectedNode.range;
-    if (start !== end) return;
-  
+    if (start !== end) {
+      setSnackbarMessage("Можно обновлять только листовые узлы.");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const updatedData = [...data];
     updatedData[start] = delta;
     setData(updatedData);
-  
+
     const newVisNodes = await updateTreeWithNewData(updatedData);
     if (!newVisNodes) {
       setSnackbarMessage("Ошибка при обновлении узла.");
       setSnackbarOpen(true);
       return;
     }
-  
+
     // Найти обновлённый листовой узел
     const leafNode = newVisNodes.find(n => n.range[0] === start && n.range[1] === end);
     if (!leafNode) {
@@ -89,25 +107,34 @@ export default function SegmentTreeVisualizer() {
       setSnackbarOpen(true);
       return;
     }
-  
+
     if (Object.keys(parentMap).length === 0) {
       console.warn("Skipping highlight: parentMap is empty.");
       setSnackbarMessage("parentMap пуст. Подсветка невозможна.");
       setSnackbarOpen(true);
       return;
     }
-  
+
     highlightPathFromLeaf(leafNode.id);
-  
+
     setSnackbarMessage(`Значение узла [${start},${end}] обновлено до ${delta}`);
     setSnackbarOpen(true);
     setSelectedNode(null);
   };
-  
+
+  // Удаление листа
   const handleRemoveLeaf = async () => {
-    if (!selectedNode) return;
+    if (!selectedNode) {
+      setSnackbarMessage("Выберите узел для удаления.");
+      setSnackbarOpen(true);
+      return;
+    }
     const [start, end] = selectedNode.range;
-    if (start !== end) return;
+    if (start !== end) {
+      setSnackbarMessage("Можно удалять только листовые узлы.");
+      setSnackbarOpen(true);
+      return;
+    }
 
     const pos = selectedNode.range[0];
 
@@ -120,11 +147,12 @@ export default function SegmentTreeVisualizer() {
         setSnackbarOpen(true);
         return;
       }
-      setData(newArr); 
+      setData(newArr);
     });
     setSelectedNode(null);
   };
 
+  // Обработка клика по узлу
   const handleNodeClick = (node: VisNode) => {
     // Только листы
     if (node.range[0] === node.range[1]) {
@@ -133,6 +161,7 @@ export default function SegmentTreeVisualizer() {
     }
   };
 
+  // Закрытие уведомления
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
