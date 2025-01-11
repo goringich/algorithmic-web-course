@@ -1,6 +1,6 @@
 // hooks/useSegmentTreeState.ts
 import { useState, useEffect } from 'react';
-import { VisNode } from '../../visualisationComponents/nodeAnimations/types/VisNode';
+import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
 
 const useSegmentTreeState = (initialNodes: VisNode[], initialParentMap: Record<string, string>) => {
   const [nodes, setNodes] = useState<VisNode[]>(initialNodes);

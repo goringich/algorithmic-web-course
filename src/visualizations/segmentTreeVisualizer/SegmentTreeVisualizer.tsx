@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useDrag } from "./components/UseDrag";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
@@ -35,13 +35,13 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  // кастомный хук для управления деревом
+  // Кастомный хук для управления деревом
   const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } = useSegmentTree({ initialData: data, shapeRefs });
 
   // Инициализация хука подсветки с передачей nodes
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
-  // новый элемент
+  // Новый элемент
   const handleAddElement = async () => {
     if (newValue === "") return;
     const value = parseInt(newValue, 10);
@@ -54,12 +54,17 @@ export default function SegmentTreeVisualizer() {
     }
 
     const updatedData = [...data, value];
-    await updateTreeWithNewData(updatedData);
+    const newVisNodes = await updateTreeWithNewData(updatedData);
+    if (!newVisNodes) {
+      setSnackbarMessage("Ошибка при добавлении нового элемента.");
+      setSnackbarOpen(true);
+      return;
+    }
     setData(updatedData);
     setNewValue("");
   };
 
-  // обновляем значение листа
+  // Обновляем значение листа
   const handleUpdate = async () => {
     if (!selectedNode) return;
     const [start, end] = selectedNode.range;
@@ -69,29 +74,36 @@ export default function SegmentTreeVisualizer() {
     updatedData[start] = delta;
     setData(updatedData);
   
-    await updateTreeWithNewData(updatedData);
+    const newVisNodes = await updateTreeWithNewData(updatedData);
+    if (!newVisNodes) {
+      setSnackbarMessage("Ошибка при обновлении узла.");
+      setSnackbarOpen(true);
+      return;
+    }
   
-    setTimeout(() => {
-      const leafNode = nodes.find(n => n.range[0] === start && n.range[1] === end);
-      if (!leafNode) {
-        console.error(`Leaf node for range [${start}, ${end}] not found.`);
-        return;
-      }
+    // Найти обновлённый листовой узел
+    const leafNode = newVisNodes.find(n => n.range[0] === start && n.range[1] === end);
+    if (!leafNode) {
+      console.error(`Leaf node for range [${start}, ${end}] not found.`);
+      setSnackbarMessage(`Узел [${start}, ${end}] не найден.`);
+      setSnackbarOpen(true);
+      return;
+    }
   
-      if (Object.keys(parentMap).length === 0) {
-        console.warn("Skipping highlight: parentMap is empty.");
-        return;
-      }
+    if (Object.keys(parentMap).length === 0) {
+      console.warn("Skipping highlight: parentMap is empty.");
+      setSnackbarMessage("parentMap пуст. Подсветка невозможна.");
+      setSnackbarOpen(true);
+      return;
+    }
   
-      highlightPathFromLeaf(leafNode.id);
-    }, 50);
+    highlightPathFromLeaf(leafNode.id);
   
     setSnackbarMessage(`Значение узла [${start},${end}] обновлено до ${delta}`);
     setSnackbarOpen(true);
     setSelectedNode(null);
   };
   
-
   const handleRemoveLeaf = async () => {
     if (!selectedNode) return;
     const [start, end] = selectedNode.range;
@@ -102,14 +114,19 @@ export default function SegmentTreeVisualizer() {
     animateNodeDisappear(selectedNode.id, shapeRefs.current, async () => {
       const newArr = [...data];
       newArr.splice(pos, 1);
-      await updateTreeWithNewData(newArr);
+      const newVisNodes = await updateTreeWithNewData(newArr);
+      if (!newVisNodes) {
+        setSnackbarMessage("Ошибка при удалении узла.");
+        setSnackbarOpen(true);
+        return;
+      }
       setData(newArr); 
     });
     setSelectedNode(null);
   };
 
   const handleNodeClick = (node: VisNode) => {
-    // только листы
+    // Только листы
     if (node.range[0] === node.range[1]) {
       setSelectedNode(node);
       setDelta(node.value);

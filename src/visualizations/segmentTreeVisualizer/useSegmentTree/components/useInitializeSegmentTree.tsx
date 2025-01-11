@@ -1,8 +1,8 @@
 // hooks/useInitializeSegmentTree.ts
 import { useState, useCallback, useEffect } from 'react';
-import SegmentTreeWasm from '../../SegmentTreeWasm';
-import { VisNode } from '../../visualisationComponents/nodeAnimations/types/VisNode';
-import { buildParentMap } from '../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import SegmentTreeWasm from '../../../SegmentTreeWasm';
+import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
 
 interface UseInitializeSegmentTreeProps {
   initialData: number[];

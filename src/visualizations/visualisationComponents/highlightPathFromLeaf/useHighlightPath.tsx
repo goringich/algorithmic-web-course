@@ -13,6 +13,8 @@ const useHighlightPath = ({ nodes, parentMap, setNodes }: UseHighlightPathProps)
 
   const highlightPathFromLeaf = (leafNodeId: string) => {
     console.log(`Start highlighting from leaf: ${leafNodeId}`);
+    console.log("Current parentMap:", parentMap);
+    console.log("Current nodes:", nodes);
   
     // Очистка существующих таймаутов
     timeoutsRef.current.forEach(timeout => clearTimeout(timeout));
@@ -52,11 +54,13 @@ const useHighlightPath = ({ nodes, parentMap, setNodes }: UseHighlightPathProps)
       }
   
       const parentNode = nodes.find(n => n.id === pId);
+      console.log(`Parent of ${currentId}: ${pId} (Range: ${parentNode.range})`);
+      
       if (!parentNode) {
         console.error(`Parent node with ID ${pId} not found in nodes`);
         break;
       }
-      console.log(`Parent of ${currentId}: ${pId} (Range: ${parentNode.range})`);
+      
   
       if (pId === currentId) { // Достигнут корень
         console.log(`Reached end of path at: ${currentId} (Range: ${currentNode?.range})`);
@@ -134,8 +138,6 @@ const useHighlightPath = ({ nodes, parentMap, setNodes }: UseHighlightPathProps)
     }
   };
   
-  
-
   // Очистка таймаутов при размонтировании компонента
   useEffect(() => {
     return () => {
