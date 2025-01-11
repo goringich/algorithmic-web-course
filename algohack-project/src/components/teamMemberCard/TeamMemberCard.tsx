@@ -1,6 +1,6 @@
 import React from "react";
 import styles_card from "./TeamMemberCard.module.scss";
-import { Card, CardMedia, CardContent, Typography, Button, Divider, Box } from "@mui/material";
+import { Card, CardMedia, CardContent, Typography, Divider, Box, Shadows } from "@mui/material";
 
 interface TeamMemberProps {
   name: string;
@@ -40,6 +40,8 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
           margin: "auto 0", // Вертикальное выравнивание изображения
           marginLeft: "44px", // Фиксированный отступ слева
           display: "flex",
+          borderRadius: "20px",
+          boxShadow: 3,
         }}
       />
       {/* Правая часть с текстом */}

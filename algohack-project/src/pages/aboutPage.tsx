@@ -6,11 +6,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import TeamMemberCard from "../components/teamMemberCard/TeamMemberCard";
 import { Button } from "@mui/material";
-import photo_Juls from "../assets/images/AboutPage/image.jpg";
+import photo_Juls from "../assets/images/AboutPage/image_juls.jpg";
+import photo_Nastik from "../assets/images/AboutPage/image_nastik.jpg";
+import photo_igor from "../assets/images/AboutPage/image_igor.jpg";
+import photo_ksenon from "../assets/images/AboutPage/image_ksenon.jpg";
+
 
 const teamMembers = [
   {
-    name: "Чезрякова Юлия",
+    name: "Юлия Чезрякова",
     role: "Team leader",
     description:
       "Студентка 2-го курса НИУ ВШЭ 'Компьютерные науки и технологии'. Призер международного фестиваля хакатонов 'Технострелка'.",
@@ -18,12 +22,28 @@ const teamMembers = [
     imageUrl: photo_Juls,
   },
   {
-    name: "Иван Иванов",
-    role: "Backend Developer",
+    name: "Анастасия Пищаева",
+    role: "Frontend Developer",
     description:
-      "Студент 3-го курса НИУ ВШЭ. Разрабатывает серверные приложения и микросервисы.",
-    skills: ["Node.js", "Express", "MongoDB", "PostgreSQL"],
-    imageUrl: "https://via.placeholder.com/451x671",
+      "Студент 2-го курса НИУ ВШЭ.",
+    skills: ["C/C++", "Python", "Figma", "C#"],
+    imageUrl: photo_Nastik,
+  },
+  {
+    name: "Игорь Ким",
+    role: "Fullstack Developer",
+    description:
+      "Студент 2-го курса НИУ ВШЭ.",
+    skills: ["C/C++", "Python", "и тд допишите, ибо я не знаю:)"],
+    imageUrl: photo_igor,
+  },
+  {
+    name: "Ксения Игонина",
+    role: "Какой-то Developer",
+    description:
+      "Студент 2-го курса НИУ ВШЭ.",
+    skills: ["C/C++", "Python", "и тд допишите, ибо я не знаю:)"],
+    imageUrl: photo_ksenon,
   },
 ];
 
@@ -93,6 +113,7 @@ const AboutPage: React.FC = () => {
             color: "#fff",
             textTransform: "none",
             fontFamily: "Comfortaa, sans-serif",
+            borderRadius: "7px",
           }}
         >
           Связаться с нами
