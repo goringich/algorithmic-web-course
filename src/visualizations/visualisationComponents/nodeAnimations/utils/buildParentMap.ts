@@ -47,10 +47,10 @@ export const buildParentMap = (newNodes: VisNode[]): Record<number, number> => {
   if (rootNodes.length > 0) {
     const trueRoot = rootNodes[0];
     map[trueRoot.id] = trueRoot.id;
-    console.log(`True root detected: '${trueRoot.id}'`);
+    // console.log(`True root detected: '${trueRoot.id}'`);
   }
 
-  console.log("Final parentMap:", map);
+  // console.log("Final parentMap:", map);
 
   return map;
 };

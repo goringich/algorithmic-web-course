@@ -45,7 +45,6 @@ export const buildPathFromLeaf = (
   // Обнаружение цикла, исключая самореференцию корня
   if (pId !== undefined && pId !== currentId && visited.has(pId)) {
     console.error(`Cycle detected at node '${pId}'`);
-    // Опционально, можно остановить дальнейшую обработку
   }
 
   console.log(`Final path from leaf to root:`, pathIds.map(id => {
