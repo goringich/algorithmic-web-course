@@ -75,7 +75,8 @@ export function EditNodeModal({
         <strong>Значение:</strong> {selectedNode.value}
       </Typography>
       <Typography variant="body2">
-        <strong>Дети:</strong> {selectedNode.children.length > 0 ? selectedNode.children.join(", ") : "Нет"}
+        <strong>Дети:</strong>{" "}
+        {selectedNode.children.length > 0 ? selectedNode.children.join(", ") : "Нет"}
       </Typography>
       <TextField
         type="number"

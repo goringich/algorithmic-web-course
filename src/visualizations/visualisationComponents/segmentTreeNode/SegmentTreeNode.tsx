@@ -10,7 +10,6 @@ interface NodeData {
   label: string;
   value: number;
   children: string[];
-  depth?: number; 
   isHighlighted?: boolean;
 }
 
@@ -18,6 +17,7 @@ interface SegmentTreeNodeProps {
   node: NodeData;
   shapeRef: (el: Konva.Circle | null) => void;
   onNodeClick: (node: NodeData) => void;
+  fillColor: string;
   strokeWidth: number;
   textColor: string;
 }
@@ -26,37 +26,11 @@ export function SegmentTreeNode({
   node,
   shapeRef,
   onNodeClick,
+  fillColor,
   strokeWidth,
   textColor
 }: SegmentTreeNodeProps) {
-
-  const maxDepth = 6;
-
-  // check if the node has depth, otherwise we set 0
-  const depth = node.depth !== undefined ? node.depth : 0;
-
-  // use non-linear scaling to increase the difference.
-  const depthFactor = Math.pow(Math.min(depth / maxDepth, 1), 0.7);
-
-  const minColor = [10, 10, 120];  
-  const maxColor = [180, 220, 255]; 
-
-  const interpolateColor = (min: number, max: number, factor: number) => 
-    Math.round(min + (max - min) * factor);
-
-  // console.log(`Node: ${node.id}, isHighlighted: ${node.isHighlighted}`);
-
-  // Вычисляем цвет узла
-  const fillColor = node.isHighlighted
-  ? "orange"
-  : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, 
-         ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
-         ${interpolateColor(minColor[2], maxColor[2], depthFactor)})` || "#4B7BEC";
-
-
-  // console.log(`Node: ${node.label}, Depth: ${depth}, DepthFactor: ${depthFactor}, Color: ${fillColor}`);
-  // console.log(`Node Rendered: ${node.id}, isHighlighted: ${node.isHighlighted}`);
-
+  const radius = 30;
 
   return (
     <>
@@ -64,7 +38,7 @@ export function SegmentTreeNode({
         ref={shapeRef}
         x={node.x}
         y={node.y}
-        radius={30}
+        radius={radius}
         fill={fillColor}
         stroke="black"
         strokeWidth={strokeWidth}
@@ -83,13 +57,13 @@ export function SegmentTreeNode({
         shadowOpacity={0.2}
       />
       <Text
-        x={node.x - 25}
-        y={node.y - 15}
+        x={node.x - radius + 2}
+        y={node.y - 10}
         text={`${node.label}\n(${node.value})`}
         fontSize={12}
         fill={textColor}
         align="center"
-        width={50}
+        width={2 * radius - 4}
       />
     </>
   );

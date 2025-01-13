@@ -1,5 +1,5 @@
-import React from 'react';
-import { AddElementForm } from '../visualisationComponents/nodeControls/addElementForm/AddElementForm';
+import React from "react";
+import { AddElementForm } from "../visualisationComponents/nodeControls/addElementForm/AddElementForm";
 
 interface ControlsProps {
   newValue: string;
@@ -8,13 +8,20 @@ interface ControlsProps {
   disabled: boolean;
 }
 
-const Controls: React.FC<ControlsProps> = ({ newValue, setNewValue, handleAddElement, disabled }) => (
-  <AddElementForm
-    newValue={newValue}
-    onChangeValue={setNewValue}
-    onAdd={handleAddElement}
-    disabled={disabled}
-  />
-);
+const Controls: React.FC<ControlsProps> = ({
+  newValue,
+  setNewValue,
+  handleAddElement,
+  disabled
+}) => {
+  return (
+    <AddElementForm
+      newValue={newValue}
+      onChangeValue={setNewValue}
+      onAdd={handleAddElement}
+      disabled={disabled}
+    />
+  );
+};
 
 export default Controls;

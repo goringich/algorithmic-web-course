@@ -1,33 +1,34 @@
-// SegmentTreeVisualizer.tsx
 import React, { useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { useDrag } from "../components/UseDrag";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
-import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
+import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal"
 import useHighlightPath from "../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
-import { VisNode } from "../visualisationComponents/nodeAnimations/types/VisNode"
-import Header from '../components/Header';
-import Controls from '../components/Controls';
-import TreeArea from '../components/TreeArea';
-import useSegmentTree from './useSegmentTree/UseSegmentTree'; 
-import { animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations'; 
+import { VisNode } from "../visualisationComponents/nodeAnimations/types/VisNode";
+import Header from "../components/Header";
+import Controls from "../components/Controls";
+import TreeArea from "../components/TreeArea"; // Если вы отделили TreeArea.tsx
+import useSegmentTree from "./useSegmentTree/UseSegmentTree";
+import { animateNodeDisappear } from "../visualisationComponents/nodeAnimations/nodeAnimations";
 import TreeStructure from "../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
 
 const MAX_LEAVES = 16;
 
 export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const shapeRefs = useRef<Record<string, Konva.Circle>>({});
-  const [stageSize, setStageSize] = useState({ width: 1200, height: 500 });
 
-  const [data, setData] = useState([5, 8, 6, 3, 2, 7, 2, 6]);
+  // Меняем shapeRefs на Record<string, Konva.Circle>
+  const shapeRefs = useRef<Record<string, any>>({}); 
+
+  const [stageSize, setStageSize] = useState({ width: 1200, height: 500 });
+  const [data, setData] = useState<number[]>([5, 8, 6, 3, 2, 7, 2, 6]);
   const [selectedNode, setSelectedNode] = useState<VisNode | null>(null);
   const [delta, setDelta] = useState(0);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const [newValue, setNewValue] = useState(""); // Объявляем состояние newValue
+  const [newValue, setNewValue] = useState("");
 
   const {
     position: editBoxPos,
@@ -36,13 +37,14 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  // Кастомный хук для управления деревом
-  const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } = useSegmentTree({ initialData: data, shapeRefs });
+  // Хук дерева
+  const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } =
+    useSegmentTree({ initialData: data, shapeRefs });
 
-  // Инициализация хука подсветки с передачей nodes
+  // Хук подсветки
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
-  // Добавление нового элемента
+  // Добавление элемента
   const handleAddElement = async () => {
     if (newValue.trim() === "") {
       setSnackbarMessage("Введите значение для нового элемента.");
@@ -55,7 +57,6 @@ export default function SegmentTreeVisualizer() {
       setSnackbarOpen(true);
       return;
     }
-
     if (data.length >= MAX_LEAVES) {
       setSnackbarMessage("Превышен лимит (16) листьев.");
       setSnackbarOpen(true);
@@ -77,7 +78,7 @@ export default function SegmentTreeVisualizer() {
   // Обновление значения листа
   const handleUpdate = async () => {
     if (!selectedNode) {
-      setSnackbarMessage("Выберите узел для обновления.");
+      setSnackbarMessage("Выберите узел для обновления (лист).");
       setSnackbarOpen(true);
       return;
     }
@@ -89,7 +90,7 @@ export default function SegmentTreeVisualizer() {
     }
 
     const updatedData = [...data];
-    updatedData[start] = delta;
+    updatedData[start] = delta; // Присваиваем
     setData(updatedData);
 
     const newVisNodes = await updateTreeWithNewData(updatedData);
@@ -99,17 +100,17 @@ export default function SegmentTreeVisualizer() {
       return;
     }
 
-    // Найти обновлённый листовой узел
-    const leafNode = newVisNodes.find(n => n.range[0] === start && n.range[1] === end);
+    // После обновления подсвечиваем путь от листа
+    const leafNode = newVisNodes.find(
+      (n) => n.range[0] === start && n.range[1] === end
+    );
     if (!leafNode) {
-      console.error(`Leaf node for range [${start}, ${end}] not found.`);
-      setSnackbarMessage(`Узел [${start}, ${end}] не найден.`);
+      setSnackbarMessage(`Узел [${start}, ${end}] не найден после обновления.`);
       setSnackbarOpen(true);
       return;
     }
 
     if (Object.keys(parentMap).length === 0) {
-      console.warn("Skipping highlight: parentMap is empty.");
       setSnackbarMessage("parentMap пуст. Подсветка невозможна.");
       setSnackbarOpen(true);
       return;
@@ -125,7 +126,7 @@ export default function SegmentTreeVisualizer() {
   // Удаление листа
   const handleRemoveLeaf = async () => {
     if (!selectedNode) {
-      setSnackbarMessage("Выберите узел для удаления.");
+      setSnackbarMessage("Выберите узел для удаления (лист).");
       setSnackbarOpen(true);
       return;
     }
@@ -136,8 +137,7 @@ export default function SegmentTreeVisualizer() {
       return;
     }
 
-    const pos = selectedNode.range[0];
-
+    const pos = start; // индекс
     animateNodeDisappear(selectedNode.id, shapeRefs.current, async () => {
       const newArr = [...data];
       newArr.splice(pos, 1);
@@ -152,21 +152,20 @@ export default function SegmentTreeVisualizer() {
     setSelectedNode(null);
   };
 
-  // Обработка клика по узлу
+  // Клик по узлу
   const handleNodeClick = (node: VisNode) => {
-    // Только листы
     if (node.range[0] === node.range[1]) {
       setSelectedNode(node);
       setDelta(node.value);
     }
   };
 
-  // Закрытие уведомления
+  // Закрыть уведомление
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
-  // Стили
+  // Параметры отрисовки
   const circleColor = "#4B7BEC";
   const highlightColor = "#FFC107";
   const selectedColor = "#34B3F1";
@@ -237,7 +236,7 @@ export default function SegmentTreeVisualizer() {
         onClose={handleCloseSnackbar}
       />
 
-      <TreeStructure parentMap={parentMap}/>
+      <TreeStructure parentMap={parentMap} />
     </Box>
   );
 }

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Layer, Line, Stage } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
+import Konva from "konva";
 
 interface NodeData {
-  id: string;
+  id: string;                 // теперь строка
   x: number;
   y: number;
   range: [number, number];
@@ -15,7 +16,7 @@ interface NodeData {
 
 interface SegmentTreeCanvasProps {
   nodes: NodeData[];
-  shapeRefs: React.MutableRefObject<Record<string, any>>;
+  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
   selectedNodeId: string | null;
   stageSize: { width: number; height: number };
   circleColor: string;
@@ -27,21 +28,6 @@ interface SegmentTreeCanvasProps {
   getTextColor: (fill: string) => string;
   onNodeClick: (node: NodeData) => void;
 }
-
-function calculateDepth(node: NodeData, nodesMap: Record<string, NodeData>): number {
-  let depth = 0;
-  let current = node;
-
-  while (current && nodesMap[current.id]) {
-    const parent = Object.values(nodesMap).find((n) => n.children.includes(current.id));
-    if (!parent) break;
-    depth++;
-    current = parent;
-  }
-
-  return depth;
-}
-
 
 export function SegmentTreeCanvas({
   nodes,
@@ -57,20 +43,17 @@ export function SegmentTreeCanvas({
   getTextColor,
   onNodeClick
 }: SegmentTreeCanvasProps) {
-  const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
-  const layerRef = useRef<any>(null);
+  const layerRef = useRef<Konva.Layer>(null);
 
   useEffect(() => {
-    // console.log("Обновление nodes:", nodes);
     if (layerRef.current) {
       layerRef.current.batchDraw();
     }
   }, [nodes]);
-  
 
   return (
     <Stage width={stageSize.width} height={stageSize.height}>
-      <Layer>
+      <Layer ref={layerRef}>
         {nodes.map((parentNode) =>
           parentNode.children.map((childId) => {
             const childNode = nodes.find((n) => n.id === childId);
@@ -94,13 +77,13 @@ export function SegmentTreeCanvas({
           else if (selectedNodeId === node.id) fillColor = selectedColor;
           const strokeW = isLeaf ? leafStrokeWidth : internalNodeStrokeWidth;
 
-          const depth = calculateDepth(node, nodesMap);
-
           return (
             <SegmentTreeNode
               key={node.id}
-              node={{ ...node, depth }}
-              shapeRef={(el) => (shapeRefs.current[node.id] = el)}
+              node={node}
+              shapeRef={(el) => {
+                if (el) shapeRefs.current[node.id] = el;
+              }}
               onNodeClick={onNodeClick}
               fillColor={fillColor}
               strokeWidth={strokeW}

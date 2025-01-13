@@ -1,13 +1,13 @@
 import createSegmentTreeModule from "../assets/JS_complied_algorithms/segment_tree.mjs";
 
 interface SegmentTreeNodeData {
-  id: number;
+  id: number;          // <-- Исходно из C++ мы получаем числовые ID
   x: number;
   y: number;
   value: number;
   label: string;
   range: [number, number];
-  children: number[];
+  children: number[];  // <-- Тоже числа
 }
 
 export default class SegmentTreeWasm {
@@ -22,31 +22,43 @@ export default class SegmentTreeWasm {
     this.modulePromise = createSegmentTreeModule().then((module: any) => {
       const vectorInt = new module.VectorInt();
       
-      // Явно заполняем его значениями
+      // Заполняем значениями
       this.array.forEach((val) => vectorInt.push_back(val));
-    
-      // Передаём в C++
       module.setArray(vectorInt);
       
-      // Очищаем вручную (иначе утечка памяти)
-      vectorInt.delete();
+      // Если есть метод buildTree - вызываем
+      if (typeof module.buildTree === 'function') {
+        module.buildTree(0, 0, this.array.length - 1);
+      } else {
+        console.warn("Метод buildTree не найден в WASM модуле. Возможно дерево строится автоматически.");
+      }
       
+      vectorInt.delete();
       return module;
     });
   }
 
-  // Добавляем метод setData
+  // Полное обновление массива и перестройка дерева
   async setData(newData: number[]): Promise<void> {
     const module = await this.modulePromise;
     const vectorInt = new module.VectorInt();
     newData.forEach((val) => vectorInt.push_back(val));
     module.setArray(vectorInt);
+
+    if (typeof module.buildTree === 'function') {
+      module.buildTree(0, 0, newData.length - 1);
+      console.log("Дерево перестроено с новыми данными.");
+    } else {
+      console.error("Метод buildTree не найден в WASM модуле.");
+    }
     vectorInt.delete();
     this.array = newData.slice();
   }
 
+  // Пример точечного update, если захотите использовать:
   async update(index: number, value: number): Promise<void> {
     const module = await this.modulePromise;
+    // Здесь в C++ добавляем value:
     module.updateTree(0, 0, this.array.length - 1, index, value);
     this.array[index] += value;
   }
@@ -56,28 +68,28 @@ export default class SegmentTreeWasm {
     return module.queryTree(0, 0, this.array.length - 1, l, r);
   }
 
+  // Получение «сырых» узлов для визуализации (числовые ID)
   async getTreeForVisualization(): Promise<SegmentTreeNodeData[]> {
     const module = await this.modulePromise;
-    
     const rawTreeVector = module.getTree();
-    // Проверяем, есть ли у объекта `size` и `get`
-    if (!rawTreeVector || typeof rawTreeVector.size !== "function" || typeof rawTreeVector.get !== "function") {
-      // console.error("Ошибка: `getTree()` вернул неподдерживаемый формат", rawTreeVector);
+    if (
+      !rawTreeVector ||
+      typeof rawTreeVector.size !== "function" ||
+      typeof rawTreeVector.get !== "function"
+    ) {
+      console.error("Ошибка: getTree() вернул неподдерживаемый формат", rawTreeVector);
       return [];
     }
 
-    // Преобразуем `VectorInt` в обычный массив `number[]`
     const rawTree: number[] = [];
     for (let i = 0; i < rawTreeVector.size(); i++) {
       rawTree.push(rawTreeVector.get(i));
     }
-
-    // Лог преобразованного массива
-    // console.log("Преобразованный массив rawTree:", rawTree);
+    // rawTree[i] — значения в segtree
 
     const nodes: SegmentTreeNodeData[] = [];
-    const idCounter = { current: 0 };
 
+    // Рекурсивная функция для «нарисованных» координат
     const buildVisualization = (
       node: number,
       start: number,
@@ -87,8 +99,9 @@ export default class SegmentTreeWasm {
       spacingX: number,
       spacingY: number
     ): number => {
-      const id = idCounter.current++;
+      const id = node; // узел в segtree
       const value = rawTree[node];
+
       const nodeData: SegmentTreeNodeData = {
         id,
         x,
@@ -132,7 +145,11 @@ export default class SegmentTreeWasm {
       return id;
     };
 
-    buildVisualization(0, 0, this.array.length - 1, 400, 50, 300, 100);
+    // Начинаем с корня
+    if (this.array.length > 0) {
+      buildVisualization(0, 0, this.array.length - 1, 400, 50, 300, 100);
+    }
+
     return nodes;
   }
 }

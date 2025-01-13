@@ -1,19 +1,16 @@
-// hooks/useSegmentTreeState.ts
-import { useState } from 'react';
-import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { useState } from "react";
+import { VisNode } from "../visualisationComponents/nodeAnimations/types/VisNode";
 
 interface UseSegmentTreeStateReturn {
   nodes: VisNode[];
-  parentMap: Record<number, number>;
+  parentMap: Record<string, string>;
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
-  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
+  setParentMap: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
-const useSegmentTreeState = (): UseSegmentTreeStateReturn => {
+export default function useSegmentTreeState(): UseSegmentTreeStateReturn {
   const [nodes, setNodes] = useState<VisNode[]>([]);
-  const [parentMap, setParentMap] = useState<Record<number, number>>({});
+  const [parentMap, setParentMap] = useState<Record<string, string>>({});
 
   return { nodes, parentMap, setNodes, setParentMap };
-};
-
-export default useSegmentTreeState;
+}

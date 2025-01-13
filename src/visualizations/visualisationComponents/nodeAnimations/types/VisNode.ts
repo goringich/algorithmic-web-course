@@ -1,5 +1,5 @@
 export interface VisNode {
-  id: string;
+  id: string;                  // <-- строка
   x: number;
   y: number;
   range: [number, number];
