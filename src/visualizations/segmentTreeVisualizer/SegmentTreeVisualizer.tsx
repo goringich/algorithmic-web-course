@@ -11,7 +11,7 @@ import Controls from '../components/Controls';
 import TreeArea from '../components/TreeArea';
 import useSegmentTree from './useSegmentTree/UseSegmentTree'; 
 import { animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations'; 
-import TreeStructure from "../visualisationComponents/treeStructure/TreeStructure";
+import TreeStructure from "../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
 
 const MAX_LEAVES = 16;
 

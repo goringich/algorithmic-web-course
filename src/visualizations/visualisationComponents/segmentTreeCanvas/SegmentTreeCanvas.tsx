@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 import { Layer, Line, Stage } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 
@@ -60,14 +60,12 @@ export function SegmentTreeCanvas({
   const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
   const layerRef = useRef<any>(null);
 
-  const memoizedNodes = useMemo(() => nodes, [JSON.stringify(nodes)]);
-
   useEffect(() => {
+    // console.log("Обновление nodes:", nodes);
     if (layerRef.current) {
       layerRef.current.batchDraw();
     }
-  }, [memoizedNodes]);
-
+  }, [nodes]);
   
 
   return (
