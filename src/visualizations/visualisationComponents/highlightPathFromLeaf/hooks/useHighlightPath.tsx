@@ -20,7 +20,16 @@ const useHighlightPath = ({ nodes, parentMap, setNodes }: UseHighlightPathProps)
 
       // Очистка существующих таймаутов и сброс выделений
       clearAllTimeouts();
-      setNodes((old) => old.map((n) => ({ ...n, isHighlighted: false })));
+      setNodes((oldNodes) => {
+        const updatedNodes = oldNodes.map((n) => {
+          if (n.isHighlighted) {
+            return { ...n, isHighlighted: false };
+          }
+          return n;
+        });
+        return updatedNodes;
+      });
+      
 
       // Проверка существования leafNodeId в nodes
       const leafNode = nodes.find(n => n.id === leafNodeId);

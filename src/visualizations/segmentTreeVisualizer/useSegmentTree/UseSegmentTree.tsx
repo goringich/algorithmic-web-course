@@ -1,5 +1,5 @@
 // hooks/useSegmentTree.ts
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import useInitializeSegmentTree from './hooks/useInitializeSegmentTree';
 import useSegmentTreeState from './hooks/useSegmentTreeState';
 import useUpdateSegmentTree from './hooks/useUpdateSegmentTree';
@@ -18,7 +18,7 @@ interface UseSegmentTreeReturn {
 }
 
 const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSegmentTreeReturn => {
-  const { segmentTree, initialNodes, initialParentMap, initialize } = useInitializeSegmentTree({ initialData });
+  const { segmentTree, initialize, initialNodes, initialParentMap } = useInitializeSegmentTree({ initialData });
   const { nodes, parentMap, setNodes, setParentMap } = useSegmentTreeState();
   const { updateTreeWithNewData } = useUpdateSegmentTree({
     nodes,
@@ -29,12 +29,33 @@ const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSeg
     shapeRefs
   });
 
+  // Memoize initial nodes and parent map based on initial data
+  const memoizedInitialNodes = useMemo(() => initialNodes, [initialNodes]);
+  const memoizedInitialParentMap = useMemo(() => initialParentMap, [initialParentMap]);
+
   useEffect(() => {
-    initialize().then(() => {
-      setNodes(initialNodes);
-      setParentMap(initialParentMap);
-    });
-  }, [initialize, initialNodes, initialParentMap, setNodes, setParentMap]);
+    let isMounted = true;
+    const initializeTree = async () => {
+      try {
+        await initialize();
+        if (isMounted) {
+          setNodes(memoizedInitialNodes);
+          setParentMap(memoizedInitialParentMap);
+        }
+      } catch (error) {
+        if (isMounted) {
+          // Optionally handle the error, e.g., set an error state
+          console.error('Failed to initialize segment tree:', error);
+        }
+      }
+    };
+
+    initializeTree();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialize, memoizedInitialNodes, memoizedInitialParentMap, setNodes, setParentMap]);
 
   return {
     nodes,

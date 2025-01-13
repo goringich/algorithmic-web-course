@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { VisNode } from '../../VisNode';
+import { VisNode } from '../../nodeAnimations/types/VisNode';
 import useTimeouts from './useTimeouts';
 
 interface UseNodeAnimationsProps {

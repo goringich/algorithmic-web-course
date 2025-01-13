@@ -1,4 +1,3 @@
-// utils/buildParentMap.ts
 import { VisNode } from '../types/VisNode';
 
 export const buildParentMap = (newNodes: VisNode[]): Record<number, number> => {

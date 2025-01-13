@@ -30,7 +30,7 @@ const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) 
         } else {
           setTimeout(() => {
             animateNodeAppear(newN.id, newN.x, newN.y, shapeRefs.current);
-          }, 50);
+          }, 500);
         }
       });
     },

@@ -1,8 +1,8 @@
 // src/visualizations/segmentTreeVisualizer/TreeArea.tsx
 
 import React from 'react';
-import { SegmentTreeCanvas } from '../../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas';
-import { VisNode } from '../../visualisationComponents/nodeAnimations/types/VisNode';
+import { SegmentTreeCanvas } from '../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas';
+import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode';
 
 interface TreeAreaProps {
   nodes: VisNode[];

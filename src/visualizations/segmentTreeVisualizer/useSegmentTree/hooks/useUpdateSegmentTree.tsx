@@ -2,8 +2,13 @@
 import { useCallback } from 'react';
 import SegmentTreeWasm from '../../../SegmentTreeWasm';
 import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
-import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
+import {
+  animateNodeMove,
+  animateNodeAppear,
+  animateNodeDisappear
+} from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
 import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import Konva from 'konva';
 
 interface UseUpdateSegmentTreeProps {
   nodes: VisNode[];
@@ -26,65 +31,59 @@ const useUpdateSegmentTree = ({
   segmentTree,
   shapeRefs
 }: UseUpdateSegmentTreeProps): UseUpdateSegmentTreeReturn => {
-  const updateTreeWithNewData = useCallback(async (newData: number[]): Promise<VisNode[] | null> => {
-    if (!segmentTree) {
-      console.error("SegmentTreeWasm instance is not initialized.");
-      return null;
-    }
-
-    try {
-      // Обновляем данные и перестраиваем дерево
-      await segmentTree.setData(newData);
-      const newVisNodes = await segmentTree.getTreeForVisualization();
-      console.log('Обновлённые узлы:', newVisNodes);
-
-      let newParentMap = buildParentMap(newVisNodes);
-
-      // Проверяем узлы, у которых нет родителя в newParentMap
-      const orphanNodes = newVisNodes.filter(node => !newParentMap[node.id]);
-      if (orphanNodes.length > 0) {
-        console.warn("Orphan nodes detected, fixing structure.", orphanNodes);
-
-        // Присоединяем сиротские узлы к первому узлу дерева (или к главному корню)
-        orphanNodes.forEach(node => {
-          const nodeId = node.id;
-          const trueRootId = newVisNodes[0].id;
-          newParentMap[nodeId] = trueRootId;
-          console.log(`Reassigning orphan node '${nodeId}' to true root '${trueRootId}'`);
-        });
+  
+  const updateTreeWithNewData = useCallback(
+    async (newData: number[]): Promise<VisNode[] | null> => {
+      if (!segmentTree) {
+        console.error("Экземпляр SegmentTreeWasm не инициализирован.");
+        return null;
       }
 
-      console.log('Updated parentMap:', newParentMap);
+      try {
+        // Обновляем данные и перестраиваем дерево
+        await segmentTree.setData(newData);
+        const newVisNodes: VisNode[] = await segmentTree.getTreeForVisualization();
+        console.log('Обновленные узлы:', newVisNodes);
 
-      // Анимация исчезновения удалённых узлов
-      const removedNodes = nodes.filter(oldNode => !newVisNodes.some(n => n.id === oldNode.id));
-      removedNodes.forEach(rn => animateNodeDisappear(rn.id, shapeRefs.current));
+        // Создаем новую карту родителей
+        const newParentMap: Record<number, number> = buildParentMap(newVisNodes);
+        console.log('Новая parentMap:', newParentMap);
 
-      // Анимация перемещения и появления узлов
-      newVisNodes.forEach(newN => {
-        const oldNode = nodes.find(p => p.id === newN.id);
-        if (oldNode) {
-          if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
-            animateNodeMove(newN.id, newN.x, newN.y, shapeRefs.current, newParentMap);
+        // Определяем удаленные узлы и анимируем их исчезновение
+        const removedNodes = nodes.filter(
+          (oldNode) => !newVisNodes.some((newNode) => newNode.id === oldNode.id)
+        );
+        removedNodes.forEach((node) => animateNodeDisappear(node.id, shapeRefs.current));
+
+        // Анимируем перемещение и появление узлов
+        newVisNodes.forEach((newNode) => {
+          const oldNode = nodes.find((node) => node.id === newNode.id);
+          if (oldNode) {
+            if (oldNode.x !== newNode.x || oldNode.y !== newNode.y) {
+              animateNodeMove(newNode.id, newNode.x, newNode.y, shapeRefs.current, newParentMap);
+            }
+          } else {
+            // Анимация появления нового узла с задержкой
+            setTimeout(() => {
+              animateNodeAppear(newNode.id, newNode.x, newNode.y, shapeRefs.current);
+            }, 500);
           }
-        } else {
-          setTimeout(() => {
-            animateNodeAppear(newN.id, newN.x, newN.y, shapeRefs.current);
-          }, 500);
-        }
-      });
+        });
 
-      // Обновляем parentMap и nodes
-      setParentMap(newParentMap);
-      setNodes(newVisNodes);
-      console.log("Final parentMap after refresh:", newParentMap);
+        // Обновляем состояние parentMap и nodes
+        setParentMap(newParentMap);
+        setNodes(newVisNodes);
 
-      return newVisNodes;
-    } catch (error) {
-      console.error("Ошибка при обновлении дерева:", error);
-      return null;
-    }
-  }, [nodes, segmentTree, shapeRefs, setNodes, setParentMap]);
+        console.log("Итоговая parentMap после обновления:", newParentMap);
+
+        return newVisNodes;
+      } catch (error) {
+        console.error("Ошибка при обновлении дерева:", error);
+        return null;
+      }
+    },
+    [segmentTree, nodes, shapeRefs, setNodes, setParentMap]
+  );
 
   return { updateTreeWithNewData };
 };

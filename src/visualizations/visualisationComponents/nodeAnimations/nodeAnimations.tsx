@@ -1,4 +1,3 @@
-// nodeAnimations.tsx
 import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
 import Konva from 'konva';
 
@@ -26,7 +25,7 @@ export const animateNodeMove = (
       y: newY,
       duration: 0.5,
       onFinish: () => {
-        // Дополнительные действия после перемещения (если необходимо)
+
       }
     });
   } else {
@@ -38,7 +37,7 @@ export const animateNodeMove = (
       y: newY,
       easing: Konva.Easings.EaseInOut,
       onFinish: () => {
-        // Дополнительные действия после анимации (если необходимо)
+
       }
     }).play();
   }
