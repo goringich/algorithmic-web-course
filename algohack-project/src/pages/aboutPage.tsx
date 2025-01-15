@@ -49,36 +49,16 @@ const teamMembers = [
 
 const AboutPage: React.FC = () => {
   return (
-    <div
-      style={{
-        position: "relative", // Для размещения кнопки внутри этого контейнера
-        width: "100%",
-        height: "100vh", // Высота на всю страницу
-        display: "flex",
-        justifyContent: "center", // Центрирование карточки по горизонтали
-        alignItems: "center", // Центрирование карточки по вертикали
-      }}
+    <div className="about-page-container"
     >
-      {/* Контейнер с карточкой */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "1200px",
-          height: "780px",
-          zIndex: 1, // Задаем базовый слой
-        }}
+      <div className="swiper-container"
       >
         <Swiper
           modules={[Navigation]}
           navigation
           spaceBetween={20}
           slidesPerView={1}
-          style={{
-            width: "100%",
-            height: "100%",
-          }}
+          className="size"
         >
           {teamMembers.map((member, index) => (
             <SwiperSlide key={index}>
@@ -94,27 +74,12 @@ const AboutPage: React.FC = () => {
         </Swiper>
       </div>
 
-      {/* Контейнер с кнопкой */}
-      <div
-        style={{
-          position: "absolute", // Позиционируем относительно родительского div
-          right: "20px", // Расстояние от правого края
-          top: "50%", // Располагаем по центру
-          transform: "translateY(700%)", // Смещаем вниз от центра
-          zIndex: 2, // Поверх всех других слоев
-        }}
+      <div className="button-container"
       >
         <Button
           variant="contained"
           color="primary"
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#B13EEA",
-            color: "#fff",
-            textTransform: "none",
-            fontFamily: "Comfortaa, sans-serif",
-            borderRadius: "7px",
-          }}
+          className="contact-button"
         >
           Связаться с нами
         </Button>

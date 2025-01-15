@@ -18,42 +18,19 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
   imageUrl,
 }) => {
   return (
-    <Card
-      sx={{
-        display: "flex",
-        width: 987, // Задаем фиксированную ширину карточки
-        height: 761, // Задаем фиксированную высоту карточки
-        backgroundColor: "#EADDFF",
-        borderRadius: 4,
-        boxShadow: 3,
-        margin: "auto", // Центрируем карточку
-      }}
+    <Card className={styles_card.card_style}
+    sx = {{ boxShadow: 3}}
     >
-      {/* Левая часть с изображением */}
       <CardMedia
         component="img"
         image={imageUrl}
         alt={name}
-        sx={{
-          width: 451, // Фиксированная ширина изображения
-          height: 671, // Фиксированная высота изображения
-          margin: "auto 0", // Вертикальное выравнивание изображения
-          marginLeft: "44px", // Фиксированный отступ слева
-          display: "flex",
-          borderRadius: "20px",
-          boxShadow: 3,
-        }}
+        sx = {{ boxShadow: 3}}
+        className={styles_card.left_part}
       />
-      {/* Правая часть с текстом */}
-      <Box 
-        sx={{
-          flex: 1,
-          padding: 3,
-          display: "flex",
-          marginTop: "40px",
-          flexDirection: "column",
-          justifyContent: "space-between"
-        }} 
+
+      <Box className={styles_card.right_part}
+      sx = {{padding: 3}}
       >
         <CardContent>
           <Typography variant="h5" component="div" gutterBottom className={styles_card.name} >
@@ -63,7 +40,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
           >
             {role}
           </Typography>
-          <Divider sx={{ marginY: 2, borderBottomWidth: 2, borderColor: "black" }} />
+          <Divider className={styles_card.divider} />
           <Typography variant="body2" paragraph className={styles_card.description}
           >
             {description}
