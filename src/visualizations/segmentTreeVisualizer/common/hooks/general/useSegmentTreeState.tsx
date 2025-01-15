@@ -1,6 +1,5 @@
-// hooks/useSegmentTreeState.ts
 import { useState } from 'react';
-import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { VisNode } from '../../../../visualisationComponents/nodeAnimations/types/VisNode';
 
 interface UseSegmentTreeStateReturn {
   nodes: VisNode[];

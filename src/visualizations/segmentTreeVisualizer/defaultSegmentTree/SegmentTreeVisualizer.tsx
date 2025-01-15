@@ -1,17 +1,17 @@
 // SegmentTreeVisualizer.tsx
 import React, { useRef, useState } from "react";
 import { Box } from "@mui/material";
-import { useDrag } from "../components/UseDrag";
-import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
-import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
-import useHighlightPath from "../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
-import { VisNode } from "../visualisationComponents/nodeAnimations/types/VisNode"
-import Header from '../components/Header';
-import Controls from '../components/Controls';
-import TreeArea from '../components/TreeArea';
+import { useDrag } from "../../components/UseDrag";
+import { NotificationSnackbar } from "../../../components/notificationSnackbar/NotificationSnackbar";
+import { EditNodeModal } from "../../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
+import useHighlightPath from "../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
+import { VisNode } from "../../visualisationComponents/nodeAnimations/types/VisNode"
+import Header from '../../components/Header';
+import Controls from '../../components/Controls';
+import TreeArea from '../../components/TreeArea';
 import useSegmentTree from './useSegmentTree/UseSegmentTree'; 
-import { animateNodeDisappear } from '../visualisationComponents/nodeAnimations/nodeAnimations'; 
-import TreeStructure from "../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
+import { animateNodeDisappear } from '../../visualisationComponents/nodeAnimations/nodeAnimations'; 
+import TreeStructure from "../../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
 
 const MAX_LEAVES = 16;
 

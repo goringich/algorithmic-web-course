@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./algorithmsPage.module.scss"
 import contents from "../../assets/dataBase/TitlesData.json"
-import SegmentTreeVisualizer from "../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
+import SegmentTreeVisualizer from "../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
 
 interface Section {
   title: string;

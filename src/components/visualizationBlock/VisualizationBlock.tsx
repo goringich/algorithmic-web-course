@@ -5,7 +5,7 @@ const fakeDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Задержка применяется именно к SegmentTreeVisualizer
 const SegmentTreeVisualizer = lazy(() =>
-  fakeDelay(1000).then(() => import('../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer'))
+  fakeDelay(1000).then(() => import('../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer'))
 );
 
 const VisualizationBlock = () => {

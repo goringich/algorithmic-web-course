@@ -1,8 +1,8 @@
 // hooks/useSegmentTreeAnimations.ts
 import { useCallback } from 'react';
-import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
-import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
-import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import { VisNode } from '../../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../../visualisationComponents/nodeAnimations/nodeAnimations';
+import { buildParentMap } from '../../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
 import Konva from 'konva';
 
 interface UseSegmentTreeAnimationsProps {
