@@ -1,5 +1,4 @@
-// hooks/useSegmentTree.ts
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback } from 'react';
 import useInitializeSegmentTree from './hooks/useInitializeSegmentTree';
 import useSegmentTreeState from './hooks/useSegmentTreeState';
 import useUpdateSegmentTree from './hooks/useUpdateSegmentTree';
@@ -29,33 +28,36 @@ const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSeg
     shapeRefs
   });
 
-  // Memoize initial nodes and parent map based on initial data
-  const memoizedInitialNodes = useMemo(() => initialNodes, [initialNodes]);
-  const memoizedInitialParentMap = useMemo(() => initialParentMap, [initialParentMap]);
+  // Оборачиваем в useCallback, чтобы избежать ненужных перерисовок
+  const initializeTree = useCallback(async () => {
+    const abortController = new AbortController();
 
-  useEffect(() => {
-    let isMounted = true;
-    const initializeTree = async () => {
-      try {
-        await initialize();
-        if (isMounted) {
-          setNodes(memoizedInitialNodes);
-          setParentMap(memoizedInitialParentMap);
-        }
-      } catch (error) {
-        if (isMounted) {
-          // Optionally handle the error, e.g., set an error state
-          console.error('Failed to initialize segment tree:', error);
-        }
+    try {
+      await initialize();
+      if (!abortController.signal.aborted) {
+        setNodes(initialNodes);
+        setParentMap(initialParentMap);
       }
-    };
-
-    initializeTree();
+    } catch (error) {
+      if (!abortController.signal.aborted) {
+        console.error('Failed to initialize segment tree:', error);
+      }
+    }
 
     return () => {
-      isMounted = false;
+      abortController.abort();
     };
-  }, [initialize, memoizedInitialNodes, memoizedInitialParentMap, setNodes, setParentMap]);
+  }, [initialize, initialNodes, initialParentMap, setNodes, setParentMap]);
+
+  useEffect(() => {
+    const cleanup = initializeTree();
+
+    return () => {
+      if (typeof cleanup === 'function') {
+        cleanup();
+      }
+    };
+  }, [initializeTree]);
 
   return {
     nodes,

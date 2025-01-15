@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { VisNode } from '../../nodeAnimations/types/VisNode';
 import useTimeouts from './useTimeouts';
 
@@ -11,8 +11,9 @@ const useNodeAnimations = ({ setNodes }: UseNodeAnimationsProps) => {
 
   const animatePath = useCallback(
     (pathIds: number[]) => {
+      if (!pathIds.length) return;
+
       pathIds.forEach((nodeId, index) => {
-        // Подсветка узла
         setAndStoreTimeout(() => {
           console.log(`Highlighting node: '${nodeId}'`);
           setNodes((old) =>
@@ -20,24 +21,20 @@ const useNodeAnimations = ({ setNodes }: UseNodeAnimationsProps) => {
               n.id === nodeId ? { ...n, isHighlighted: true } : n
             )
           );
-        }, index * 800);
 
-        // Снятие подсветки с предыдущего узла
-        if (index > 0) {
-          const prevNodeId = pathIds[index - 1];
-          setAndStoreTimeout(() => {
+          if (index > 0) {
+            const prevNodeId = pathIds[index - 1];
             console.log(`Unhighlighting node: '${prevNodeId}'`);
             setNodes((old) =>
               old.map((n) =>
                 n.id === prevNodeId ? { ...n, isHighlighted: false } : n
               )
             );
-          }, index * 800);
-        }
+          }
+        }, index * 800);
       });
 
-      // Снятие подсветки с последнего узла после всех анимаций
-      if (pathIds.length > 0) {
+      if (pathIds.length > 1) {
         const lastNodeId = pathIds[pathIds.length - 1];
         setAndStoreTimeout(() => {
           console.log(`Final unhighlighting of node: '${lastNodeId}'`);
@@ -51,6 +48,12 @@ const useNodeAnimations = ({ setNodes }: UseNodeAnimationsProps) => {
     },
     [setAndStoreTimeout, setNodes]
   );
+
+  useEffect(() => {
+    return () => {
+      clearAllTimeouts();
+    };
+  }, [clearAllTimeouts]);
 
   return { animatePath, clearAllTimeouts };
 };
