@@ -1,5 +1,5 @@
 export interface VisNode {
-  id: string;
+  id: number;
   x: number;
   y: number;
   range: [number, number];

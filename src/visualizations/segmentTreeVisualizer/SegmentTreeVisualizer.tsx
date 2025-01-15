@@ -17,6 +17,7 @@ const MAX_LEAVES = 16;
 
 export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const layerRef = useRef<Konva.Layer>(null);  
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const [stageSize, setStageSize] = useState({ width: 1200, height: 500 });
 
@@ -37,7 +38,7 @@ export default function SegmentTreeVisualizer() {
   } = useDrag(400, 300);
 
   // Кастомный хук для управления деревом
-  const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } = useSegmentTree({ initialData: data, shapeRefs });
+  const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } = useSegmentTree({ initialData: data, shapeRefs, layerRef });
 
   // Инициализация хука подсветки с передачей nodes
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });

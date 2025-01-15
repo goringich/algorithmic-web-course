@@ -1,4 +1,3 @@
-import { VisNode } from '../../segmentTreeVisualizer/SegmentTreeVisualizer';
 import Konva from 'konva';
 
 export const animateNodeMove = (
@@ -15,7 +14,7 @@ export const animateNodeMove = (
     return;
   }
 
-  // Проверяем, является ли узел корневым (самореференцией)
+  // Check if the node is a root
   const isRoot = parentMap[nodeId] === nodeId;
 
   if (isRoot) {
@@ -24,24 +23,21 @@ export const animateNodeMove = (
       x: newX,
       y: newY,
       duration: 0.5,
-      onFinish: () => {
-
-      }
+      onFinish: () => {},
     });
   } else {
-    // Анимация перемещения узла с использованием Tween
+    // Animate node movement using Tween
     new Konva.Tween({
       node: shape,
       duration: 0.5,
       x: newX,
       y: newY,
       easing: Konva.Easings.EaseInOut,
-      onFinish: () => {
-
-      }
+      onFinish: () => {},
     }).play();
   }
 };
+
 
 export const animateNodeAppear = (
   nodeId: number,
@@ -55,17 +51,18 @@ export const animateNodeAppear = (
     return;
   }
 
-  // Устанавливаем начальные атрибуты для анимации появления
+  // Set initial attributes for appearance animation
   shape.position({ x, y });
   shape.opacity(0);
   
-  // Анимация появления узла
+  // Animate node appearance
   shape.to({
     opacity: 1,
     duration: 0.5,
     easing: Konva.Easings.EaseInOut
   });
 };
+
 
 export const animateNodeDisappear = (
   nodeId: number,

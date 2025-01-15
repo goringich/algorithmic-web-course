@@ -3,10 +3,13 @@ import { useEffect } from 'react';
 import useInitializeSegmentTree from './hooks/useInitializeSegmentTree';
 import useSegmentTreeState from './hooks/useSegmentTreeState';
 import useUpdateSegmentTree from './hooks/useUpdateSegmentTree';
+import { VisNode } from '@src/visualizations/visualisationComponents/nodeAnimations/types/VisNode';
+import Konva from 'konva';
 
 interface UseSegmentTreeProps {
   initialData: number[];
-  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
+  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
+  layerRef: React.MutableRefObject<Konva.Layer | null>; 
 }
 
 interface UseSegmentTreeReturn {
@@ -17,7 +20,7 @@ interface UseSegmentTreeReturn {
   setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
 }
 
-const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSegmentTreeReturn => {
+const useSegmentTree = ({ initialData, shapeRefs, layerRef }: UseSegmentTreeProps): UseSegmentTreeReturn => {
   const { segmentTree, initialNodes, initialParentMap, initialize } = useInitializeSegmentTree({ initialData });
   const { nodes, parentMap, setNodes, setParentMap } = useSegmentTreeState();
   const { updateTreeWithNewData } = useUpdateSegmentTree({
@@ -26,7 +29,8 @@ const useSegmentTree = ({ initialData, shapeRefs }: UseSegmentTreeProps): UseSeg
     parentMap,
     setParentMap,
     segmentTree,
-    shapeRefs
+    shapeRefs,
+    layerRef
   });
 
   useEffect(() => {
