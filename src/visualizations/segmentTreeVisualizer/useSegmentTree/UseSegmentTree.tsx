@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
-import useInitializeSegmentTree from './hooks/useInitializeSegmentTree';
-import useSegmentTreeState from './hooks/useSegmentTreeState';
-import useUpdateSegmentTree from './hooks/useUpdateSegmentTree';
+import { useInitializeSegmentTree } from './hooks/useInitializeSegmentTree';
+import { useSegmentTreeState } from './hooks/useSegmentTreeState';
+import { useUpdateSegmentTree } from './hooks/useUpdateSegmentTree';
 
 interface UseSegmentTreeProps {
   initialData: number[];

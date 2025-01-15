@@ -1,6 +1,4 @@
-// hooks/useUpdateSegmentTree.ts
-import { useCallback } from 'react';
-import SegmentTreeWasm from '../../../SegmentTreeWasm';
+import { useCallback, useMemo } from 'react';
 import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
 import {
   animateNodeMove,
@@ -15,7 +13,7 @@ interface UseUpdateSegmentTreeProps {
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
   parentMap: Record<number, number>;
   setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
-  segmentTree: SegmentTreeWasm | null;
+  segmentTree: Promise<typeof import('../../../SegmentTreeWasm')> | null;
   shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
 }
 
@@ -23,7 +21,7 @@ interface UseUpdateSegmentTreeReturn {
   updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
 }
 
-const useUpdateSegmentTree = ({
+export const useUpdateSegmentTree = ({
   nodes,
   setNodes,
   parentMap,
@@ -32,37 +30,40 @@ const useUpdateSegmentTree = ({
   shapeRefs
 }: UseUpdateSegmentTreeProps): UseUpdateSegmentTreeReturn => {
   
+  const memoizedNodes = useMemo(() => nodes, [nodes]);
+  const memoizedParentMap = useMemo(() => parentMap, [parentMap]);
+
   const updateTreeWithNewData = useCallback(
     async (newData: number[]): Promise<VisNode[] | null> => {
       if (!segmentTree) {
-        console.error('Экземпляр SegmentTreeWasm не инициализирован.');
+        console.error('SegmentTreeWasm is not initialized.');
         return null;
       }
 
       try {
-        await segmentTree.setData(newData);
-        const newVisNodes: VisNode[] = await segmentTree.getTreeForVisualization();
+        const segmentTreeModule = await segmentTree; // Lazy load
+        await segmentTreeModule.setData(newData);
+
+        const newVisNodes: VisNode[] = await segmentTreeModule.getTreeForVisualization();
 
         if (!newVisNodes.length) {
-          console.warn('Получены пустые узлы дерева.');
+          console.warn('Empty tree nodes received.');
           return null;
         }
 
         const newParentMap = buildParentMap(newVisNodes);
-        
-        // Используем Set для быстрого поиска отсутствующих узлов
-        const newNodeIds = new Set(newVisNodes.map(node => node.id));
 
-        // Фильтруем удаленные узлы и анимируем их исчезновение
-        const removedNodes = nodes.filter(node => !newNodeIds.has(node.id));
+        // Find removed nodes
+        const newNodeIds = new Set(newVisNodes.map(node => node.id));
+        const removedNodes = memoizedNodes.filter(node => !newNodeIds.has(node.id));
+
+        // Animate removed nodes
         removedNodes.forEach(node => animateNodeDisappear(node.id, shapeRefs.current));
 
-        // Группируем перемещение и появление узлов
+        // Group animations
         const animations: (() => void)[] = [];
-
         newVisNodes.forEach(newNode => {
-          const oldNode = nodes.find(node => node.id === newNode.id);
-
+          const oldNode = memoizedNodes.find(node => node.id === newNode.id);
           if (oldNode) {
             if (oldNode.x !== newNode.x || oldNode.y !== newNode.y) {
               animations.push(() => animateNodeMove(newNode.id, newNode.x, newNode.y, shapeRefs.current, newParentMap));
@@ -72,25 +73,26 @@ const useUpdateSegmentTree = ({
           }
         });
 
-        // Запускаем анимации с минимальной задержкой
-        setTimeout(() => animations.forEach(animate => animate()), 500);
+        requestAnimationFrame(() => animations.forEach(animate => animate()));
 
-        // Обновляем состояние одним вызовом
-        setNodes(prevNodes => {
+        // Log tree updates
+        console.log(`Tree updated: Old nodes: ${memoizedNodes.length}, New nodes: ${newVisNodes.length}`);
+
+        // Batch updates
+        setTimeout(() => {
           setParentMap(newParentMap);
-          return newVisNodes;
-        });
+          setNodes(newVisNodes);
+        }, 300);
 
         return newVisNodes;
       } catch (error) {
-        console.error('Ошибка при обновлении дерева:', error);
+        console.error('Error updating segment tree:', error);
         return null;
       }
     },
-    [segmentTree, nodes, shapeRefs, setNodes, setParentMap]
+    [segmentTree, memoizedNodes, shapeRefs, setNodes, setParentMap]
   );
 
   return { updateTreeWithNewData };
 };
 
-export default useUpdateSegmentTree;

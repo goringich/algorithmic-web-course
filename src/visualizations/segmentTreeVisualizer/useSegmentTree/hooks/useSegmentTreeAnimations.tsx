@@ -9,7 +9,7 @@ interface UseSegmentTreeAnimationsProps {
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
 }
 
-const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) => {
+export const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) => {
   const handleAnimations = useCallback(
     (
       oldNodes: VisNode[],
@@ -39,5 +39,3 @@ const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) 
 
   return { handleAnimations };
 };
-
-export default useSegmentTreeAnimations;

@@ -1,5 +1,4 @@
-// hooks/useInitializeSegmentTree.ts
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import SegmentTreeWasm from '../../../SegmentTreeWasm';
 import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
 import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
@@ -15,28 +14,27 @@ interface UseInitializeSegmentTreeReturn {
   initialize: () => Promise<void>;
 }
 
-const useInitializeSegmentTree = ({ initialData }: UseInitializeSegmentTreeProps): UseInitializeSegmentTreeReturn => {
-  const [segmentTree, setSegmentTree] = useState<SegmentTreeWasm | null>(null);
+export const useInitializeSegmentTree = ({ initialData }: UseInitializeSegmentTreeProps): UseInitializeSegmentTreeReturn => {
+  const segmentTreeRef = useRef<SegmentTreeWasm | null>(null);
   const [initialNodes, setInitialNodes] = useState<VisNode[]>([]);
   const [initialParentMap, setInitialParentMap] = useState<Record<number, number>>({});
 
   const initialize = useCallback(async () => {
     try {
-      const st = new SegmentTreeWasm(initialData);
-      setSegmentTree(st);
+      if (!segmentTreeRef.current) {
+        console.log("Initializing Segment Tree"); // Проверка
+        segmentTreeRef.current = new SegmentTreeWasm(initialData);
+      }
 
-      const nodes = await st.getTreeForVisualization();
+      const nodes = await segmentTreeRef.current.getTreeForVisualization();
       setInitialNodes(nodes);
       const parentMap = buildParentMap(nodes);
       setInitialParentMap(parentMap);
-
-      // console.log('Initial parentMap:', parentMap);
     } catch (error) {
       console.error("Ошибка при инициализации дерева:", error);
     }
   }, [initialData]);
 
-  return { segmentTree, initialNodes, initialParentMap, initialize };
+  return { segmentTree: segmentTreeRef.current, initialNodes, initialParentMap, initialize };
 };
 
-export default useInitializeSegmentTree;

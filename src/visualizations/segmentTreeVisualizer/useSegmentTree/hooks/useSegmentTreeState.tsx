@@ -9,11 +9,9 @@ interface UseSegmentTreeStateReturn {
   setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
 }
 
-const useSegmentTreeState = (): UseSegmentTreeStateReturn => {
+export const useSegmentTreeState = (): UseSegmentTreeStateReturn => {
   const [nodes, setNodes] = useState<VisNode[]>([]);
   const [parentMap, setParentMap] = useState<Record<number, number>>({});
 
   return { nodes, parentMap, setNodes, setParentMap };
 };
-
-export default useSegmentTreeState;
