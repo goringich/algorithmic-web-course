@@ -136,3 +136,4 @@ export default class SegmentTreeWasm {
     return nodes;
   }
 }
+
