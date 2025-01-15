@@ -28,30 +28,47 @@
     }
 
 .card_style {
-    display: flex !important;
-    width: 987px !important; 
-    height: 761px !important; 
-    background-color: #EADDFF !important;
+    width: 90vw !important; 
+    max-width: 987px !important; 
+    aspect-ratio: 19 / 14.5 !important; 
+    background-color: #eaddff !important;
     border-radius: 20px !important;
-    box-shadow: 3 !important; 
     margin: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+
+    @media (max-width: 768px) {
+        width: 95vw !important; 
+        flex-direction: column !important; 
     }
-.left_part{
-    width: 451px !important; 
-    height: 671px !important; 
-    margin: auto 0 !important; 
-    margin-left: 44px !important; 
+}
+      
+
+.left_part {
+    width: 46% !important; /* Пропорциональная ширина относительно карточки */
+    aspect-ratio: 41 / 61 !important; /* Сохраняем исходное соотношение сторон */
+    margin: auto !important;
     display: flex !important;
     border-radius: 20px !important;
-    box-shadow: 3 !important; 
+    margin-left: 2% !important; 
+  }
+      
+      
+.right_part {
+    flex: 2 !important; 
+    padding: 2% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    margin-top: 5% !important;
+
+    @media (max-width: 768px) {
+        padding: 2% !important;
     }
-.right_part{
-    flex: 1;
-    display: flex;
-    margin-top: 40px !important;
-    flex-direction: column;
-    justify-content: space-between
 }
+
 .divider {
     border-bottom-width: 2px !important;
     border-color: black !important
