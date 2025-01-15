@@ -16,11 +16,11 @@ const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) 
       newNodes: VisNode[],
       newParentMap: Record<string, string>
     ) => {
-      // Анимация исчезновения удалённых узлов
+      // Animation of the disappearance of deleted nodes
       const removedNodes = oldNodes.filter(oldNode => !newNodes.some(n => n.id === oldNode.id));
       removedNodes.forEach(rn => animateNodeDisappear(rn.id, shapeRefs.current));
 
-      // Анимация перемещения и появления узлов
+      // Animation of movement and appearance of nodes
       newNodes.forEach(newN => {
         const oldNode = oldNodes.find(p => p.id === newN.id);
         if (oldNode) {

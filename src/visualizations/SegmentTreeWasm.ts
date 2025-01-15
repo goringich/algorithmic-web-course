@@ -13,6 +13,7 @@ interface SegmentTreeNodeData {
 export default class SegmentTreeWasm {
   private array: number[];
   private modulePromise: Promise<any>;
+  private vectorInt: any | null = null;
 
   constructor(array: number[]) {
     if (!Array.isArray(array) || !array.every((x) => typeof x === "number")) {
@@ -20,35 +21,39 @@ export default class SegmentTreeWasm {
     }
     this.array = array.slice();
     this.modulePromise = createSegmentTreeModule().then((module: any) => {
-      const vectorInt = new module.VectorInt();
+      this.vectorInt = new module.VectorInt();
       
-      // Явно заполняем его значениями
-      this.array.forEach((val) => vectorInt.push_back(val));
+      // Заполняем vectorInt
+      this.array.forEach((val) => this.vectorInt.push_back(val));
     
       // Передаём в C++
-      module.setArray(vectorInt);
-      
-      // Очищаем вручную (иначе утечка памяти)
-      vectorInt.delete();
+      module.setArray(this.vectorInt);
       
       return module;
     });
   }
 
-  // Добавляем метод setData
   async setData(newData: number[]): Promise<void> {
     const module = await this.modulePromise;
-    const vectorInt = new module.VectorInt();
-    newData.forEach((val) => vectorInt.push_back(val));
-    module.setArray(vectorInt);
-    vectorInt.delete();
+    
+    // Переиспользуем vectorInt
+    if (!this.vectorInt) {
+      this.vectorInt = new module.VectorInt();
+    } else {
+      this.vectorInt.clear();
+    }
+
+    newData.forEach((val) => this.vectorInt.push_back(val));
+    module.setArray(this.vectorInt);
     this.array = newData.slice();
   }
 
   async update(index: number, value: number): Promise<void> {
     const module = await this.modulePromise;
     module.updateTree(0, 0, this.array.length - 1, index, value);
-    this.array[index] += value;
+    
+    // Читаем обновлённое значение вместо манипуляции `this.array`
+    this.array[index] = await this.query(index, index);
   }
 
   async query(l: number, r: number): Promise<number> {
@@ -58,22 +63,14 @@ export default class SegmentTreeWasm {
 
   async getTreeForVisualization(): Promise<SegmentTreeNodeData[]> {
     const module = await this.modulePromise;
-    
+
     const rawTreeVector = module.getTree();
-    // Проверяем, есть ли у объекта `size` и `get`
     if (!rawTreeVector || typeof rawTreeVector.size !== "function" || typeof rawTreeVector.get !== "function") {
-      // console.error("Ошибка: `getTree()` вернул неподдерживаемый формат", rawTreeVector);
       return [];
     }
 
-    // Преобразуем `VectorInt` в обычный массив `number[]`
-    const rawTree: number[] = [];
-    for (let i = 0; i < rawTreeVector.size(); i++) {
-      rawTree.push(rawTreeVector.get(i));
-    }
-
-    // Лог преобразованного массива
-    // console.log("Преобразованный массив rawTree:", rawTree);
+    // Преобразуем VectorInt в обычный массив одним вызовом
+    const rawTree = Array.from({ length: rawTreeVector.size() }, (_, i) => rawTreeVector.get(i));
 
     const nodes: SegmentTreeNodeData[] = [];
     const idCounter = { current: 0 };
