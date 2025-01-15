@@ -1,28 +1,22 @@
-// SegmentTreeVisualizer.tsx
+// src/visualizations/SegmentTreeVisualizer.tsx
 import React, { useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { useDrag } from "../../components/UseDrag";
 import { NotificationSnackbar } from "../../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
 import useHighlightPath from "../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
-import { VisNode } from "../../visualisationComponents/nodeAnimations/types/VisNode"
+import { VisNode } from "../../visualisationComponents/nodeAnimations/types/VisNode";
 import Header from '../../components/Header';
 import Controls from '../../components/Controls';
 import TreeArea from '../../components/TreeArea';
-import useSegmentTree from './useSegmentTree/UseSegmentTree'; 
 import { animateNodeDisappear } from '../../visualisationComponents/nodeAnimations/nodeAnimations'; 
 import TreeStructure from "../../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
-import { SegmentTreeContextProps } from "../common/context/SegmentTreeContextProps";
-import { useSegmentTreeContext } from "../common/context/SegmentTreeContext"; 
+import { SegmentTreeProvider } from "../common/context/SegmentTreeProvider";
 
 const MAX_LEAVES = 16;
 
-
-
 export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const layerRef = useRef<Konva.Layer>(null);  
-  const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const [stageSize, setStageSize] = useState({ width: 1200, height: 500 });
 
   const [data, setData] = useState([5, 8, 6, 3, 2, 7, 2, 6]);
@@ -41,14 +35,10 @@ export default function SegmentTreeVisualizer() {
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  // Кастомный хук для управления деревом
-  const { nodes, parentMap, updateTreeWithNewData, setNodes, setParentMap } = useSegmentTree({ initialData: data, shapeRefs, layerRef });
-
-  // Инициализация хука подсветки с передачей nodes
-  const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
-
+  // Функции для управления деревом (handleAddElement, handleUpdate, handleRemoveLeaf, handleNodeClick, handleCloseSnackbar)
+  
   // Добавление нового элемента
-  const handleAddElement = async () => {
+  const handleAddElement = async (updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>, setData: React.Dispatch<React.SetStateAction<number[]>>) => {
     if (newValue.trim() === "") {
       setSnackbarMessage("Введите значение для нового элемента.");
       setSnackbarOpen(true);
@@ -61,13 +51,7 @@ export default function SegmentTreeVisualizer() {
       return;
     }
 
-    if (data.length >= MAX_LEAVES) {
-      setSnackbarMessage("Превышен лимит (16) листьев.");
-      setSnackbarOpen(true);
-      setNewValue("");
-      return;
-    }
-
+    // Получаем текущие данные из контекста
     const updatedData = [...data, value];
     const newVisNodes = await updateTreeWithNewData(updatedData);
     if (!newVisNodes) {
@@ -80,7 +64,18 @@ export default function SegmentTreeVisualizer() {
   };
 
   // Обновление значения листа
-  const handleUpdate = async () => {
+  const handleUpdate = async (
+    selectedNode: VisNode | null,
+    delta: number,
+    data: number[],
+    setData: React.Dispatch<React.SetStateAction<number[]>>,
+    updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>,
+    parentMap: Record<number, number>,
+    highlightPathFromLeaf: (leafId: number) => void,
+    setSelectedNode: React.Dispatch<React.SetStateAction<VisNode | null>>,
+    setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>,
+    setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     if (!selectedNode) {
       setSnackbarMessage("Выберите узел для обновления.");
       setSnackbarOpen(true);
@@ -128,7 +123,16 @@ export default function SegmentTreeVisualizer() {
   };
 
   // Удаление листа
-  const handleRemoveLeaf = async () => {
+  const handleRemoveLeaf = async (
+    selectedNode: VisNode | null,
+    data: number[],
+    setData: React.Dispatch<React.SetStateAction<number[]>>,
+    updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>,
+    shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>,
+    setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>,
+    setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setSelectedNode: React.Dispatch<React.SetStateAction<VisNode | null>>
+  ) => {
     if (!selectedNode) {
       setSnackbarMessage("Выберите узел для удаления.");
       setSnackbarOpen(true);
@@ -158,7 +162,7 @@ export default function SegmentTreeVisualizer() {
   };
 
   // Обработка клика по узлу
-  const handleNodeClick = (node: VisNode) => {
+  const handleNodeClick = (node: VisNode, setSelectedNode: React.Dispatch<React.SetStateAction<VisNode | null>>, setDelta: React.Dispatch<React.SetStateAction<number>>) => {
     // Только листы
     if (node.range[0] === node.range[1]) {
       setSelectedNode(node);
@@ -186,18 +190,8 @@ export default function SegmentTreeVisualizer() {
     return "#fff";
   };
 
-  const contextValue: SegmentTreeContextProps = {
-    nodes,
-    parentMap,
-    updateTreeWithNewData,
-    setNodes,
-    setParentMap,
-    shapeRefs,
-    layerRef
-  };
-
   return (
-    <useSegmentTreeContext.Provider value={contextValue}>
+    <SegmentTreeProvider initialData={data}>
       <Box
         ref={containerRef}
         width="100%"
@@ -218,13 +212,11 @@ export default function SegmentTreeVisualizer() {
         <Controls
           newValue={newValue}
           setNewValue={setNewValue}
-          handleAddElement={handleAddElement}
+          handleAddElement={() => handleAddElement}
           disabled={data.length >= MAX_LEAVES}
         />
 
         <TreeArea
-          nodes={nodes}
-          shapeRefs={shapeRefs}
           selectedNodeId={selectedNode?.id || null}
           stageSize={stageSize}
           circleColor={circleColor}
@@ -234,15 +226,15 @@ export default function SegmentTreeVisualizer() {
           leafStrokeWidth={leafStrokeWidth}
           internalNodeStrokeWidth={internalNodeStrokeWidth}
           getTextColor={getTextColor}
-          onNodeClick={handleNodeClick}
+          onNodeClick={(node: VisNode) => handleNodeClick(node, setSelectedNode, setDelta)}
         />
 
         <EditNodeModal
           selectedNode={selectedNode}
           delta={delta}
           setDelta={setDelta}
-          onUpdate={handleUpdate}
-          onRemove={handleRemoveLeaf}
+          onUpdate={() => handleUpdate(selectedNode, delta, data, setData, updateTreeWithNewData, parentMap, useHighlightPath, setSelectedNode, setSnackbarMessage, setSnackbarOpen)}
+          onRemove={() => handleRemoveLeaf(selectedNode, data, setData, updateTreeWithNewData, shapeRefs, setSnackbarMessage, setSnackbarOpen, setSelectedNode)}
           position={editBoxPos}
           onMouseDown={handleEditBoxMouseDown}
         />
@@ -255,6 +247,6 @@ export default function SegmentTreeVisualizer() {
 
         <TreeStructure parentMap={parentMap}/>
       </Box>
-    </useSegmentTreeContext.Provider>
+    </SegmentTreeProvider>
   );
 }

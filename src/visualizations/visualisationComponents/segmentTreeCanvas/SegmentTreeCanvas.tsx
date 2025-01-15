@@ -1,13 +1,21 @@
-// SegmentTreeCanvas.tsx
+// src/visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas.tsx
 import React, { useEffect, useRef } from "react";
 import { Layer, Line, Stage } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 import { useSegmentTreeContext } from "../../segmentTreeVisualizer/common/context/SegmentTreeContext";
-import { VisNode } from "../../visualisationComponents/nodeAnimations/types/VisNode";
+import { VisNode } from "../nodeAnimations/types/VisNode";
 
 interface SegmentTreeCanvasProps {
+  circleColor: string;
+  highlightColor: string;
+  selectedColor: string;
+  lineColor: string;
+  leafStrokeWidth: number;
+  internalNodeStrokeWidth: number;
   getTextColor: (fill: string) => string;
   onNodeClick: (node: VisNode) => void;
+  selectedNodeId: number | null;
+  stageSize: { width: number; height: number };
 }
 
 function calculateDepth(node: VisNode, nodesMap: Record<string, VisNode>): number {
@@ -24,11 +32,19 @@ function calculateDepth(node: VisNode, nodesMap: Record<string, VisNode>): numbe
   return depth;
 }
 
-export function SegmentTreeCanvas({
+export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
+  circleColor,
+  highlightColor,
+  selectedColor,
+  lineColor,
+  leafStrokeWidth,
+  internalNodeStrokeWidth,
   getTextColor,
-  onNodeClick
-}: SegmentTreeCanvasProps) {
-  const { nodes, shapeRefs, parentMap } = useSegmentTreeContext();
+  onNodeClick,
+  selectedNodeId,
+  stageSize
+}) => {
+  const { nodes, shapeRefs } = useSegmentTreeContext();
   const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
   const layerRef = useRef<any>(null);
 
@@ -38,18 +54,8 @@ export function SegmentTreeCanvas({
     }
   }, [nodes]);
 
-  const { 
-    circleColor, 
-    highlightColor, 
-    selectedColor, 
-    lineColor, 
-    leafStrokeWidth, 
-    internalNodeStrokeWidth, 
-    selectedNodeId 
-  } = useSegmentTreeContext();
-
   return (
-    <Stage width={window.innerWidth} height={window.innerHeight}>
+    <Stage width={stageSize.width} height={stageSize.height}>
       <Layer ref={layerRef}>
         {nodes.map((parentNode) =>
           parentNode.children.map((childId) => {
@@ -91,4 +97,4 @@ export function SegmentTreeCanvas({
       </Layer>
     </Stage>
   );
-}
+};

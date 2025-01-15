@@ -1,8 +1,7 @@
-// TreeArea.tsx
+// src/components/TreeArea.tsx
 import React from 'react';
 import { SegmentTreeCanvas } from '../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas';
 import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode';
-import { useSegmentTreeContext } from '../segmentTreeVisualizer/common/context/SegmentTreeContext';
 
 interface TreeAreaProps {
   selectedNodeId: number | null;
@@ -31,8 +30,16 @@ const TreeArea: React.FC<TreeAreaProps> = ({
 }) => {
   return (
     <SegmentTreeCanvas
+      circleColor={circleColor}
+      highlightColor={highlightColor}
+      selectedColor={selectedColor}
+      lineColor={lineColor}
+      leafStrokeWidth={leafStrokeWidth}
+      internalNodeStrokeWidth={internalNodeStrokeWidth}
       getTextColor={getTextColor}
       onNodeClick={onNodeClick}
+      selectedNodeId={selectedNodeId}
+      stageSize={stageSize}
     />
   );
 };
