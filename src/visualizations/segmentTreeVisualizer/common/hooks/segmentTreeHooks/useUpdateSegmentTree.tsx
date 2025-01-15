@@ -107,7 +107,7 @@ const useUpdateSegmentTree = ({
       x: node.x,
       y: node.y,
       radius: 20,
-      fill: 'blue',
+      fill: 'black',
       id: node.id.toString(),
     });
 

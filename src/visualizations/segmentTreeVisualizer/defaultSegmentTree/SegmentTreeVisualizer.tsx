@@ -12,8 +12,12 @@ import TreeArea from '../../components/TreeArea';
 import useSegmentTree from './useSegmentTree/UseSegmentTree'; 
 import { animateNodeDisappear } from '../../visualisationComponents/nodeAnimations/nodeAnimations'; 
 import TreeStructure from "../../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
+import { SegmentTreeContextProps } from "../common/context/SegmentTreeContextProps";
+import { useSegmentTreeContext } from "../common/context/SegmentTreeContext"; 
 
 const MAX_LEAVES = 16;
+
+
 
 export default function SegmentTreeVisualizer() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -182,63 +186,75 @@ export default function SegmentTreeVisualizer() {
     return "#fff";
   };
 
+  const contextValue: SegmentTreeContextProps = {
+    nodes,
+    parentMap,
+    updateTreeWithNewData,
+    setNodes,
+    setParentMap,
+    shapeRefs,
+    layerRef
+  };
+
   return (
-    <Box
-      ref={containerRef}
-      width="100%"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="start"
-      padding="20px"
-      boxSizing="border-box"
-      bgcolor="#f8f9fa"
-      onMouseMove={(e) =>
-        handleEditBoxMouseMove(e, stageSize.width, stageSize.height, 300, 150)
-      }
-      onMouseUp={handleEditBoxMouseUp}
-    >
-      <Header />
+    <useSegmentTreeContext.Provider value={contextValue}>
+      <Box
+        ref={containerRef}
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="start"
+        padding="20px"
+        boxSizing="border-box"
+        bgcolor="#f8f9fa"
+        onMouseMove={(e) =>
+          handleEditBoxMouseMove(e, stageSize.width, stageSize.height, 300, 150)
+        }
+        onMouseUp={handleEditBoxMouseUp}
+      >
+        <Header />
 
-      <Controls
-        newValue={newValue}
-        setNewValue={setNewValue}
-        handleAddElement={handleAddElement}
-        disabled={data.length >= MAX_LEAVES}
-      />
+        <Controls
+          newValue={newValue}
+          setNewValue={setNewValue}
+          handleAddElement={handleAddElement}
+          disabled={data.length >= MAX_LEAVES}
+        />
 
-      <TreeArea
-        nodes={nodes}
-        shapeRefs={shapeRefs}
-        selectedNodeId={selectedNode?.id || null}
-        stageSize={stageSize}
-        circleColor={circleColor}
-        highlightColor={highlightColor}
-        selectedColor={selectedColor}
-        lineColor={lineColor}
-        leafStrokeWidth={leafStrokeWidth}
-        internalNodeStrokeWidth={internalNodeStrokeWidth}
-        getTextColor={getTextColor}
-        onNodeClick={handleNodeClick}
-      />
+        <TreeArea
+          nodes={nodes}
+          shapeRefs={shapeRefs}
+          selectedNodeId={selectedNode?.id || null}
+          stageSize={stageSize}
+          circleColor={circleColor}
+          highlightColor={highlightColor}
+          selectedColor={selectedColor}
+          lineColor={lineColor}
+          leafStrokeWidth={leafStrokeWidth}
+          internalNodeStrokeWidth={internalNodeStrokeWidth}
+          getTextColor={getTextColor}
+          onNodeClick={handleNodeClick}
+        />
 
-      <EditNodeModal
-        selectedNode={selectedNode}
-        delta={delta}
-        setDelta={setDelta}
-        onUpdate={handleUpdate}
-        onRemove={handleRemoveLeaf}
-        position={editBoxPos}
-        onMouseDown={handleEditBoxMouseDown}
-      />
+        <EditNodeModal
+          selectedNode={selectedNode}
+          delta={delta}
+          setDelta={setDelta}
+          onUpdate={handleUpdate}
+          onRemove={handleRemoveLeaf}
+          position={editBoxPos}
+          onMouseDown={handleEditBoxMouseDown}
+        />
 
-      <NotificationSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        onClose={handleCloseSnackbar}
-      />
+        <NotificationSnackbar
+          open={snackbarOpen}
+          message={snackbarMessage}
+          onClose={handleCloseSnackbar}
+        />
 
-      <TreeStructure parentMap={parentMap}/>
-    </Box>
+        <TreeStructure parentMap={parentMap}/>
+      </Box>
+    </useSegmentTreeContext.Provider>
   );
 }

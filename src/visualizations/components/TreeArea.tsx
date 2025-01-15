@@ -1,13 +1,11 @@
-// src/visualisations/segmentTreeVisualizer/components/TreeArea.tsx
-
+// TreeArea.tsx
 import React from 'react';
 import { SegmentTreeCanvas } from '../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas';
 import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode';
+import { useSegmentTreeContext } from '../segmentTreeVisualizer/common/context/SegmentTreeContext';
 
 interface TreeAreaProps {
-  nodes: VisNode[];
-  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>; // Изменено на Record<number, ...>
-  selectedNodeId: number | null; // Изменено на number | null
+  selectedNodeId: number | null;
   stageSize: { width: number; height: number };
   circleColor: string;
   highlightColor: string;
@@ -20,8 +18,6 @@ interface TreeAreaProps {
 }
 
 const TreeArea: React.FC<TreeAreaProps> = ({
-  nodes,
-  shapeRefs,
   selectedNodeId,
   stageSize,
   circleColor,
@@ -32,21 +28,13 @@ const TreeArea: React.FC<TreeAreaProps> = ({
   internalNodeStrokeWidth,
   getTextColor,
   onNodeClick
-}) => (
-  <SegmentTreeCanvas
-    nodes={nodes}
-    shapeRefs={shapeRefs}
-    selectedNodeId={selectedNodeId}
-    stageSize={stageSize}
-    circleColor={circleColor}
-    highlightColor={highlightColor}
-    selectedColor={selectedColor}
-    lineColor={lineColor}
-    leafStrokeWidth={leafStrokeWidth}
-    internalNodeStrokeWidth={internalNodeStrokeWidth}
-    getTextColor={getTextColor}
-    onNodeClick={onNodeClick}
-  />
-);
+}) => {
+  return (
+    <SegmentTreeCanvas
+      getTextColor={getTextColor}
+      onNodeClick={onNodeClick}
+    />
+  );
+};
 
 export default TreeArea;
