@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import styles from "./algorithmsPage.module.scss"
-import contents from "../../assets/dataBase/TitlesData.json"
+import styles from "./algorithmsPage.module.scss";
+import contents from "../../assets/dataBase/TitlesData.json";
 import SegmentTreeVisualizer from "../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
+import ErrorBoundary from "../../components/errorBoundary/ErrorBoundary";
 
 interface Section {
   title: string;
@@ -13,8 +14,8 @@ interface Section {
 
 const ContentPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
-  const [activeTab, setActiveTab] = useState<"теория" | "код" | "визуализация" | "комплексный анализ" > (
-    "теория"  
+  const [activeTab, setActiveTab] = useState<"теория" | "код" | "визуализация" | "комплексный анализ">(
+    "теория"
   );
 
   const renderSubSection = (subSection?: Section[]) => {
@@ -31,14 +32,14 @@ const ContentPage: React.FC = () => {
           </li>
         ))}
       </ul>
-    )
-  }
+    );
+  };
 
   return (
     <div className={styles.content_page}>
-      {/* left panel */}
+      {/* Left Panel */}
       <nav className={styles.sidebar}>
-        <h3>содержание</h3>
+        <h3>Содержание</h3>
         {
           contents.map((section, index) => (
             <div key={index}>
@@ -57,49 +58,53 @@ const ContentPage: React.FC = () => {
         </button>
       </nav>
 
-
-      {/* Right side */}
+      {/* Right Side */}
       <main className={styles.main}>
-        {/* content */}
+        {/* Content */}
         {activeSection ? (
           <>
             <h1>{activeSection.title}</h1>
             {activeTab === "теория" && (
-              <p>{activeSection.content || "Мы не сделали эту часть ещё :( "}</p>
+              <p>{activeSection.content || "Мы не сделали эту часть ещё :("}</p>
             )}
             {activeTab === "код" && (
-                <pre>
-                  <code>{activeSection.code || "Код не добавлен для этой секции"}</code>
-                </pre>
-              )}
-              {activeTab === "визуализация" && (
-                <>
-                 <SegmentTreeVisualizer />
-                 
-                 <div>{activeSection.visualization || "Визуализация не доступна"}</div>
-                </>
-              )}
-              {activeTab === "комплексный анализ" && (
-                <div>{activeSection.visualization || "Мы всё итак знаем, зачем анализировать"}</div>
-              )}
+              <pre>
+                <code>{activeSection.code || "Код не добавлен для этой секции"}</code>
+              </pre>
+            )}
+            {activeTab === "визуализация" && (
+              <>
+                <ErrorBoundary>
+                  <SegmentTreeVisualizer />
+                </ErrorBoundary>
+                <div>{activeSection.visualization || "Визуализация не доступна"}</div>
+              </>
+            )}
+            {activeTab === "комплексный анализ" && (
+              <div>{activeSection.visualization || "Мы всё итак знаем, зачем анализировать"}</div>
+            )}
           </>
         ) : (
           <h2>Выберите раздел для просмотра</h2>
         )}
 
-        {/* tabs */}
+        {/* Tabs */}
         <div className={styles.tabs}>
-          {["теория", "код", "визуализация", "комплексный анализ" ].map((tab) => (
-            <button key={tab} className={`${styles.tab} ${
-              activeTab === tab ? styles.active : ""
-            }`} onClick={() => setActiveTab(tab as "теория" | "код" | "визуализация" | "комплексный анализ" )}>
+          {["теория", "код", "визуализация", "комплексный анализ"].map((tab) => (
+            <button
+              key={tab}
+              className={`${styles.tab} ${
+                activeTab === tab ? styles.active : ""
+              }`}
+              onClick={() => setActiveTab(tab as "теория" | "код" | "визуализация" | "комплексный анализ")}
+            >
               {tab}
             </button>
           ))}
-        </div> 
+        </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default ContentPage
+export default ContentPage;
