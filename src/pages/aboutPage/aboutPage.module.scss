@@ -1,0 +1,54 @@
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000000; 
+  font-size: 15px;
+  width: 100px; 
+  height: 21px;
+}
+
+.swiper-button-next {
+  right: 10px; 
+}
+
+.swiper-button-prev {
+  left: 10px; 
+}
+
+.about-page-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1200px;
+  height: 780px;
+  z-index: 1;
+}
+
+.button-container {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(700%);
+  z-index: 2;
+}
+
+.contact-button {
+  padding: 10px 20px !important;
+  background-color: #b13eea !important;
+  color: #fff !important;
+  text-transform: none !important;
+  font-family: "Comfortaa", sans-serif !important;
+  border-radius: 7px !important;
+}
+
+.size {
+  width: 100% !important;
+  height: 100% !important
+}

@@ -56,7 +56,9 @@ export default function SegmentTreeVisualizer() {
 
   // Effect to build the initial tree and parentMap
   useEffect(() => {
+    console.log("Data updated:", data);
     const visNodes = buildSegmentTree(data);
+    console.log("Built VisNodes:", visNodes);
     const newParentMap: Record<number, number> = {};
     visNodes.forEach(node => {
       if (node.parentId !== undefined) {
@@ -68,8 +70,7 @@ export default function SegmentTreeVisualizer() {
 
   // Function to update the tree with new data
   const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
-    // Implement your segment tree construction logic here
-    // For demonstration, using the buildSegmentTree function
+    console.log("Adding element:", newValue);
     const newVisNodes = buildSegmentTree(newData);
     if (newVisNodes) {
       const newParentMap: Record<number, number> = {};

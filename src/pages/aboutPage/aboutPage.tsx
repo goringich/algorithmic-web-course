@@ -1,67 +1,90 @@
 import React from "react";
-import "swiper/css"; 
-import "swiper/css/navigation"; 
+import "swiper/css";
+import "swiper/css/navigation";
+import "./AboutPage.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import styles from "./aboutPage.module.scss";
 import TeamMemberCard from "../../components/teamMemberCard/TeamMemberCard";
+import { Button } from "@mui/material";
+import photo_Juls from "../assets/images/AboutPage/image_juls.jpg";
+import photo_Nastik from "../assets/images/AboutPage/image_nastik.jpg";
+import photo_igor from "../assets/images/AboutPage/image_igor.jpg";
+import photo_ksenon from "../assets/images/AboutPage/image_ksenon.jpg";
 
-interface TeamMember {
-  name: string;
-  role: string;
-  description: string;
-  skills: string[];
-  imageUrl: string;
-}
 
-const teamMembers: TeamMember[] = [
+const teamMembers = [
   {
-    name: "Чезрякова Юлия",
+    name: "Юлия Чезрякова",
     role: "Team leader",
     description:
       "Студентка 2-го курса НИУ ВШЭ 'Компьютерные науки и технологии'. Призер международного фестиваля хакатонов 'Технострелка'.",
     skills: ["C/C++", "Python", "Java", "SQL", "Figma"],
-    imageUrl: "https://via.placeholder.com/150",
+    imageUrl: photo_Juls,
   },
   {
-    name: "Чезрякова Юлия",
-    role: "Team leader",
+    name: "Анастасия Пищаева",
+    role: "Frontend Developer",
     description:
-      "Студентка 2-го курса НИУ ВШЭ 'Компьютерные науки и технологии'. Призер международного фестиваля хакатонов 'Технострелка'.",
-    skills: ["C/C++", "Python", "Java", "SQL", "Figma"],
-    imageUrl: "https://via.placeholder.com/150",
-  }
+      "Студент 2-го курса НИУ ВШЭ.",
+    skills: ["C/C++", "Python", "Figma", "C#"],
+    imageUrl: photo_Nastik,
+  },
+  {
+    name: "Игорь Ким",
+    role: "Fullstack Developer",
+    description:
+      "Студент 2-го курса НИУ ВШЭ.",
+    skills: ["C/C++", "Python", "и тд допишите, ибо я не знаю:)"],
+    imageUrl: photo_igor,
+  },
+  {
+    name: "Ксения Игонина",
+    role: "Какой-то Developer",
+    description:
+      "Студент 2-го курса НИУ ВШЭ.",
+    skills: ["C/C++", "Python", "и тд допишите, ибо я не знаю:)"],
+    imageUrl: photo_ksenon,
+  },
 ];
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="team-section-slider">
-      <Swiper
-        modules={[Navigation]}
-        navigation // Включаем только стрелки навигации
-        spaceBetween={20}
-        slidesPerView={1}
-        breakpoints={{
-          768: {
-            slidesPerView: 2,
-          },
-          1024: {
-            slidesPerView: 3,
-          },
-        }}
+    <div className="about-page-container"
+    >
+      <div className="swiper-container"
       >
-        {teamMembers.map((member, index) => (
-          <SwiperSlide key={index}>
-            <TeamMemberCard
-              name={member.name}
-              role={member.role}
-              description={member.description}
-              skills={member.skills}
-              imageUrl={member.imageUrl}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          spaceBetween={20}
+          slidesPerView={1}
+          className="size"
+        >
+          {teamMembers.map((member, index) => (
+            <SwiperSlide key={index}>
+              <TeamMemberCard
+                name={member.name}
+                role={member.role}
+                description={member.description}
+                skills={member.skills}
+                imageUrl={member.imageUrl}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+
+      <div className="button-container"
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          className="contact-button"
+        >
+          Связаться с нами
+        </Button>
+      </div>
     </div>
   );
 };

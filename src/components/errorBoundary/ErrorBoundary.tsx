@@ -7,6 +7,7 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo; // Добавляем errorInfo для хранения стека вызовов
 }
 
 class ErrorBoundary extends Component<Props, State> {
@@ -16,24 +17,36 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    // Update state to display fallback UI on next render
+    // Обновляем состояние для отображения резервного UI
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // You can log the error to an error reporting service here
+    // Логируем ошибку в консоль или отправляем в службу мониторинга
     console.error("Uncaught error:", error, errorInfo);
+    this.setState({ errorInfo }); // Сохраняем информацию о стеке вызовов
   }
 
   render() {
     if (this.state.hasError) {
-      // Fallback UI
+      // Резервный UI с информацией об ошибке
       return (
         <div style={{ padding: "20px", textAlign: "center" }}>
           <h1>Что-то пошло не так.</h1>
           <p>Попробуйте обновить страницу или вернитесь позже.</p>
-          <details style={{ whiteSpace: "pre-wrap" }}>
-            {this.state.error && this.state.error.toString()}
+          <details style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
+            {this.state.error && (
+              <p>
+                <strong>Ошибка:</strong> {this.state.error.toString()}
+              </p>
+            )}
+            {this.state.errorInfo && (
+              <p>
+                <strong>Стек вызовов:</strong>
+                <br />
+                {this.state.errorInfo.componentStack}
+              </p>
+            )}
           </details>
         </div>
       );
