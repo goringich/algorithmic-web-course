@@ -23,18 +23,31 @@ h2 {
   line-height: 28px;
   color: #000000;
 }
-
-li {
-  top: 13.19px;
-  font-family: 'Comfortaa';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 20px;
-  text-decoration-line: underline;
-  color: #000000;
+.underlined {
+  text-decoration: underline;
 }
-
+.listItem {
+  &.underlined {
+    width: 920px;
+    font-family: 'Comfortaa', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+    color: #000000;
+  }
+  &._listItem_1hgjm_54 {
+    width: 920px;
+    left: 20px;
+    top: 13.19px;
+    font-family: 'Comfortaa', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+    color: #000000;
+  }
+}
 .course__box {
   margin-top: 10px;
   padding: 15px;
@@ -61,8 +74,8 @@ li {
   transform: translate(-50%, -50%);
   background: rgba(208, 188, 255, 0.15);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px; /* Скругленные углы */
-  padding: 20px; /* Отступ внутри рамки */
+  border-radius: 20px;
+  padding: 20px;
   text-align: center;
 }
 .section__title {
