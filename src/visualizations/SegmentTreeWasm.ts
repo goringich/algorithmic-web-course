@@ -1,13 +1,13 @@
 import createSegmentTreeModule from "../assets/JS_complied_algorithms/segment_tree.mjs";
 
 interface SegmentTreeNodeData {
-  id: number;          // <-- Исходно из C++ мы получаем числовые ID
+  id: number;         
   x: number;
   y: number;
   value: number;
   label: string;
   range: [number, number];
-  children: number[];  // <-- Тоже числа
+  children: number[];  
 }
 
 export default class SegmentTreeWasm {
