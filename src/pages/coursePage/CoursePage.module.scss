@@ -1,3 +1,134 @@
-body {
-  // background-color: black !important;
+h1 {
+  width: 440px;
+  height: 45px;
+  left: 500px;
+  top: 17px;
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 45px;
+  color: #230047;
+}
+
+h2 {
+  width: 803.32px;
+  height: 27.93px;
+  left: 55.86px;
+  top: -2.04px;
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 25px;
+  line-height: 28px;
+  color: #000000;
+}
+
+li {
+  top: 13.19px;
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+  text-decoration-line: underline;
+  color: #000000;
+}
+
+.course__box {
+  margin-top: 10px;
+  padding: 15px;
+  background: #eaddff;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  list-style: none;
+}
+
+.container {
+  display: flex;
+  justify-content: center; /* Центрирует по горизонтали */
+  align-items: center; /* Центрирует по вертикали */
+  height: 100vh; /* Высота контейнера на всю высоту экрана */
+  background-color: #f9f9f9; /* Задний фон страницы */
+}
+
+.rectangle {
+  position: absolute;
+  width: 1037px;
+  height: 795px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(208, 188, 255, 0.15);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px; /* Скругленные углы */
+  padding: 20px; /* Отступ внутри рамки */
+  text-align: center;
+}
+.section__title {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.circle {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: #EADDFF;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.number {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1E1E1E;
+  line-height: 24px;
+  text-align: center;
+  transform: none;
+}
+
+.subtitle {
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  color: #000;
+}
+
+.open {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.section__title span:not(.open) {
+  transition: transform 0.3s ease;
+}
+
+.course__box {
+  margin-left: 60px;
+  padding-left: 10px;
+  list-style: none;
+}
+
+.listItem {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.arrow {
+  margin-left: auto;
+  width: 10px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
 }
