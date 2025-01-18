@@ -11,7 +11,6 @@ const __dirname = path.dirname(__filename);
     const wasmPath = path.resolve(__dirname, '../JS_complied_algorithms/segment_tree.wasm');
     const wasmBuffer = fs.readFileSync(wasmPath);
 
-    // Создаём память для WebAssembly модуля, если требуется
     const memory = new WebAssembly.Memory({ initial: 256, maximum: 512 });
 
     // Компиляция и инициализация WebAssembly модуля

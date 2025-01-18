@@ -1,16 +1,15 @@
 import React from "react";
 import "swiper/css";
 import "swiper/css/navigation";
-import "./AboutPage.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import styles from "./aboutPage.module.scss";
 import TeamMemberCard from "../../components/teamMemberCard/TeamMemberCard";
 import { Button } from "@mui/material";
-import photo_Juls from "../assets/images/AboutPage/image_juls.jpg";
-import photo_Nastik from "../assets/images/AboutPage/image_nastik.jpg";
-import photo_igor from "../assets/images/AboutPage/image_igor.jpg";
-import photo_ksenon from "../assets/images/AboutPage/image_ksenon.jpg";
+import photo_Juls from "../../assets/images/AboutPage/image_juls.jpg";
+import photo_Nastik from "../../assets/images/AboutPage/image_nastik.jpg";
+import photo_igor from "../../assets/images/AboutPage/image_igor.jpg";
+import photo_ksenon from "../../assets/images/AboutPage/image_ksenon.jpg";
 
 
 const teamMembers = [
