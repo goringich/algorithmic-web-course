@@ -1,12 +1,12 @@
 .name {
-    font-size: 28px !important; 
+    font-size: 1.9rem !important; 
     font-family: "Comfortaa", sans-serif !important; 
     font-weight: bold !important; 
     text-align: center !important;
 }
   
 .role {
-    font-size: 26px !important; 
+    font-size: 1.6rem !important; 
     font-family: "Comfortaa", sans-serif !important; 
     font-style: italic !important;
     color: black; 
@@ -14,14 +14,14 @@
 }
 
 .description {
-    font-size: 26px !important; 
+    font-size: 1.6rem !important; 
     font-family: "Comfortaa", sans-serif !important; 
     line-height: 1.5 !important; 
     color: black; 
 }
 
 .skills {
-    font-size: 26px !important; 
+    font-size: 1.6rem !important; 
     font-family: "Comfortaa", sans-serif !important;
     font-weight: 500 !important; 
     color: black; 
@@ -38,31 +38,34 @@
     flex-direction: row !important;
     overflow: hidden !important;
     transition: all 0.3s ease !important;
-
+    
     @media (max-width: 768px) {
         width: 95vw !important; 
         flex-direction: column !important; 
     }
-}
+    }
+      
       
 
 .left_part {
-    width: 46% !important; /* Пропорциональная ширина относительно карточки */
-    aspect-ratio: 41 / 61 !important; /* Сохраняем исходное соотношение сторон */
+    width: 46% !important;
+    aspect-ratio: 41 / 61 !important; 
     margin: auto !important;
     display: flex !important;
     border-radius: 20px !important;
     margin-left: 2% !important; 
+    margin-top: 4% !important;
   }
       
       
 .right_part {
-    flex: 2 !important; 
+    flex: 1 !important; 
     padding: 2% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     margin-top: 5% !important;
+    overflow: auto !important;
 
     @media (max-width: 768px) {
         padding: 2% !important;
