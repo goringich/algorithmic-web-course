@@ -1,17 +1,18 @@
-.swiper-button-next,
-.swiper-button-prev {
-  color: #000000; 
-  font-size: 15px;
-  width: 100px; 
-  height: 21px;
-}
+.swiper-button {
+  &-next, &-prev{
+    color: var(--black); 
+    font-size: 15px;
+    width: 100px; 
+    height: 21px;
+  }
+  
+  &-next{
+    right: 10px; 
+  }
 
-.swiper-button-next {
-  right: 10px; 
-}
-
-.swiper-button-prev {
-  left: 10px; 
+  &-prev {
+    left: 10px; 
+  }
 }
 
 .about-page-container {
@@ -40,15 +41,15 @@
 }
 
 .contact-button {
-  padding: 10px 20px !important;
-  background-color: #b13eea !important;
-  color: #fff !important;
-  text-transform: none !important;
-  font-family: "Comfortaa", sans-serif !important;
-  border-radius: 7px !important;
+  padding: 10px 20px;
+  background-color: #b13eea;
+  color: #fff;
+  text-transform: none;
+  font-family: "Comfortaa", sans-serif;
+  border-radius: 7px;
 }
 
 .size {
-  width: 100% !important;
-  height: 100% !important
+  width: 100%;
+  height: 100%
 }
