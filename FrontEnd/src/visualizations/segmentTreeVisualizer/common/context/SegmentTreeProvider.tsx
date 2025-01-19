@@ -1,4 +1,3 @@
-// SegmentTreeProvider.tsx
 import React, { useState, useEffect, useRef } from "react";
 import Konva from "konva";
 import { SegmentTreeContextProps } from "./segmentTreeContext/SegmentTreeContextProps";
@@ -61,3 +60,5 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     </SegmentTreeContext.Provider>
   );
 };
+
+// export default SegmentTreeProvider;

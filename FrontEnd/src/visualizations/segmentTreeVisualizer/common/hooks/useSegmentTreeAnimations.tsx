@@ -1,8 +1,8 @@
 // hooks/useSegmentTreeAnimations.ts
 import { useCallback } from 'react';
-import { VisNode } from '../../../../visualisationComponents/nodeAnimations/types/VisNode';
-import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../../visualisationComponents/nodeAnimations/nodeAnimations';
-import { buildParentMap } from '../../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
+import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
 import Konva from 'konva';
 
 interface UseSegmentTreeAnimationsProps {
@@ -16,11 +16,9 @@ const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) 
       newNodes: VisNode[],
       newParentMap: Record<string, string>
     ) => {
-      // Анимация исчезновения удалённых узлов
       const removedNodes = oldNodes.filter(oldNode => !newNodes.some(n => n.id === oldNode.id));
       removedNodes.forEach(rn => animateNodeDisappear(rn.id, shapeRefs.current));
 
-      // Анимация перемещения и появления узлов
       newNodes.forEach(newN => {
         const oldNode = oldNodes.find(p => p.id === newN.id);
         if (oldNode) {

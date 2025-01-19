@@ -9,7 +9,7 @@ import Header from "../../components/Header";
 import Controls from "../../components/Controls";
 import TreeArea from "../../components/TreeArea";
 import TreeStructure from "../../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
-import { useSegmentTreeContext } from "../common/context/SegmentTreeProvider";
+import { useSegmentTreeContext } from "../common/context/segmentTreeContext/SegmentTreeContext"
 import Konva from "konva";
 
 import {
