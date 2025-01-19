@@ -1,38 +1,51 @@
-// src/context/SegmentTreeProvider.tsx
-import React, { useRef, useState, useEffect, ReactNode } from "react";
+// SegmentTreeProvider.tsx
+import React, { useState, useEffect, useRef } from "react";
 import Konva from "konva";
+import { SegmentTreeContextProps } from "./segmentTreeContext/SegmentTreeContextProps";
+import SegmentTreeContext from "./segmentTreeContext/SegmentTreeContext"; 
 import { VisNode } from "@src/visualizations/visualisationComponents/nodeAnimations/types/VisNode";
-import SegmentTreeContext, { SegmentTreeContextProps } from "./SegmentTreeContext";
-import useSegmentTree from "../../defaultSegmentTree/useSegmentTree/UseSegmentTree";
-import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap"; // Убедитесь в правильности пути импорта
+import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
 
 interface SegmentTreeProviderProps {
   initialData: number[];
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initialData, children }) => {
-  const layerRef = useRef<Konva.Layer>(null);  
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
-  const [data, setData] = useState(initialData);
+  const layerRef = useRef<Konva.Layer | null>(null);
   const [nodes, setNodes] = useState<VisNode[]>([]);
   const [parentMap, setParentMap] = useState<Record<number, number>>({});
-  
-  const { updateTreeWithNewData } = useSegmentTree({ initialData: data, shapeRefs, layerRef });
 
-  // Инициализация дерева при монтировании
   useEffect(() => {
-    updateTreeWithNewData(data).then((newNodes) => {
-      if (newNodes) {
-        setNodes(newNodes);
-        setParentMap(buildParentMap(newNodes));
-      }
-    }).catch((error) => {
-      console.error("Ошибка при инициализации дерева сегментов:", error);
-    });
-  }, [data, updateTreeWithNewData]);
+    const newNodes = initialData.map((value, index) => ({
+      id: index,
+      value,
+      range: [index, index],
+      parentId: Math.floor((index - 1) / 2),
+    }));
+    setNodes(newNodes);
+    setParentMap(buildParentMap(newNodes));
+  }, [initialData]);
 
-  const contextValue: SegmentTreeContextProps = {
+  const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
+    try {
+      const newNodes = newData.map((value, index) => ({
+        id: index,
+        value,
+        range: [index, index],
+        parentId: Math.floor((index - 1) / 2),
+      }));
+      setNodes(newNodes);
+      setParentMap(buildParentMap(newNodes));
+      return newNodes;
+    } catch (error) {
+      console.error("Error updating tree with new data:", error);
+      return null;
+    }
+  };
+
+  const value: SegmentTreeContextProps = {
     nodes,
     parentMap,
     updateTreeWithNewData,
@@ -43,7 +56,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
   };
 
   return (
-    <SegmentTreeContext.Provider value={contextValue}>
+    <SegmentTreeContext.Provider value={value}>
       {children}
     </SegmentTreeContext.Provider>
   );

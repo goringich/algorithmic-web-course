@@ -1,8 +1,7 @@
-// src/visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas.tsx
 import React, { useEffect, useRef } from "react";
 import { Layer, Line, Stage } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
-import { useSegmentTreeContext } from "../../segmentTreeVisualizer/common/context/SegmentTreeContext";
+import { useSegmentTreeContext } from "../../segmentTreeVisualizer/common/context/segmentTreeContext/SegmentTreeContext";
 import { VisNode } from "../nodeAnimations/types/VisNode";
 
 interface SegmentTreeCanvasProps {

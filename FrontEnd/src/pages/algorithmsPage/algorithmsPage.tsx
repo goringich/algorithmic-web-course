@@ -3,6 +3,7 @@ import styles from "./algorithmsPage.module.scss";
 import contents from "../../assets/dataBase/TitlesData.json";
 import SegmentTreeVisualizer from "../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
 import ErrorBoundary from "../../components/errorBoundary/ErrorBoundary";
+import { SegmentTreeProvider } from "../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
 
 interface Section {
   title: string;
@@ -14,6 +15,7 @@ interface Section {
 
 const ContentPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
+  const data = [5, 8, 6, 3, 2, 7, 2, 6];
   const [activeTab, setActiveTab] = useState<"теория" | "код" | "визуализация" | "комплексный анализ">(
     "теория"
   );
@@ -75,7 +77,9 @@ const ContentPage: React.FC = () => {
             {activeTab === "визуализация" && (
               <>
                 <ErrorBoundary>
-                  <SegmentTreeVisualizer />
+                  <SegmentTreeProvider initialData={data}>
+                    <SegmentTreeVisualizer />
+                  </SegmentTreeProvider>
                 </ErrorBoundary>
                 <div>{activeSection.visualization || "Визуализация не доступна"}</div>
               </>

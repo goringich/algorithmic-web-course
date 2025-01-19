@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import SegmentTreeWasm from '../../../SegmentTreeWasm';
+import SegmentTreeWasm from '../SegmentTreeWasm';
 import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
 import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
 import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';

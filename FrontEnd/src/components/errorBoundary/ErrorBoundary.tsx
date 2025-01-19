@@ -7,7 +7,7 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
-  errorInfo?: ErrorInfo; // Добавляем errorInfo для хранения стека вызовов
+  errorInfo?: ErrorInfo; 
 }
 
 class ErrorBoundary extends Component<Props, State> {
