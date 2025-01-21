@@ -11,6 +11,7 @@ const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
 const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'));
 
 
+
 function App() {
   return (
     <ErrorBoundary>
