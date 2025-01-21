@@ -47,6 +47,8 @@ export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
   const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
   const layerRef = useRef<any>(null);
 
+  console.log("logs: ", nodes);
+
   useEffect(() => {
     if (layerRef.current) {
       layerRef.current.batchDraw();

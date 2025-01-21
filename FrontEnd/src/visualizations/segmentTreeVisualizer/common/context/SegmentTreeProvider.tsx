@@ -4,10 +4,12 @@ import { SegmentTreeContextProps } from "./segmentTreeContext/SegmentTreeContext
 import SegmentTreeContext from "./segmentTreeContext/SegmentTreeContext"; 
 import { VisNode } from "../../../visualisationComponents/nodeAnimations/types/VisNode";
 import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
+import useUpdateSegmentTree from "../../defaultSegmentTree/hooks/useUpdateSegmentTree";
 import useHighlightPath from "../../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
 import { useDrag } from "../../../components/UseDrag";
 import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
 import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
+import buildTree from "../../../segmentTreeVisualizer/defaultSegmentTree/SegmentTreeWasm"
 
 interface SegmentTreeProviderProps {
   children: React.ReactNode;
@@ -67,22 +69,56 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
   //   setParentMap(buildParentMap(newNodes));
   // }, [initialData]);
 
-  const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
-    try {
-      const newNodes = newData.map((value, index) => ({
-        id: index,
-        value,
-        range: [index, index],
-        parentId: Math.floor((index - 1) / 2),
-      }));
-      setNodes(newNodes);
-      setParentMap(buildParentMap(newNodes));
-      return newNodes;
-    } catch (error) {
-      console.error("Error updating tree with new data:", error);
-      return null;
-    }
-  };
+  // const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
+  //   try {
+  //     // Map new data to nodes
+  //     const newNodes: VisNode[] = newData.map((value, index) => ({
+  //       id: index,
+  //       x: 0, 
+  //       y: 0,
+  //       range: [index, index],
+  //       label: `Node ${index}`,
+  //       value,
+  //       parentId: index > 0 ? Math.floor((index - 1) / 2) : undefined, 
+  //       children: []
+  //     }));
+
+  //     newData.forEach((_, index) => {
+  //       const leftChildIndex = 2 * index + 1;
+  //       const rightChildIndex = 2 * index + 2;
+  
+  //       if (leftChildIndex < newData.length) {
+  //         newNodes[index].children?.push(newNodes[leftChildIndex]);
+  //       }
+  //       if (rightChildIndex < newData.length) {
+  //         newNodes[index].children?.push(newNodes[rightChildIndex]);
+  //       }
+  //     });
+  
+  //     // Update state with new nodes
+  //     await setNodes(newNodes);
+  
+  //     // Build and update parent map
+  //     const parentMap = buildParentMap(newNodes);
+  //     await setParentMap(parentMap);
+  
+  //     return newNodes;
+  //   } catch (error) {
+  //     console.error("Error updating tree with new data:", error);
+  //     return null;
+  //   }
+  // };
+
+  const { updateTreeWithNewData } = useUpdateSegmentTree({
+    nodes,
+    setNodes,
+    parentMap,
+    setParentMap,
+    segmentTree: segmentTreeWasmRef.current,
+    shapeRefs,
+    layerRef,
+  });
+  
 
 
     // Функции, чтобы не пробрасывать их через props
@@ -96,7 +132,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
         setSnackbarOpen,
         MAX_LEAVES,
         updateTreeWithNewData,
-        buildSegmentTree,
+        buildTree,
         setParentMap
       });
     };

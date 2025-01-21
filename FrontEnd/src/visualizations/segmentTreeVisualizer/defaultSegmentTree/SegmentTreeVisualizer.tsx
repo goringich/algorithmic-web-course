@@ -78,7 +78,7 @@ const SegmentTreeVisualizer: React.FC = () => {
         newValue={newValue}
         setNewValue={setNewValue}
         handleAddElement={onAddElement}
-        disabled={data.length >= 16} // Используем MAX_LEAVES из провайдера
+        disabled={data.length >= 16}
         onUpdate={onUpdateNode}
         onRemove={onRemoveLeaf}
       />
