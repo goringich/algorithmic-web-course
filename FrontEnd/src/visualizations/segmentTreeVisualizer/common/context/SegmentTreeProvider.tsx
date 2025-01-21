@@ -6,7 +6,8 @@ import { VisNode } from "../../../visualisationComponents/nodeAnimations/types/V
 import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
 import useHighlightPath from "../../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
 import { useDrag } from "../../../components/UseDrag";
-import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick, buildSegmentTree } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
+import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
+import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
 
 interface SegmentTreeProviderProps {
   children: React.ReactNode;
@@ -40,15 +41,21 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     handleMouseUp: handleEditBoxMouseUp
   } = useDrag(400, 300);
 
-  useEffect(() => {
-    const visNodes = buildSegmentTree(data);
-    console.log("Built VisNodes:", visNodes);
-    setNodes(visNodes);
-    const newPM = buildParentMap(visNodes);
-    console.log("Built ParentMap:", newPM);
-    setParentMap(newPM);
-  }, [data]);
+  const segmentTreeWasmRef = useRef<SegmentTreeWasm | null>(null);
 
+  useEffect(() => {
+    // Инициализация только один раз
+    if (!segmentTreeWasmRef.current) {
+      segmentTreeWasmRef.current = new SegmentTreeWasm(initialData);
+      // Получаем дерево для визуализации
+      segmentTreeWasmRef.current.getTreeForVisualization().then((visNodes) => {
+        setNodes(visNodes);
+        setParentMap(buildParentMap(visNodes));
+      }).catch(error => {
+        console.error("Ошибка при построении дерева для визуализации:", error);
+      });
+    }
+  }, [initialData]);
   // useEffect(() => {
   //   const newNodes = initialData.map((value, index) => ({
   //     id: index,

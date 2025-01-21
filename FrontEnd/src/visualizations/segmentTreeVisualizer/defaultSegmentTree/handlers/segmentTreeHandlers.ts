@@ -206,22 +206,22 @@ export const handleCloseSnackbar = ({
   setSnackbarOpen(false);
 };
 
-export const buildSegmentTree = (data: number[]): VisNode[] => {
-  const leaves: VisNode[] = data.map((value, index) => ({
-    id: index,
-    value,
-    range: [index, index],
-    parentId: Math.floor((index - 1) / 2), 
-  }));
-  return leaves;
-};
+// export const buildSegmentTree = (data: number[]): VisNode[] => {
+//   const leaves: VisNode[] = data.map((value, index) => ({
+//     id: index,
+//     value,
+//     range: [index, index],
+//     parentId: Math.floor((index - 1) / 2), 
+//   }));
+//   return leaves;
+// };
 
-export const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
-  try {
-    const newVisNodes = buildSegmentTree(newData);
-    return newVisNodes;
-  } catch (error) {
-    console.error("Error updating tree with new data:", error);
-    return null;
-  }
-};
+// export const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
+//   try {
+//     const newVisNodes = buildSegmentTree(newData);
+//     return newVisNodes;
+//   } catch (error) {
+//     console.error("Error updating tree with new data:", error);
+//     return null;
+//   }
+// };
