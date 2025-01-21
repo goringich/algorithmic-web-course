@@ -1,11 +1,11 @@
 import { VisNode } from "../types/VisNode";
 
-export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
-  const map: Record<string, string> = {};
-
-  // Создаём Set всех ID для быстрого поиска
+export const buildParentMap = (newNodes: VisNode[]): Record<number, number> => {
+  const map: Record<number, number> = {};
   const nodeIds = new Set(newNodes.map((node) => node.id));
+  const childNodes = new Set<number>();
 
+  // Построение parentMap
   for (const node of newNodes) {
     for (const childId of node.children) {
       if (!nodeIds.has(childId)) {
@@ -20,11 +20,12 @@ export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
         );
       }
       map[childId] = node.id;
+      childNodes.add(childId);
     }
   }
 
-  // Определяем «корневые» узлы (те, что не имеют родителя)
-  const rootNodes = newNodes.filter((node) => !map.hasOwnProperty(node.id));
+  // Поиск корневых узлов
+  const rootNodes = newNodes.filter((node) => !childNodes.has(node.id));
   if (rootNodes.length === 0) {
     console.error("No root node found in the tree.");
     if (newNodes.length > 0) {
@@ -40,13 +41,36 @@ export const buildParentMap = (newNodes: VisNode[]): Record<string, string> => {
     const trueRoot = rootNodes[0];
     rootNodes.slice(1).forEach((root) => {
       map[root.id] = trueRoot.id;
-      console.log(`Reassigning root node '${root.id}' to true root '${trueRoot.id}'`);
+      console.log(
+        `Reassigning root node '${root.id}' to true root '${trueRoot.id}'`
+      );
     });
   }
 
+  // Установка родителя для корневого узла
   if (rootNodes.length > 0) {
     const trueRoot = rootNodes[0];
     map[trueRoot.id] = trueRoot.id; // сам себе родитель
+  }
+
+  // Проверка на зацикливание
+  const visited = new Set<number>();
+  const hasCycle = (nodeId: number): boolean => {
+    if (visited.has(nodeId)) return true; // Обнаружен цикл
+    visited.add(nodeId);
+    const parentId = map[nodeId];
+    if (parentId && parentId !== nodeId) {
+      return hasCycle(parentId);
+    }
+    return false;
+  };
+
+  for (const nodeId of nodeIds) {
+    if (hasCycle(nodeId)) {
+      console.error(`Cycle detected at node '${nodeId}'.`);
+      break;
+    }
+    visited.clear();
   }
 
   return map;

@@ -1,32 +1,32 @@
 import { VisNode } from "../nodeAnimations/types/VisNode";
 
 export const buildPathFromLeaf = (
-  leafNodeId: string,
+  leafNodeId: number,
   nodes: VisNode[],
-  parentMap: Record<string, string>
-): string[] => {
-  const pathIds: string[] = [];
-  let currentId: string | undefined = leafNodeId;
-  const visited = new Set<string>();
+  parentMap: Record<number, number>
+): number[] => {
+  const pathIds: number[] = [];
+  let currentId: number | undefined = leafNodeId;
+  const visited = new Set<number>();
 
   while (currentId !== undefined && !visited.has(currentId)) {
     pathIds.push(currentId);
     visited.add(currentId);
 
-    const currentNode = nodes.find((n) => n.id === currentId);
     if (!parentMap[currentId]) {
-      console.error(`No parent found for node '${currentId}'`);
-      break;
+      console.error(`No parent found for node '${currentId}'. Adding to orphan list.`);
+      break; // Прекращаем обработку, если узел-сирота.
     }
-    const pId = parentMap[currentId];
-    if (!pId) break;
 
-    if (pId === currentId) {
-      // Достигли корня (сам себе родитель)
+    const parentId = parentMap[currentId];
+    if (parentId === currentId) {
+      // Достигли корня
       break;
     }
-    currentId = pId;
+
+    currentId = parentId;
   }
 
   return pathIds;
 };
+
