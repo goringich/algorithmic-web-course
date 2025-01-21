@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import React, {useState, lazy, Suspense} from "react";
 import './globalStyles/App.scss';
 import Header from './components/header/Header';

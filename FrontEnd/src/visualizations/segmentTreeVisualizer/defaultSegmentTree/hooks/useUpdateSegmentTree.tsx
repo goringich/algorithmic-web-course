@@ -12,8 +12,8 @@ interface UseUpdateSegmentTreeProps {
   parentMap: Record<number, number>;
   setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
   segmentTree: SegmentTreeWasm | null;
-  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>; // Changed to string
-  layerRef: React.MutableRefObject<Konva.Layer | null>; // Added layerRef
+  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>; 
+  layerRef: React.MutableRefObject<Konva.Layer | null>; 
 }
 
 interface UseUpdateSegmentTreeReturn {

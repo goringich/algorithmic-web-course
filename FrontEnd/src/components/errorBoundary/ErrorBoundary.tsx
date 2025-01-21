@@ -6,47 +6,53 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: ErrorInfo; 
+  errors: { error: Error; errorInfo: ErrorInfo | null }[]; // Список всех ошибок
 }
 
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, errors: [] };
   }
 
-  static getDerivedStateFromError(error: Error): State {
-    // Обновляем состояние для отображения резервного UI
-    return { hasError: true, error };
+  static getDerivedStateFromError(error: Error): Partial<State> {
+    // Устанавливаем флаг hasError
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Логируем ошибку в консоль или отправляем в службу мониторинга
+    // Добавляем ошибку в список ошибок
+    this.setState((prevState) => ({
+      errors: [...prevState.errors, { error, errorInfo }],
+    }));
+
+    // Логируем ошибку в консоль
     console.error("Uncaught error:", error, errorInfo);
-    this.setState({ errorInfo }); // Сохраняем информацию о стеке вызовов
   }
 
   render() {
     if (this.state.hasError) {
-      // Резервный UI с информацией об ошибке
       return (
         <div style={{ padding: "20px", textAlign: "center" }}>
           <h1>Что-то пошло не так.</h1>
           <p>Попробуйте обновить страницу или вернитесь позже.</p>
           <details style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
-            {this.state.error && (
-              <p>
-                <strong>Ошибка:</strong> {this.state.error.toString()}
-              </p>
-            )}
-            {this.state.errorInfo && (
-              <p>
-                <strong>Стек вызовов:</strong>
-                <br />
-                {this.state.errorInfo.componentStack}
-              </p>
-            )}
+            {this.state.errors.map((err, index) => (
+              <div key={index} style={{ marginBottom: "20px" }}>
+                {err.error && (
+                  <p>
+                    <strong>Ошибка {index + 1}:</strong> {err.error.toString()}
+                  </p>
+                )}
+                {err.errorInfo && (
+                  <p>
+                    <strong>Стек вызовов:</strong>
+                    <br />
+                    {err.errorInfo.componentStack}
+                  </p>
+                )}
+              </div>
+            ))}
           </details>
         </div>
       );

@@ -1,9 +1,7 @@
-// handlers.ts
 import { VisNode } from "../../../visualisationComponents/nodeAnimations/types/VisNode";
 import { animateNodeDisappear } from "../../../visualisationComponents/nodeAnimations/nodeAnimations";
 import Konva from "konva";
 
-// Типы для параметров функций
 
 type HandleAddElementParams = {
   newValue: string;
@@ -107,7 +105,6 @@ export const handleUpdateNode = async ({
     return;
   }
 
-  // Найти обновлённый листовой узел
   const leafNode = newVisNodes.find(n => n.range[0] === start && n.range[1] === end);
   if (!leafNode) {
     console.error(`Leaf node for range [${start}, ${end}] not found.`);
@@ -167,7 +164,6 @@ export const handleRemoveLeaf = async ({
 
   const pos = selectedNode.range[0];
 
-  // Убедитесь, что animateNodeDisappear правильно реализован и импортирован
   await animateNodeDisappear(selectedNode.id, shapeRefs.current);
 
   const newArr = [...data];
@@ -210,25 +206,19 @@ export const handleCloseSnackbar = ({
   setSnackbarOpen(false);
 };
 
-// Вспомогательная функция для построения дерева
 export const buildSegmentTree = (data: number[]): VisNode[] => {
-  // Реализуйте логику построения сегментного дерева здесь
-  // Это упрощённый пример
   const leaves: VisNode[] = data.map((value, index) => ({
     id: index,
     value,
     range: [index, index],
-    parentId: Math.floor((index - 1) / 2), // Пример расчёта родителя
+    parentId: Math.floor((index - 1) / 2), 
   }));
-  // Добавьте внутренние узлы по необходимости
   return leaves;
 };
 
-// Функция для обновления дерева с новыми данными
 export const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
   try {
     const newVisNodes = buildSegmentTree(newData);
-    // Дополнительная логика при необходимости
     return newVisNodes;
   } catch (error) {
     console.error("Error updating tree with new data:", error);

@@ -5,6 +5,6 @@ export interface VisNode {
   range: [number, number];
   label: string;
   value: number;
-  children: string[];
+  children?: VisNode[];
   isHighlighted?: boolean;
 }
