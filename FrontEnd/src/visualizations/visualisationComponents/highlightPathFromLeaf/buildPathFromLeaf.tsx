@@ -6,21 +6,25 @@ export const buildPathFromLeaf = (
   parentMap: Record<number, number>
 ): number[] => {
   const pathIds: number[] = [];
+  const visited = new Set<number>(); // Для предотвращения циклов
   let currentId: number | undefined = leafNodeId;
-  const visited = new Set<number>();
 
-  while (currentId !== undefined && !visited.has(currentId)) {
-    pathIds.push(currentId);
+  while (currentId !== undefined) {
+    if (visited.has(currentId)) {
+      console.error(`Cycle detected at node '${currentId}'. Stopping path construction.`);
+      break;
+    }
     visited.add(currentId);
+    pathIds.push(currentId);
 
     if (!parentMap[currentId]) {
-      console.error(`No parent found for node '${currentId}'. Adding to orphan list.`);
-      break; // Прекращаем обработку, если узел-сирота.
+      console.error(`No parent found for node '${currentId}'. Path construction stopped.`);
+      break;
     }
 
     const parentId = parentMap[currentId];
     if (parentId === currentId) {
-      // Достигли корня
+      // Достигли корня дерева
       break;
     }
 
@@ -29,4 +33,6 @@ export const buildPathFromLeaf = (
 
   return pathIds;
 };
+
+
 

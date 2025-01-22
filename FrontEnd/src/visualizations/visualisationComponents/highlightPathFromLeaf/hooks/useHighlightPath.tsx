@@ -1,11 +1,12 @@
 import { useCallback } from "react";
 import { VisNode } from "../../nodeAnimations/types/VisNode";
 import { buildPathFromLeaf } from "../buildPathFromLeaf";
+import { validateParentMap } from "../utils/validateParentMap";
 import useNodeAnimations from "./useNodeAnimations";
 
 interface UseHighlightPathProps {
   nodes: VisNode[];
-  parentMap: Record<string, string>;
+  parentMap: Record<number, number>
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
 }
 
@@ -17,28 +18,31 @@ export default function useHighlightPath({
   const { animatePath, clearAllTimeouts } = useNodeAnimations({ setNodes });
 
   const highlightPathFromLeaf = useCallback(
-    (leafNodeId: string) => {
-      // Сбрасываем все таймауты и подсветки
+    (leafNodeId: number) => {
       clearAllTimeouts();
-      setNodes((old) =>
-        old.map((n) => (n.isHighlighted ? { ...n, isHighlighted: false } : n))
+
+      setNodes((oldNodes) =>
+        oldNodes.map((node) => ({
+          ...node,
+          isHighlighted: false
+        }))
       );
 
-      // Проверяем, есть ли такой узел
-      const leafNode = nodes.find((n) => n.id === leafNodeId);
+      const leafNode = nodes.find((node) => node.id === leafNodeId);
       if (!leafNode) {
-        console.error(`Leaf node with ID '${leafNodeId}' not found`);
+        console.error(`Leaf node with ID '${leafNodeId}' not found.`);
         return;
       }
 
-      // Строим путь
+      if (!validateParentMap(parentMap)) {
+        throw new Error("Invalid parentMap: Cycles or orphan nodes detected.");
+      }
       const pathIds = buildPathFromLeaf(leafNodeId, nodes, parentMap);
       if (pathIds.length === 0) {
-        console.warn(`No path found from leaf '${leafNodeId}' to root`);
+        console.warn(`No path found from leaf node '${leafNodeId}' to root.`);
         return;
       }
 
-      // Запускаем анимацию подсветки
       animatePath(pathIds);
     },
     [nodes, parentMap, setNodes, animatePath, clearAllTimeouts]
@@ -46,3 +50,4 @@ export default function useHighlightPath({
 
   return highlightPathFromLeaf;
 }
+
