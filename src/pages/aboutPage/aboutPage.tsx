@@ -49,16 +49,16 @@ const teamMembers = [
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="about-page-container"
+    <div className={styles.about_page_container}
     >
-      <div className="swiper-container"
+      <div className={styles.swiper_container}
       >
         <Swiper
           modules={[Navigation]}
           navigation
           spaceBetween={20}
           slidesPerView={1}
-          className="size"
+          className={styles.size}
         >
           {teamMembers.map((member, index) => (
             <SwiperSlide key={index}>
@@ -74,12 +74,12 @@ const AboutPage: React.FC = () => {
         </Swiper>
       </div>
 
-      <div className="button-container"
+      <div className={styles.button_container}
       >
         <Button
           variant="contained"
           color="primary"
-          className="contact-button"
+          className={styles.contact_button}
         >
           Связаться с нами
         </Button>
