@@ -14,7 +14,7 @@ func main() {
   }
   defer db.Close()
 
-  contentPath := "DataBase/content"
+  contentPath := "../DataBase/content"
   err = content_loader.LoadContent(db, contentPath)
   if err != nil {
     log.Fatalf("Ошибка при загрузке контента: %v", err)

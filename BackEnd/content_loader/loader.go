@@ -2,7 +2,7 @@ package content_loader
 
 import (
   "database/sql"
-  "fmt"
+  // "fmt"
   "os"
   "path/filepath"
   "strings"
