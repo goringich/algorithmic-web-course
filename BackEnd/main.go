@@ -1,26 +1,26 @@
 package main
 
 import (
-  "backend/config"
-  "backend/internal/handlers"
-  "backend/internal/models"
+  "log"
 
-  "github.com/gin-gonic/gin"
+  "your_project_path/back/content_loader" // Обновите на ваш путь
+  "your_project_path/back/database"      // Обновите на ваш путь
 )
 
 func main() {
-  // Инициализация базы данных
-  config.InitDB()
-  config.DB.AutoMigrate(&models.Item{}) // Создаём таблицу для модели Item
+  // Подключение к базе данных
+  db, err := database.Connect()
+  if err != nil {
+    log.Fatalf("Не удалось подключиться к базе данных: %v", err)
+  }
+  defer db.Close()
 
-  // Настройка роутера
-  r := gin.Default()
+  // Загрузка контента из папки DataBase/content
+  contentPath := "DataBase/content" // Убедитесь, что путь указан правильно
+  err = content_loader.LoadContent(db, contentPath)
+  if err != nil {
+    log.Fatalf("Ошибка при загрузке контента: %v", err)
+  }
 
-  // Маршруты
-  r.GET("/items", handlers.GetItems)       // Получить все товары
-  r.POST("/items", handlers.CreateItem)    // Создать новый товар
-  r.DELETE("/items/:id", handlers.DeleteItem) // Удалить товар
-
-  // Запуск сервера
-  r.Run(":8080")
+  log.Println("Контент успешно загружен в базу данных!")
 }

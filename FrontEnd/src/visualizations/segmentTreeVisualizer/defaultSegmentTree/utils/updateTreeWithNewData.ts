@@ -1,6 +1,9 @@
 import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
 import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
 import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import { validateParentMap } from '../../../visualisationComponents/highlightPathFromLeaf/utils/validateParentMap';
+import { fixParentMap } from '../../../visualisationComponents/highlightPathFromLeaf/utils/fixParentMap';
+import SegmentTreeWasm from '../SegmentTreeWasm';
 import Konva from 'konva';
 
 export const updateTreeWithNewData = async (
@@ -8,8 +11,8 @@ export const updateTreeWithNewData = async (
   segmentTree: SegmentTreeWasm | null,
   nodes: VisNode[],
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>,
-  parentMap: Record<number, number>,
-  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>,
+  parentMap: Record<number, number | undefined>,
+  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>,
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>,
   layerRef: React.MutableRefObject<Konva.Layer | null>
 ): Promise<VisNode[] | null> => {
@@ -23,27 +26,30 @@ export const updateTreeWithNewData = async (
     await segmentTree.setData(newData);
     const newVisNodes = await segmentTree.getTreeForVisualization();
 
-    let newParentMap = buildParentMap(newVisNodes);
+    const rootId = newVisNodes[0]?.id;
+    if (rootId === undefined) {
+      throw new Error("No root node found in the new visualization nodes.");
+    }
+
+    let newParentMap = buildParentMap(newVisNodes, rootId);
 
     // Validate and fix parentMap
-    if (!validateParentMap(newParentMap)) {
+    if (!validateParentMap(newParentMap, rootId)) {
       console.warn("Invalid parentMap detected. Attempting to fix...");
-      newParentMap = fixParentMap(newParentMap);
+      newParentMap = fixParentMap(newParentMap, rootId);
 
-      if (!validateParentMap(newParentMap)) {
+      if (!validateParentMap(newParentMap, rootId)) {
         throw new Error("Unable to fix parentMap: Cycles or orphan nodes remain.");
       }
     }
 
     // Check for orphan nodes
-    const orphanNodes = newVisNodes.filter(node => !newParentMap[node.id]);
+    const orphanNodes = newVisNodes.filter(node => node.id !== rootId && !newParentMap[node.id]);
     if (orphanNodes.length > 0) {
       console.warn("Orphan nodes detected, fixing structure.", orphanNodes);
 
       orphanNodes.forEach(node => {
-        const nodeId = node.id;
-        const trueRootId = newVisNodes[0].id; // Use the first node as root
-        newParentMap[nodeId] = trueRootId;
+        newParentMap[node.id] = rootId;
       });
     }
 
@@ -84,6 +90,7 @@ export const updateTreeWithNewData = async (
     return null;
   }
 };
+
 
 // Helper function to create a new shape reference
 const createShapeRef = (node: VisNode, layerRef: React.MutableRefObject<Konva.Layer | null>): Konva.Circle => {

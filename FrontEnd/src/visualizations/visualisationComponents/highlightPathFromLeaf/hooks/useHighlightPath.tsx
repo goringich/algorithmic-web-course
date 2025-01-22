@@ -34,14 +34,8 @@ export default function useHighlightPath({
         return;
       }
 
-      if (!validateParentMap(parentMap)) {
-        throw new Error("Invalid parentMap: Cycles or orphan nodes detected.");
-      }
-      const pathIds = buildPathFromLeaf(leafNodeId, nodes, parentMap);
-      if (pathIds.length === 0) {
-        console.warn(`No path found from leaf node '${leafNodeId}' to root.`);
-        return;
-      }
+
+      
 
       animatePath(pathIds);
     },
