@@ -21,7 +21,7 @@ h2 {
   font-weight: 500;
   font-size: 25px;
   line-height: 28px;
-  color: #000000;
+  color: var(--black);
 }
 .underlined {
   text-decoration: underline;
@@ -29,23 +29,23 @@ h2 {
 .listItem {
   &.underlined {
     width: 920px;
-    font-family: 'Comfortaa', sans-serif;
+    font-family: var( --course-page-font);
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 20px;
-    color: #000000;
+    color: var(--black);
   }
   &._listItem_1hgjm_54 {
     width: 920px;
     left: 20px;
     top: 13.19px;
-    font-family: 'Comfortaa', sans-serif;
+    font-family: var( --course-page-font);
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 20px;
-    color: #000000;
+    color: var(--black);
   }
 }
 .course__box {
@@ -59,25 +59,12 @@ h2 {
 
 .container {
   display: flex;
-  justify-content: center; /* Центрирует по горизонтали */
-  align-items: center; /* Центрирует по вертикали */
-  height: 100vh; /* Высота контейнера на всю высоту экрана */
-  background-color: #f9f9f9; /* Задний фон страницы */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
 }
 
-.rectangle {
-  position: absolute;
-  width: 1037px;
-  height: 795px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(208, 188, 255, 0.15);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  padding: 20px;
-  text-align: center;
-}
 .section__title {
   display: flex;
   align-items: center;
@@ -110,10 +97,10 @@ h2 {
 }
 
 .subtitle {
-  font-family: 'Comfortaa', sans-serif;
+  font-family: var( --course-page-font);
   font-size: 25px;
   font-weight: 500;
-  color: #000;
+  color: var(--black);
 }
 
 .open {
@@ -145,3 +132,20 @@ h2 {
   transform: rotate(45deg);
   transition: transform 0.3s ease;
 }
+.arrow.open {
+  transform: rotate(225deg);
+}
+.rectangle {
+  width: 1037px;
+  height: 795px;
+  background: rgba(208, 188, 255, 0.15);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+

@@ -21,8 +21,11 @@ const CourseContent: React.FC = () => {
 
   return (
     <div className={styles.course__content}>
+      {/* Heading outside the rectangle */}
       <h1 className={styles.title}>Содержание курса</h1>
-      <div>
+      
+      {/* Rectangle */}
+      <div className={styles.rectangle}>
         {courseContent.map((section, index) => (
           <div key={index} className={styles.section}>
             <div 
