@@ -6,6 +6,6 @@ import (
 )
 
 func Connect() (*sql.DB, error) {
-  connStr := "user=postgres password=yourpassword dbname=algo-hack sslmode=disable"
+  connStr := "user=postgres password=admin dbname=algo-hack sslmode=disable"
   return sql.Open("postgres", connStr)
 }
