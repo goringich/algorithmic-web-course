@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import styles from "./aboutPage.module.scss";
 import TeamMemberCard from "../../components/teamMemberCard/TeamMemberCard";
-import { Button } from "@mui/material";
+import { Grid2, Button } from "@mui/material";
 import photo_Juls from "../../assets/images/AboutPage/image_juls.jpg";
 import photo_Nastik from "../../assets/images/AboutPage/image_nastik.jpg";
 import photo_igor from "../../assets/images/AboutPage/image_igor.jpg";
@@ -49,16 +49,15 @@ const teamMembers = [
 
 const AboutPage: React.FC = () => {
   return (
-    <div className={styles.about_page_container}
+    <Grid2 container
+    className={styles.about_page_container}
     >
-      <div className={styles.swiper_container}
-      >
+      <Grid2 item xs={12} md={12} className={styles.swiper_container}>
         <Swiper
           modules={[Navigation]}
           navigation
-          spaceBetween={20}
           slidesPerView={1}
-          className={styles.size}
+          //className={styles.size}
         >
           {teamMembers.map((member, index) => (
             <SwiperSlide key={index}>
@@ -72,9 +71,9 @@ const AboutPage: React.FC = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-      </div>
+      </Grid2>
 
-      <div className={styles.button_container}
+      <Grid2 item className={styles.button_container}
       >
         <Button
           variant="contained"
@@ -83,8 +82,8 @@ const AboutPage: React.FC = () => {
         >
           Связаться с нами
         </Button>
-      </div>
-    </div>
+      </Grid2>
+    </Grid2>
   );
 };
 

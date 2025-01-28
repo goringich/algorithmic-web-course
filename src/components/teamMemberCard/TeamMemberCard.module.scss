@@ -3,6 +3,14 @@
   font-family: var(--primary-font) !important; 
   font-weight: bold !important; 
   text-align: center !important;
+
+  @media (max-width: 426px) {
+    font-size: 1rem !important;
+  }
+
+  @media (min-width: 427px) and (max-width: 950px) {
+    font-size: 1.5rem !important;
+  }
 }
   
 .role {
@@ -11,6 +19,12 @@
   font-style: italic !important;
   color: var(--black); 
   text-align: center;
+  @media (max-width:426px) {
+    font-size: 0.8rem !important;
+  }
+  @media (min-width: 427px) and (max-width: 950px) {
+    font-size: 1.3rem !important;
+  }
 }
 
 .description {
@@ -18,6 +32,12 @@
   font-family: var(--primary-font) !important; 
   line-height: 1.5 !important; 
   color: var(--black); 
+  @media (max-width:426px) {
+    font-size: 0.8rem !important;
+  }
+  @media (min-width: 427px) and (max-width: 950px) {
+    font-size: 1.3rem !important;
+  }
 }
 
 .skills {
@@ -25,7 +45,13 @@
   font-family: var(--primary-font) !important;
   font-weight: 500 !important; 
   color: var(--black); 
+  @media (max-width:426px) {
+    font-size: 0.8rem !important;
   }
+  @media (min-width: 427px) and (max-width: 950px) {
+    font-size: 1.3rem !important;
+  }
+}
 
 .card_style {
   width: 80vw !important; 
@@ -74,6 +100,9 @@
 
 .divider {
   border-bottom-width: 2px !important;
-  border-color: var(--black) !important
+  border-color: var(--black) !important;
+  @media (max-width:426px) {
+    border-bottom-width: 1px !important;
+  }
 }
 

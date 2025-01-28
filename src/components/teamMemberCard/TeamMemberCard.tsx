@@ -22,7 +22,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
     sx = {{ boxShadow: 3}}
     >
       <Grid2 container>
-        <Grid2 item xs={6} md={6}
+        <Grid2 item 
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -39,7 +39,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
           />
         </Grid2>
 
-        <Grid2 item xs={6} md={6} className={styles_card.right_part}>
+        <Grid2 item  className={styles_card.right_part}>
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom className={styles_card.name} >
               {name}
