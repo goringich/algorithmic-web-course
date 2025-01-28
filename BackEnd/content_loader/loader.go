@@ -55,6 +55,7 @@ func LoadContent(db *sql.DB, baseDir string) error {
   return nil
 }
 
+
 func processSubdirectories(db *sql.DB, sectionPath string, sectionID int) error {
   log.Printf("Processing subdirectories in: %s", sectionPath)
 
@@ -109,9 +110,6 @@ func processSubdirectories(db *sql.DB, sectionPath string, sectionID int) error 
 }
 
 
-
-
-
 func insertSection(db *sql.DB, title string) (int, error) {
   log.Printf("insertSection: Start, title=%s", title)
   var id int
@@ -123,6 +121,7 @@ func insertSection(db *sql.DB, title string) (int, error) {
   log.Printf("insertSection: Success, id=%d", id)
   return id, nil
 }
+
 
 func insertSubSection(db *sql.DB, sectionID int, title string) (int, error) {
   log.Printf("insertSubSection: Start, title=%s, sectionID=%d", title, sectionID)

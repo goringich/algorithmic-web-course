@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./algorithmsPage.module.scss";
 import contents from "../../assets/dataBase/TitlesData.json";
 import SegmentTreeVisualizer from "../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
@@ -10,15 +10,29 @@ interface Section {
   content?: string;
   subSection?: Section[];
   code?: string; // temp
-  visualization?: string; // temp
+  visualization?: string; // temp 
 }
 
 const ContentPage: React.FC = () => {
+  const [sections, setSections] = useState<Section[]>([]);
   const [activeSection, setActiveSection] = useState<Section | null>(null);
   const data = [5, 8, 6, 3, 2, 7, 2, 6];
   const [activeTab, setActiveTab] = useState<"теория" | "код" | "визуализация" | "комплексный анализ">(
     "теория"
   );
+
+
+  useEffect(() => {
+    const fetchSections = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/sections");
+        const data = await response.json();
+        setSections(data);
+      } catch (error) {
+        console.error("Error fetching sections:", error);
+      }
+    };
+  });
 
   const renderSubSection = (subSection?: Section[]) => {
     if (!subSection) return null;
