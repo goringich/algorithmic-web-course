@@ -49,7 +49,8 @@ const teamMembers = [
 
 const AboutPage: React.FC = () => {
   return (
-    <Grid2 container
+    <Grid2 container justifyContent="center" /* Центрирование */
+    alignItems="center"
     className={styles.about_page_container}
     >
       <Grid2 item xs={12} md={12} className={styles.swiper_container}>
@@ -60,7 +61,7 @@ const AboutPage: React.FC = () => {
           //className={styles.size}
         >
           {teamMembers.map((member, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} style={{ paddingBottom: '8px' }}>
               <TeamMemberCard
                 name={member.name}
                 role={member.role}

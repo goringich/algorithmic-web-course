@@ -54,7 +54,7 @@
 }
 
 .card_style {
-  width: 80vw !important; 
+  width: 80vw;
   max-width: 987px !important; 
   aspect-ratio: 19 / 14.5 !important; 
   background-color: var(--background-color-lilac) !important;
@@ -62,15 +62,10 @@
   margin: auto !important;
   display: flex !important;
   flex-direction: row !important;
-  overflow: hidden !important;
   transition: all 0.3s ease !important;
-  
-  @media (max-width: 768px) {
-    width: 95vw !important;
-    flex-direction: column !important;
-    }
-  }
-    
+
+}
+
 .left_part {
   width: 46% !important;
   margin: auto !important;
