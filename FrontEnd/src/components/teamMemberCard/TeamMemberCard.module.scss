@@ -2,14 +2,15 @@
     font-size: 1.9rem !important; 
     font-family: var(--primary-font) !important; 
     font-weight: bold !important; 
-    text-align: center !important;
-  
-    @media (max-width: 426px) {
-      font-size: 1rem !important;
-    }
-  
+    text-align: center !important; 
     @media (min-width: 427px) and (max-width: 950px) {
       font-size: 1.5rem !important;
+    }
+    @media (min-width: 500px) and (max-width: 758px) {
+      font-size: 1rem !important;
+    }
+    @media (min-width: 300px) and (max-width: 499px) {
+      font-size: 0.7rem !important;
     }
   }
     
@@ -19,11 +20,14 @@
     font-style: italic !important;
     color: var(--black); 
     text-align: center;
-    @media (max-width:426px) {
-      font-size: 0.8rem !important;
-    }
     @media (min-width: 427px) and (max-width: 950px) {
       font-size: 1.3rem !important;
+    }
+    @media (min-width: 500px) and (max-width: 758px) {
+      font-size: 0.8rem !important;
+    }
+    @media (min-width: 300px) and (max-width: 499px) {
+      font-size: 0.5rem !important;
     }
   }
   
@@ -32,11 +36,14 @@
     font-family: var(--primary-font) !important; 
     line-height: 1.5 !important; 
     color: var(--black); 
-    @media (max-width:426px) {
-      font-size: 0.8rem !important;
-    }
     @media (min-width: 427px) and (max-width: 950px) {
       font-size: 1.3rem !important;
+    }
+    @media (min-width: 500px) and (max-width: 758px) {
+      font-size: 0.8rem !important;
+    }
+    @media (min-width: 300px) and (max-width: 499px) {
+      font-size: 0.5rem !important;
     }
   }
   
@@ -45,11 +52,14 @@
     font-family: var(--primary-font) !important;
     font-weight: 500 !important; 
     color: var(--black); 
-    @media (max-width:426px) {
+    @media (min-width: 759px) and (max-width: 950px) {
+      font-size: 1.3rem !important;
+    }
+    @media (min-width: 500px) and (max-width: 758px) {
       font-size: 0.8rem !important;
     }
-    @media (min-width: 427px) and (max-width: 950px) {
-      font-size: 1.3rem !important;
+    @media (min-width: 300px) and (max-width: 499px) {
+      font-size: 0.5rem !important;
     }
   }
   

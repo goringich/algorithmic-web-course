@@ -27,14 +27,13 @@
 
 .button_container {
   position: absolute;
-  right: 20px;
+  right: 5%;
   top: 50%;
   transform: translateY(700%);
   z-index: 2;
 }
 
 .contact_button {
-  padding: 10px 20px !important;
   background-color: var(--pink) !important;
   color: var(--secondary-color) !important;
   text-transform: none !important;
