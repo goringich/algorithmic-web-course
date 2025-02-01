@@ -8,7 +8,7 @@ import ErrorBoundary from "./components/errorBoundary/ErrorBoundary";
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
 const CoursePage = lazy(() => import('./pages/coursePage/CoursePage'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
-const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'));
+const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/components/Sidebar'));
 
 
 
