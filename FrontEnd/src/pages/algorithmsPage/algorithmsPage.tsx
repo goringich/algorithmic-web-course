@@ -1,42 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./algorithmsPage.module.scss";
-import contents from "../../assets/dataBase/TitlesData.json";
-import Sidebar from "./components/Sidebar";
-import ContentDisplay from "./components/ContentDisplay";
-import Tabs, { TabType } from "./components/Tabs";
+import SubSectionList from "./components/SubSectionList";
 import { Section } from "./components/types/types";
 
-const ContentPage: React.FC = () => {
+interface SidebarProps {
+  onSectionSelect: (section: Section) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onSectionSelect }) => {
   const [sections, setSections] = useState<Section[]>([]);
-  const [activeSection, setActiveSection] = useState<Section | null>(null);
-  const [activeTab, setActiveTab] = useState<TabType>("теория");
 
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/content");
+        const response = await fetch("http://localhost:8080/api/sections");
         const data = await response.json();
+        console.log("Темы из API:", data);
         setSections(data);
-        console.log("Данные из базы данных:", data);
       } catch (error) {
-        console.error("Ошибка при получении данных:", error);
+        console.error("Ошибка при загрузке тем:", error);
       }
     };
     fetchSections();
   }, []);
 
   return (
-    <div className={styles.content_page}>
-      <Sidebar
-        contents={contents}
-        onSectionSelect={(section) => setActiveSection(section)}
-      />
-      <main className={styles.main}>
-        <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
-        <Tabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab)} />
-      </main>
-    </div>
+    <nav className={styles.sidebar}>
+      <h3>Содержание</h3>
+      {sections.map((section, index) => (
+        <div key={index}>
+          <button
+            onClick={() => onSectionSelect(section)}
+            className={styles.section}
+          >
+            {section.title}
+          </button>
+          <SubSectionList subSections={section.subSections} onSectionSelect={onSectionSelect} />
+        </div>
+      ))}
+      <button className={styles.back_button}>Вернуться к содержанию</button>
+    </nav>
   );
 };
 
-export default ContentPage;
+export default Sidebar;
