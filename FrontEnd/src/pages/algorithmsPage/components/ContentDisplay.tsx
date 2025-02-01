@@ -3,7 +3,7 @@ import styles from "../algorithmsPage.module.scss";
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
-import { SegmentTreeProvider } from ../"../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
+import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
 import { TabType } from "./Tabs";
 
 interface ContentDisplayProps {

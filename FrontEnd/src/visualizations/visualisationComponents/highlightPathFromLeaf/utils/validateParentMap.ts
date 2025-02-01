@@ -1,4 +1,6 @@
-export const buildParentMap = (nodes: VisNode[], rootId: number): Record<number, number | undefined> => {
+import { VisNode } from "../../nodeAnimations/types/VisNode";
+
+export const validateParentMap = (nodes: VisNode[], rootId: number): Record<number, number | undefined> => {
   const parentMap: Record<number, number | undefined> = {};
   nodes.forEach(node => {
     if (node.id === rootId) {
@@ -9,3 +11,4 @@ export const buildParentMap = (nodes: VisNode[], rootId: number): Record<number,
   });
   return parentMap;
 };
+
