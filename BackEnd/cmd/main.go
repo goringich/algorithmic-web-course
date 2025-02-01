@@ -18,15 +18,11 @@ func main() {
   }
   defer db.Close()
 
-  contentPath := "../DataBase/Content"
-  err = loader.LoadContent(db, contentPath)
-  if err != nil {
-    log.Fatalf("Ошибка при загрузке контента: %v", err)
-  }
-  log.Println("Контент успешно загружен в базу данных!")
+  // Проверяем и загружаем контент только при необходимости
+  loader.EnsureContentLoaded(db, "../DataBase/Content")
 
   contentRepo := repo.NewContentRepository(db)
-  contentHandler := httpDelivery.NewContentHandler(contentRepo)
+  contentHandler := httpDelivery.NewContentHandler(contentRepo, db) // Передаём db в хендлер
 
   r := gin.Default()
   httpDelivery.RegisterRoutes(r, contentHandler)
