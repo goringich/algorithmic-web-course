@@ -88,3 +88,20 @@
 .style_for_text_section {
   color: var(--grey_purple) !important;
 }
+
+.button_exit{
+  margin-top: auto !important;
+  display: flex !important;
+  padding-left: 8% !important;
+  padding-bottom: 8% !important;
+  justify-content: flex-start !important;
+  font-family: var(--primary-font) !important;
+  text-transform: none !important;
+  color: var(--red) !important;
+  width: 100%;
+  transition: transform 0.2s ease-in-out !important;
+}
+.button_exit:hover {
+  background-color: inherit !important; 
+  transform: scale(1.03) !important;
+}

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styles from "../algorithmsPage.module.scss";
 import SubSectionList from "./SubSectionList";
-import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItem, ListItemText, Grid2} from "@mui/material";
+import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItem, ListItemText, Grid2, Button} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Section } from "./types/types";
+import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 
 interface SidebarProps {
   contents: Section[];
@@ -23,20 +24,23 @@ const menuData = [
         title: "Дерево Фенвика",
         subSubSections: ["Подсекция 1", "Подсекция 2"],
       },
+      {
+        title: "Простое дерево отрезков",
+        subSubSections: [],
+      },
+      {
+        title: "Ленивое дерево отрезков",
+        subSubSections: [],
+      },
     ],
   },
   {
-    title: "Алгоритмы",
-    subSections: [
-      {
-        title: "Короткие пути",
-        subSubSections: ["Подсекция 1", "Подсекция 2"],
-      },
-      {
-        title: "Декомпозиционные методы",
-        subSubSections: ["Подсекция 1", "Подсекция 2"],
-      },
-    ],
+    title: "Алгоритмы обработки координат и анализа пространственных данных",
+    subSections: [ ],
+  },
+  {
+    title: "Декомпозиционные методы",
+    subSections: [ ],
   },
 ];
 
@@ -67,7 +71,6 @@ const SidebarMenu: React.FC = () => {
     sx={{
       borderRight: "1px solid #ddd", // Вертикальная линия для визуального отделения
       minHeight: "100vh", // Растягиваем меню на всю высоту экрана
-      boxShadow: "3",
       width: "20vw"
     }} >
       <Typography className={styles.content}>
@@ -131,13 +134,6 @@ const SidebarMenu: React.FC = () => {
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls={`panel${index}-${subIndex}-content`}
                         id={`panel${index}-${subIndex}-header`}
-                        // sx={{
-                        //   display: "flex",
-                        //   justifyContent: "space-between", // Стрелка слева, текст справа
-                        //   '& .MuiAccordionSummary-content': {
-                        //     marginRight: '4px', // Добавляем отступ для текста от стрелки
-                        //   },
-                        // }} 
                       >
                         <Typography className={styles.style_for_text_subsection}>{subSection.title}</Typography>
                       </AccordionSummary>
@@ -159,7 +155,11 @@ const SidebarMenu: React.FC = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-
+      <Button className={styles.button_exit}
+      startIcon={<ExitToAppOutlinedIcon />}
+      >
+      Вернуться к содержанию
+      </Button>
     </Grid2>
   );
 };

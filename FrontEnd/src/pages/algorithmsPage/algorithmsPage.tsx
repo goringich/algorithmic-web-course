@@ -38,7 +38,8 @@ const ContentPage: React.FC = () => {
           position: "fixed",  // Фиксируем меню слева
           top: 0,  // Верхняя граница меню
           bottom: 0,  // Нижняя граница меню
-          overflowY: "auto",  // Прокрутка только внутри меню
+          overflowY: "auto",  // Прокрутка только внутри менюч
+          boxShadow: "2",
           '&::-webkit-scrollbar': {
             display: 'none',  // Скрыть полосу прокрутки
           },
