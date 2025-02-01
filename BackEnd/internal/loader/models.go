@@ -1,4 +1,4 @@
-package content_loader
+package loader
 
 type Section struct {
   ID    int
