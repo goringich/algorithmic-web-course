@@ -1,9 +1,6 @@
-h1 {
-  width: 440px;
-  height: 45px;
-  left: 500px;
-  top: 17px;
-  font-family: 'Comfortaa';
+.customTitle {
+  text-align:center;
+  font-family: 'Comfortaa', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 40px;
@@ -11,36 +8,33 @@ h1 {
   color: #230047;
 }
 
-h2 {
-  width: 803.32px;
-  height: 27.93px;
-  left: 55.86px;
-  top: -2.04px;
-  font-family: 'Comfortaa';
+.customSubtitle {
+  font-family: 'Comfortaa', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 25px;
   line-height: 28px;
   color: var(--black);
 }
+
 .underlined {
   text-decoration: underline;
 }
+
 .listItem {
   &.underlined {
     width: 920px;
-    font-family: var( --course-page-font);
+    font-family: 'Comfortaa', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 20px;
     color: var(--black);
+    text-decoration: underline;
   }
   &._listItem_1hgjm_54 {
     width: 920px;
-    left: 20px;
-    top: 13.19px;
-    font-family: var( --course-page-font);
+    font-family: 'Comfortaa', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -48,14 +42,22 @@ h2 {
     color: var(--black);
   }
 }
+
+
 .course__box {
+  width: 100%;
+  max-width: 920px;
   margin-top: 10px;
   padding: 15px;
   background: #eaddff;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 
+              0px 1px 3px 1px rgba(0, 0, 0, 0.15);
   border-radius: 20px;
   list-style: none;
+  max-height: none;
+  overflow: visible;
 }
+
 
 .container {
   display: flex;
@@ -95,6 +97,7 @@ h2 {
   text-align: center;
   transform: none;
 }
+
 
 .subtitle {
   font-family: var( --course-page-font);
@@ -136,8 +139,8 @@ h2 {
   transform: rotate(225deg);
 }
 .rectangle {
-  width: 1037px;
-  height: 795px;
+  width: 100%;
+  max-width: 1040px;
   background: rgba(208, 188, 255, 0.15);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;

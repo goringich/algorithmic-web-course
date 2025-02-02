@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import { Accordion, AccordionSummary, AccordionDetails, Paper } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styles from './CoursePage.module.scss';
 import courseContent from "../../assets/dataBase/TitlesData.json";
 
 const CourseContent: React.FC = () => {
   const [openSection, setOpenSection] = useState<number | null>(null);
 
-  const toggleSection = (ind: number) => {
-    setOpenSection(openSection === ind ? null : ind);
+  const toggleSection = (index: number) => {
+    setOpenSection(openSection === index ? null : index);
   };
 
   const isUnderlined = (text: string) => {
@@ -21,38 +23,72 @@ const CourseContent: React.FC = () => {
 
   return (
     <div className={styles.course__content}>
-      {/* Heading outside the rectangle */}
-      <h1 className={styles.title}>Содержание курса</h1>
+      <h4 className={styles.customTitle}>Содержание курса</h4>
       
-      {/* Rectangle */}
-      <div className={styles.rectangle}>
+      <Paper
+        elevation={3}
+        sx={{
+          width: '100%',
+          maxWidth: '1040px',
+          background: 'rgba(208, 188, 255, 0.15)',
+          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+          borderRadius: '20px',
+          padding: '20px',
+          margin: '20px auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0px',
+        }}
+      >
         {courseContent.map((section, index) => (
-          <div key={index} className={styles.section}>
-            <div 
-              className={styles.section__title} 
-              onClick={() => toggleSection(index)}
+          <Accordion
+            key={index}
+            expanded={openSection === index}
+            onChange={() => toggleSection(index)}
+            sx={{
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+              border: 'none',
+              margin: '0',
+              '&:before': { display: 'none' },
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              className={styles.accordion__summary}
+              sx={{
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                borderBottom: 'none',
+                margin: '0',
+              }}
             >
               <div className={styles.circle}>
                 <span className={styles.number}>{index + 1}</span>
               </div>
-              <h2 className={styles.subtitle}>{section.title}</h2>
-              <span className={`${styles.arrow} ${openSection === index ? styles.open : ''}`}></span>
-            </div>
-            {openSection === index && (
+              <h2 className={styles.customSubtitle}>{section.title}</h2>
+            </AccordionSummary>
+            <AccordionDetails 
+              sx={{ 
+                backgroundColor: 'transparent', 
+                boxShadow: 'none', 
+                borderBottom: 'none',
+              }}
+            >
               <ul className={styles.course__box}>
                 {section.subSections.map((sub, idx) => (
                   <li
                     key={idx}
-                    className={`${styles.listItem} ${isUnderlined(sub) ? styles.underlined : ""} ${styles._listItem_1hgjm_54}`}
+                    className={`${styles.listItem} ${isUnderlined(sub) ? styles.underlined : styles._listItem_1hgjm_54}`}
                   >
                     {sub}
                   </li>
                 ))}
               </ul>
-            )}
-          </div>
+            </AccordionDetails>
+          </Accordion>
         ))}
-      </div>
+      </Paper>
     </div>
   );
 };
