@@ -11,19 +11,19 @@ const ContentPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("теория");
 
-  useEffect(() => {
-    const fetchSections = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/content");
-        const data = await response.json();
-        setSections(data);
-        console.log("Данные из базы данных:", data);
-      } catch (error) {
-        console.error("Ошибка при получении данных:", error);
-      }
-    };
-    fetchSections();
-  }, []);
+  // useEffect(() => {
+  //   const fetchSections = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8080/api/content");
+  //       const data = await response.json();
+  //       setSections(data);
+  //       console.log("Данные из базы данных:", data);
+  //     } catch (error) {
+  //       console.error("Ошибка при получении данных:", error);
+  //     }
+  //   };
+  //   fetchSections();
+  // }, []);
 
   return (
     <div className={styles.content_page}>

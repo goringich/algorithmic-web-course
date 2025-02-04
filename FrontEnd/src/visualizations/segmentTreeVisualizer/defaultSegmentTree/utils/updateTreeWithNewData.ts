@@ -31,16 +31,18 @@ export const updateTreeWithNewData = async (
       throw new Error("No root node found in the new visualization nodes.");
     }
 
-    let newParentMap = buildParentMap(newVisNodes, rootId);
+    const newParentMap = buildParentMap(newVisNodes);
 
     // Validate and fix parentMap
-    if (!validateParentMap(newParentMap, rootId)) {
+    if (!validateParentMap(newVisNodes, newParentMap, rootId)) {
       console.warn("Invalid parentMap detected. Attempting to fix...");
-      newParentMap = fixParentMap(newParentMap, rootId);
+      const fixedParentMap = fixParentMap(newVisNodes, newParentMap, rootId);
 
-      if (!validateParentMap(newParentMap, rootId)) {
+      if (!validateParentMap(newVisNodes, fixedParentMap, rootId)) {
         throw new Error("Unable to fix parentMap: Cycles or orphan nodes remain.");
       }
+      // Обновляем карту после исправления
+      newParentMap = fixedParentMap;
     }
 
     // Check for orphan nodes
@@ -90,7 +92,6 @@ export const updateTreeWithNewData = async (
     return null;
   }
 };
-
 
 // Helper function to create a new shape reference
 const createShapeRef = (node: VisNode, layerRef: React.MutableRefObject<Konva.Layer | null>): Konva.Circle => {
