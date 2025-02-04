@@ -3,13 +3,13 @@ import { Circle, Text } from "react-konva";
 import Konva from "konva";
 
 interface NodeData {
-  id: string;
+  id: number;
   x: number;
   y: number;
   range: [number, number];
   label: string;
   value: number;
-  children: string[];
+  children: number[];
   depth?: number; 
   isHighlighted?: boolean;
 }
@@ -31,24 +31,19 @@ export function SegmentTreeNode({
 }: SegmentTreeNodeProps) {
 
   const maxDepth = 6;
-
-  // check if the node has depth, otherwise we set 0
   const depth = node.depth !== undefined ? node.depth : 0;
-
-  // use non-linear scaling to increase the difference.
   const depthFactor = Math.pow(Math.min(depth / maxDepth, 1), 0.7);
+  const minColor = [10, 10, 120];
+  const maxColor = [180, 220, 255];
 
-  const minColor = [10, 10, 120];  
-  const maxColor = [180, 220, 255]; 
-
-  const interpolateColor = (min: number, max: number, factor: number) => 
+  const interpolateColor = (min: number, max: number, factor: number) =>
     Math.round(min + (max - min) * factor);
 
   const fillColor = node.isHighlighted
-  ? "orange"
-  : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, 
-         ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
-         ${interpolateColor(minColor[2], maxColor[2], depthFactor)})` || "#4B7BEC";
+    ? "orange"
+    : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, 
+           ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
+           ${interpolateColor(minColor[2], maxColor[2], depthFactor)})` || "#4B7BEC";
 
   return (
     <>
