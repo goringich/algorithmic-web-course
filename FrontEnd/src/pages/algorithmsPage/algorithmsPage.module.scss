@@ -105,3 +105,10 @@
   background-color: inherit !important; 
   transform: scale(1.03) !important;
 }
+
+.background_on_hover{
+  border-radius: 8px,
+}
+.background_on_hover:hover{
+  background-color: rgba(var(--light_violent), 0.85) !important
+}

@@ -69,9 +69,11 @@ const SidebarMenu: React.FC = () => {
     <Grid2 container direction="column" // Расположение элементов в колонку
     alignItems="flex-start" // Прижимаем элементы к левому краю
     sx={{
+      //backGround: "var(--secondary-color)",
       borderRight: "1px solid #ddd", // Вертикальная линия для визуального отделения
       minHeight: "100vh", // Растягиваем меню на всю высоту экрана
       width: "20vw"
+
     }} >
       <Typography className={styles.content}>
         СОДЕРЖАНИЕ
@@ -141,7 +143,7 @@ const SidebarMenu: React.FC = () => {
                         <List>
                           {/* Динамическое создание аккордеонов для подподсекций */}
                           {subSection.subSubSections.map((subSubSection, subSubIndex) => (
-                            <ListItem button key={subSubIndex}>
+                            <ListItem button key={subSubIndex} className={styles.background_on_hover}>
                               <ListItemText primary={subSubSection} />
                             </ListItem>
                           ))}

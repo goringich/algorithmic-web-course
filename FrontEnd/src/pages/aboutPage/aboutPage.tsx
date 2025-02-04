@@ -49,11 +49,10 @@ const teamMembers = [
 
 const AboutPage: React.FC = () => {
   return (
-    <Grid2 container justifyContent="center" 
-    alignItems="center"
+    <Grid2 container
     className={styles.about_page_container}
     >
-      <Grid2 item xs={12} md={12} className={styles.swiper_container}>
+      <Grid2 className={styles.swiper_container}>
         <Swiper
           modules={[Navigation]}
           navigation
@@ -74,9 +73,8 @@ const AboutPage: React.FC = () => {
         </Swiper>
       </Grid2>
 
-      <Grid2 item className={styles.button_container}
-      >
-        <Button
+      <Grid2 size={{ xs: 10, sm: 6, lg: 5, xl: 3 }}>
+        <Button 
           variant="contained"
           color="primary"
           className={styles.contact_button}

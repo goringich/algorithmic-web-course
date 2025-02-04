@@ -17,21 +17,14 @@
 }
 
 .swiper_container {
-  position: relative;
-  display: flex;
-  max-width: 1200px;
-  max-height: 780px; 
-  box-sizing: border-box;
-  z-index: 1;
+  // position: relative;
+  // display: flex;
+  // max-width: 1200px;
+  // max-height: 780px; 
+  // box-sizing: border-box;
+  // z-index: 1;
 }
 
-.button_container {
-  position: absolute;
-  right: 5%;
-  top: 50%;
-  transform: translateY(700%);
-  z-index: 2;
-}
 
 .contact_button {
   background-color: var(--pink) !important;
@@ -39,6 +32,7 @@
   text-transform: none !important;
   font-family: var(--primary-font) !important;
   border-radius: 7px !important;
+  width: 100%
 }
 
 .size {

@@ -3,15 +3,15 @@
     font-family: var(--primary-font) !important; 
     font-weight: bold !important; 
     text-align: center !important; 
-    @media (min-width: 427px) and (max-width: 950px) {
+    @media (min-width: 749px) and (max-width: 950px) {
       font-size: 1.5rem !important;
     }
-    @media (min-width: 500px) and (max-width: 758px) {
+    @media (min-width: 600px) and (max-width: 749px) {
       font-size: 1rem !important;
     }
-    @media (min-width: 300px) and (max-width: 499px) {
-      font-size: 0.7rem !important;
-    }
+    // @media (min-width: 300px) and (max-width: 528px) {
+    //   font-size: 0.7rem !important;
+    // }
   }
     
   .role {
@@ -20,15 +20,15 @@
     font-style: italic !important;
     color: var(--black); 
     text-align: center;
-    @media (min-width: 427px) and (max-width: 950px) {
+    @media (min-width: 749px) and (max-width: 950px) {
       font-size: 1.3rem !important;
     }
-    @media (min-width: 500px) and (max-width: 758px) {
+    @media (min-width: 600px) and (max-width: 749px) {
       font-size: 0.8rem !important;
     }
-    @media (min-width: 300px) and (max-width: 499px) {
-      font-size: 0.5rem !important;
-    }
+    // @media (min-width: 300px) and (max-width: 528px) {
+    //   font-size: 0.5rem !important;
+    // }
   }
   
   .description {
@@ -36,15 +36,15 @@
     font-family: var(--primary-font) !important; 
     line-height: 1.5 !important; 
     color: var(--black); 
-    @media (min-width: 427px) and (max-width: 950px) {
+    @media (min-width: 749px) and (max-width: 950px) {
       font-size: 1.3rem !important;
     }
-    @media (min-width: 500px) and (max-width: 758px) {
+    @media (min-width: 600px) and (max-width: 749px) {
       font-size: 0.8rem !important;
     }
-    @media (min-width: 300px) and (max-width: 499px) {
-      font-size: 0.5rem !important;
-    }
+    // @media (min-width: 300px) and (max-width: 528px) {
+    //   font-size: 0.5rem !important;
+    // }
   }
   
   .skills {
@@ -52,36 +52,35 @@
     font-family: var(--primary-font) !important;
     font-weight: 500 !important; 
     color: var(--black); 
-    @media (min-width: 759px) and (max-width: 950px) {
+    @media (min-width: 749px) and (max-width: 950px) {
       font-size: 1.3rem !important;
     }
-    @media (min-width: 500px) and (max-width: 758px) {
+    @media (min-width: 600px) and (max-width: 749px) {
       font-size: 0.8rem !important;
     }
-    @media (min-width: 300px) and (max-width: 499px) {
-      font-size: 0.5rem !important;
-    }
+    // @media (min-width: 300px) and (max-width: 528px) {
+    //   font-size: 0.5rem !important;
+    // }
   }
   
   .card_style {
     width: 80vw;
     max-width: 987px !important; 
-    aspect-ratio: 19 / 14.5 !important; 
     background-color: var(--background-color-lilac) !important;
     border-radius: 20px !important;
     margin: auto !important;
-    display: flex !important;
+    //display: flex !important;
     flex-direction: row !important;
     transition: all 0.3s ease !important;
   
   }
   
   .left_part {
-    width: 46% !important;
-    margin: auto !important;
-    display: flex !important;
-    margin-left: 2% !important; 
-    margin-top: 4% !important;
+    padding: 16px;
+    //width: 46% !important; // убраттт
+    // margin: auto !important;
+    // display: flex !important;
+    // margin-left: 20px !important; 
     }
     
   .photo {
@@ -91,11 +90,11 @@
       
   .right_part {
     flex: 1 !important; 
-    padding: 2% !important;
-    display: flex !important;
+    //padding: 2% !important;
+    //display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    margin-top: 5% !important;
+    //margin-top: 5% !important;
     overflow: auto !important;
   
     @media (max-width: 768px) {

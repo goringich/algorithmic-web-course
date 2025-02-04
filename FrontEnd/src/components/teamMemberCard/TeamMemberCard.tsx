@@ -1,6 +1,6 @@
 import React from "react";
 import styles_card from "./TeamMemberCard.module.scss";
-import { Grid2, Card, CardMedia, CardContent, Typography, Divider, Box, Shadows } from "@mui/material";
+import {Grid2, Card, CardMedia, CardContent, Typography, Divider, Box, Shadows } from "@mui/material";
 
 interface TeamMemberProps {
   name: string;
@@ -9,7 +9,7 @@ interface TeamMemberProps {
   skills: string[];
   imageUrl: string;
 }
-
+const isMobile = window.matchMedia("(max-width: 599px)").matches;
 const TeamMemberCard: React.FC<TeamMemberProps> = ({
   name,
   role,
@@ -18,16 +18,16 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
   imageUrl,
 }) => {
   return (
-    <Card className={styles_card.card_style}
+    <Card className={styles_card.card_style} 
     sx = {{ boxShadow: 3}}
     >
-      <Grid2 container>
-        <Grid2 item 
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+      <Grid2 container spacing={2}> 
+        <Grid2 size={{ xs: 12, sm: 6 }}
+          // sx={{
+          //   display: "flex",
+          //   justifyContent: "center",
+          //   alignItems: "center",
+          // }}
           className={styles_card.left_part}
         >
           <CardMedia
@@ -39,7 +39,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
           />
         </Grid2>
 
-        <Grid2 item  className={styles_card.right_part}>
+        <Grid2 size={{ xs: 12, sm: 6}}>
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom className={styles_card.name} >
               {name}
