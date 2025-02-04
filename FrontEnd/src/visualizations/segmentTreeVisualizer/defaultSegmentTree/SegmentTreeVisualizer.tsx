@@ -41,7 +41,7 @@ const SegmentTreeVisualizer: React.FC = () => {
     setStageSize
   } = useSegmentTreeContext();
 
-  // Константы стилей
+  
   const circleColor = "#4B7BEC";
   const highlightColor = "#FFC107";
   const selectedColor = "#34B3F1";

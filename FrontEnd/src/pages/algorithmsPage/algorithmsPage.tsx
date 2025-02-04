@@ -9,9 +9,26 @@ import { Grid2} from "@mui/material";
 
 const ContentPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("теория");
+<<<<<<< HEAD
   const [activeSection, setActiveSection] = useState<Section | null>(
     contents.length > 0 ? contents[0] : null
   );
+=======
+
+  // useEffect(() => {
+  //   const fetchSections = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8080/api/content");
+  //       const data = await response.json();
+  //       setSections(data);
+  //       console.log("Данные из базы данных:", data);
+  //     } catch (error) {
+  //       console.error("Ошибка при получении данных:", error);
+  //     }
+  //   };
+  //   fetchSections();
+  // }, []);
+>>>>>>> 64279e0 (fixed the addition bug)
 
   return (
     <Grid2 container sx={{ height: "100%", overflow: "hidden" }}>
