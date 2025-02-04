@@ -6,7 +6,7 @@ import useNodeAnimations from "./useNodeAnimations";
 
 interface UseHighlightPathProps {
   nodes: VisNode[];
-  parentMap: Record<number, number>
+  parentMap: Record<number, number>;
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
 }
 
@@ -34,9 +34,7 @@ export default function useHighlightPath({
         return;
       }
 
-
-      
-
+      const pathIds = buildPathFromLeaf(leafNode.id, nodes, parentMap);
       animatePath(pathIds);
     },
     [nodes, parentMap, setNodes, animatePath, clearAllTimeouts]
@@ -44,4 +42,3 @@ export default function useHighlightPath({
 
   return highlightPathFromLeaf;
 }
-
