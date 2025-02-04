@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Paper } from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, Paper, Fab } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styles from './CoursePage.module.scss';
 import courseContent from "../../assets/dataBase/TitlesData.json";
@@ -61,12 +61,40 @@ const CourseContent: React.FC = () => {
                 boxShadow: 'none',
                 borderBottom: 'none',
                 margin: '0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
               }}
             >
-              <div className={styles.circle}>
-                <span className={styles.number}>{index + 1}</span>
-              </div>
-              <h2 className={styles.customSubtitle}>{section.title}</h2>
+              <Fab 
+                size="small"
+                sx={{ 
+                  width: '50px', 
+                  height: '50px', 
+                  background: '#EADDFF', 
+                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)', 
+                  borderRadius: '50%', 
+                  minWidth: '50px',
+                  fontFamily: "'Roboto', sans-serif",
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  color: '#1E1E1E',
+                  lineHeight: '24px',
+                  marginRight: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  "&:hover": { background: '#D0BCFF' }
+                }}
+              >
+                {index + 1}
+              </Fab>
+              <h2 
+                className={styles.customSubtitle} 
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
+                {section.title}
+              </h2>
             </AccordionSummary>
             <AccordionDetails 
               sx={{ 
