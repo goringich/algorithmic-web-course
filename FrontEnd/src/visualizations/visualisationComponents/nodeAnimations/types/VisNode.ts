@@ -7,6 +7,7 @@ export interface VisNode {
   label: string;
   value: number;
   children: number[];  
+  parentId: number;
   depth?: number;
   isHighlighted?: boolean;
 }

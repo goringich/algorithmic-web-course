@@ -12,7 +12,7 @@ export const buildPathFromLeaf = (
   let currentId: number | undefined = leafNodeId;
   while (currentId !== undefined) {
     if (visited.has(currentId)) {
-      console.error(`Cycle detected at node '${currentId}' (Обнаружен цикл). Stopping path construction.`);
+      console.error(`Cycle detected (Обнаружен цикл) at node '${currentId}'. Stopping path construction.`);
       break;
     }
     visited.add(currentId);
@@ -22,7 +22,7 @@ export const buildPathFromLeaf = (
       console.warn(`No parent found for node '${currentId}' (Родитель не найден). Assuming it's root.`);
       break;
     }
-    const parentId = parentMap[currentId];
+    const parentId: number | undefined = parentMap[currentId];
     if (parentId === currentId) {
       console.log(`Reached root node '${currentId}' (Достигнут корневой узел).`);
       break;
