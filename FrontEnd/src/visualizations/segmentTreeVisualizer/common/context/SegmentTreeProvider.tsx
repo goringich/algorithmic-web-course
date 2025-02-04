@@ -8,8 +8,8 @@ import useUpdateSegmentTree from "../../defaultSegmentTree/hooks/useUpdateSegmen
 import useHighlightPath from "../../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
 import { useDrag } from "../../../components/UseDrag";
 import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
+// Импорт обработчиков (buildTree больше не передаём)
 import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
-import buildTree from "../../../segmentTreeVisualizer/defaultSegmentTree/SegmentTreeWasm";
 
 interface SegmentTreeProviderProps {
   children: React.ReactNode;
@@ -22,20 +22,19 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const layerRef = useRef<Konva.Layer | null>(null);
   const [nodes, setNodes] = useState<VisNode[]>([]);
-  const [parentMap, setParentMap] = useState<Record<number, number>>({});
+  // Изменили тип: теперь значения могут быть number или undefined
+  const [parentMap, setParentMap] = useState<Record<number, number | undefined>>({});
   const [selectedNode, setSelectedNode] = useState<VisNode | null>(null);
   const [delta, setDelta] = useState<number>(0);
-
   const [data, setData] = useState<number[]>(initialData);
-
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [newValue, setNewValue] = useState<string>("");
-
   const [stageSize, setStageSize] = useState({ width: 1200, height: 500 });
 
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
+  // Если в вашем интерфейсе контекста изменить типы событий на React.MouseEvent, то можно напрямую передавать
   const {
     position: editBoxPos,
     handleMouseDown: handleEditBoxMouseDown,
@@ -46,10 +45,8 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
   const segmentTreeWasmRef = useRef<SegmentTreeWasm | null>(null);
 
   useEffect(() => {
-    // Инициализация только один раз
     if (!segmentTreeWasmRef.current) {
       segmentTreeWasmRef.current = new SegmentTreeWasm(initialData);
-      // Получаем дерево для визуализации
       segmentTreeWasmRef.current.getTreeForVisualization().then((visNodes) => {
         setNodes(visNodes);
         setParentMap(buildParentMap(visNodes));
@@ -59,7 +56,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     }
   }, [initialData]);
 
-  // Новый эффект: при изменении состояния узлов вызываем перерисовку слоя
   useEffect(() => {
     if (layerRef.current) {
       console.log("Redrawing layer due to nodes state change.");
@@ -77,7 +73,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     layerRef,
   });
   
-  // Функции-обработчики
+  // Обработчики
   const onAddElement = () => {
     handleAddElement({
       newValue,
@@ -88,7 +84,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setSnackbarOpen,
       MAX_LEAVES,
       updateTreeWithNewData,
-      buildTree,
+      // buildTree не передаём
       setParentMap
     });
   };
@@ -103,6 +99,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setData,
       setSnackbarMessage,
       setSnackbarOpen,
+      // Обновлён тип parentMap:
       parentMap,
       highlightPathFromLeaf,
       updateTreeWithNewData
@@ -117,6 +114,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setData,
       setSnackbarMessage,
       setSnackbarOpen,
+      // Обновлён тип parentMap:
       parentMap,
       updateTreeWithNewData,
       shapeRefs
@@ -135,13 +133,12 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     handleCloseSnackbar({ setSnackbarOpen });
   };
   
-  // Формирование значения контекста
   const value: SegmentTreeContextProps = {
     data,
     setData,
     nodes,
     setNodes,
-    parentMap,
+    parentMap, // тип Record<number, number | undefined>
     setParentMap,
     selectedNode,
     setSelectedNode,
