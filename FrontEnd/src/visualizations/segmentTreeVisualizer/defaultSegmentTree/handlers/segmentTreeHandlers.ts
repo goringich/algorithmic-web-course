@@ -12,9 +12,13 @@ type HandleAddElementParams = {
   setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   MAX_LEAVES: number;
   updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
-  buildSegmentTree: (data: number[]) => VisNode[];
-  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
+  // Добавляем, если требуется:
+  buildTree?: (data: number[]) => VisNode[];
+  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>;
 };
+
+
+
 
 export const handleAddElement = async ({
   newValue, 

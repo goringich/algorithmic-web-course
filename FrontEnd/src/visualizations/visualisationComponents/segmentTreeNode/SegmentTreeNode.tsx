@@ -45,6 +45,9 @@ export function SegmentTreeNode({
            ${interpolateColor(minColor[1], maxColor[1], depthFactor)}, 
            ${interpolateColor(minColor[2], maxColor[2], depthFactor)})` || "#4B7BEC";
 
+           
+  console.log(`Node ${node.id} highlighted:`, node.isHighlighted);
+
   return (
     <>
       <Circle

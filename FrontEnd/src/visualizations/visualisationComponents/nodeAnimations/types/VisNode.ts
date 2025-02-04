@@ -1,3 +1,4 @@
+// ../../../visualisationComponents/nodeAnimations/types/VisNode.ts
 export interface VisNode {
   id: number;
   x: number;
@@ -5,6 +6,7 @@ export interface VisNode {
   range: [number, number];
   label: string;
   value: number;
-  children?: VisNode[];
+  children: number[];  
+  depth?: number;
   isHighlighted?: boolean;
 }

@@ -9,7 +9,7 @@ import useHighlightPath from "../../../visualisationComponents/highlightPathFrom
 import { useDrag } from "../../../components/UseDrag";
 import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
 import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
-import buildTree from "../../../segmentTreeVisualizer/defaultSegmentTree/SegmentTreeWasm"
+import buildTree from "../../../segmentTreeVisualizer/defaultSegmentTree/SegmentTreeWasm";
 
 interface SegmentTreeProviderProps {
   children: React.ReactNode;
@@ -58,56 +58,14 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       });
     }
   }, [initialData]);
-  // useEffect(() => {
-  //   const newNodes = initialData.map((value, index) => ({
-  //     id: index,
-  //     value,
-  //     range: [index, index],
-  //     parentId: Math.floor((index - 1) / 2),
-  //   }));
-  //   setNodes(newNodes);
-  //   setParentMap(buildParentMap(newNodes));
-  // }, [initialData]);
 
-  // const updateTreeWithNewData = async (newData: number[]): Promise<VisNode[] | null> => {
-  //   try {
-  //     // Map new data to nodes
-  //     const newNodes: VisNode[] = newData.map((value, index) => ({
-  //       id: index,
-  //       x: 0, 
-  //       y: 0,
-  //       range: [index, index],
-  //       label: `Node ${index}`,
-  //       value,
-  //       parentId: index > 0 ? Math.floor((index - 1) / 2) : undefined, 
-  //       children: []
-  //     }));
-
-  //     newData.forEach((_, index) => {
-  //       const leftChildIndex = 2 * index + 1;
-  //       const rightChildIndex = 2 * index + 2;
-  
-  //       if (leftChildIndex < newData.length) {
-  //         newNodes[index].children?.push(newNodes[leftChildIndex]);
-  //       }
-  //       if (rightChildIndex < newData.length) {
-  //         newNodes[index].children?.push(newNodes[rightChildIndex]);
-  //       }
-  //     });
-  
-  //     // Update state with new nodes
-  //     await setNodes(newNodes);
-  
-  //     // Build and update parent map
-  //     const parentMap = buildParentMap(newNodes);
-  //     await setParentMap(parentMap);
-  
-  //     return newNodes;
-  //   } catch (error) {
-  //     console.error("Error updating tree with new data:", error);
-  //     return null;
-  //   }
-  // };
+  // Новый эффект: при изменении состояния узлов вызываем перерисовку слоя
+  useEffect(() => {
+    if (layerRef.current) {
+      console.log("Redrawing layer due to nodes state change.");
+      layerRef.current.draw();
+    }
+  }, [nodes]);
 
   const { updateTreeWithNewData } = useUpdateSegmentTree({
     nodes,
@@ -119,102 +77,100 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     layerRef,
   });
   
-
-
-    // Функции, чтобы не пробрасывать их через props
-    const onAddElement = () => {
-      handleAddElement({
-        newValue,
-        setNewValue,
-        data,
-        setData,
-        setSnackbarMessage,
-        setSnackbarOpen,
-        MAX_LEAVES,
-        updateTreeWithNewData,
-        buildTree,
-        setParentMap
-      });
-    };
-  
-    const onUpdateNode = () => {
-      handleUpdateNode({
-        selectedNode,
-        setSelectedNode,
-        delta,
-        setDelta,
-        data,
-        setData,
-        setSnackbarMessage,
-        setSnackbarOpen,
-        parentMap,
-        highlightPathFromLeaf,
-        updateTreeWithNewData
-      });
-    };
-  
-    const onRemoveLeaf = () => {
-      handleRemoveLeaf({
-        selectedNode,
-        setSelectedNode,
-        data,
-        setData,
-        setSnackbarMessage,
-        setSnackbarOpen,
-        parentMap,
-        updateTreeWithNewData,
-        shapeRefs
-      });
-    };
-  
-    const onNodeClick = (node: VisNode) => {
-      handleNodeClick({
-        node,
-        setSelectedNode,
-        setDelta
-      });
-    };
-  
-    const onCloseSnackbar = () => {
-      handleCloseSnackbar({ setSnackbarOpen });
-    };
-  
-    // Формируем value контекста
-    const value: SegmentTreeContextProps = {
+  // Функции-обработчики
+  const onAddElement = () => {
+    handleAddElement({
+      newValue,
+      setNewValue,
       data,
       setData,
-      nodes,
-      setNodes,
-      parentMap,
-      setParentMap,
+      setSnackbarMessage,
+      setSnackbarOpen,
+      MAX_LEAVES,
+      updateTreeWithNewData,
+      buildTree,
+      setParentMap
+    });
+  };
+  
+  const onUpdateNode = () => {
+    handleUpdateNode({
       selectedNode,
       setSelectedNode,
       delta,
       setDelta,
-      snackbarOpen,
-      setSnackbarOpen,
-      snackbarMessage,
+      data,
+      setData,
       setSnackbarMessage,
-      newValue,
-      setNewValue,
-      shapeRefs,
-      layerRef,
-      editBoxPos,
-      handleEditBoxMouseDown,
-      handleEditBoxMouseMove,
-      handleEditBoxMouseUp,
-  
-      onAddElement,
-      onUpdateNode,
-      onRemoveLeaf,
-      onNodeClick,
-      onCloseSnackbar,
-  
+      setSnackbarOpen,
+      parentMap,
       highlightPathFromLeaf,
+      updateTreeWithNewData
+    });
+  };
   
-      stageSize,
-      setStageSize
-    };
+  const onRemoveLeaf = () => {
+    handleRemoveLeaf({
+      selectedNode,
+      setSelectedNode,
+      data,
+      setData,
+      setSnackbarMessage,
+      setSnackbarOpen,
+      parentMap,
+      updateTreeWithNewData,
+      shapeRefs
+    });
+  };
+  
+  const onNodeClick = (node: VisNode) => {
+    handleNodeClick({
+      node,
+      setSelectedNode,
+      setDelta
+    });
+  };
+  
+  const onCloseSnackbar = () => {
+    handleCloseSnackbar({ setSnackbarOpen });
+  };
+  
+  // Формирование значения контекста
+  const value: SegmentTreeContextProps = {
+    data,
+    setData,
+    nodes,
+    setNodes,
+    parentMap,
+    setParentMap,
+    selectedNode,
+    setSelectedNode,
+    delta,
+    setDelta,
+    snackbarOpen,
+    setSnackbarOpen,
+    snackbarMessage,
+    setSnackbarMessage,
+    newValue,
+    setNewValue,
+    shapeRefs,
+    layerRef,
+    editBoxPos,
+    handleEditBoxMouseDown,
+    handleEditBoxMouseMove,
+    handleEditBoxMouseUp,
+  
+    onAddElement,
+    onUpdateNode,
+    onRemoveLeaf,
+    onNodeClick,
+    onCloseSnackbar,
+  
+    highlightPathFromLeaf,
+  
+    stageSize,
+    setStageSize
+  };
 
   return (
     <SegmentTreeContext.Provider value={value}>
@@ -222,4 +178,3 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     </SegmentTreeContext.Provider>
   );
 };
-
