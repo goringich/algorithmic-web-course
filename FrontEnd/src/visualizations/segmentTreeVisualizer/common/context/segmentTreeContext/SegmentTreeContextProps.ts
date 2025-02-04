@@ -8,8 +8,8 @@ export interface SegmentTreeContextProps {
   nodes: VisNode[];
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
 
-  parentMap: Record<number, number>;
-  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
+  parentMap: Record<number, number | undefined>;
+  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>;
 
   selectedNode: VisNode | null;
   setSelectedNode: React.Dispatch<React.SetStateAction<VisNode | null>>;

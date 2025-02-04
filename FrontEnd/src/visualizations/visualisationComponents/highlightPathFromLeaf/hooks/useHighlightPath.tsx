@@ -6,7 +6,7 @@ import useNodeAnimations from "./useNodeAnimations";
 
 interface UseHighlightPathProps {
   nodes: VisNode[];
-  parentMap: Record<number, number>;
+  parentMap: Record<number, number | undefined>;
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
 }
 

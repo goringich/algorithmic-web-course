@@ -20,41 +20,27 @@ export const updateTreeWithNewData = async (
     console.error("SegmentTreeWasm instance is not initialized.");
     return null;
   }
-
   try {
-    // Update data and rebuild the tree
     await segmentTree.setData(newData);
     let newVisNodes = await segmentTree.getTreeForVisualization();
-
-    // Приводим данные к типу, ожидаемому VisNode, устанавливая isHighlighted и children как number[]
     newVisNodes = newVisNodes.map((node) => ({
       ...node,
       isHighlighted: false,
-      // Если children приходит как number[] – оставляем без изменений,
-      // иначе, если это VisNode[], можно преобразовать: children: node.children.map((child: any) => child.id)
       children: node.children as unknown as number[]
     }));
-
     const rootId = newVisNodes[0]?.id;
     if (rootId === undefined) {
       throw new Error("No root node found in the new visualization nodes.");
     }
-
     let newParentMap = buildParentMap(newVisNodes);
-
-    // Validate and fix parentMap
     if (!validateParentMap(newVisNodes, newParentMap, rootId)) {
       console.warn("Invalid parentMap detected. Attempting to fix...");
       const fixedParentMap = fixParentMap(newVisNodes, newParentMap, rootId);
-
       if (!validateParentMap(newVisNodes, fixedParentMap, rootId)) {
         throw new Error("Unable to fix parentMap: Cycles or orphan nodes remain.");
       }
-      // Обновляем карту после исправления
       newParentMap = fixedParentMap;
     }
-
-    // Check for orphan nodes – проверяем строго, чтобы не считать 0 за undefined
     const orphanNodes = newVisNodes.filter(node => node.id !== rootId && newParentMap[node.id] === undefined);
     if (orphanNodes.length > 0) {
       console.warn("Orphan nodes detected, fixing structure.", orphanNodes);
@@ -62,22 +48,20 @@ export const updateTreeWithNewData = async (
         newParentMap[node.id] = rootId;
       });
     }
-
-    // Animate disappearance of removed nodes
-    const removedNodes = nodes.filter(oldNode => !newVisNodes.some(n => n.id === oldNode.id));
-    removedNodes.forEach(rn => {
-      animateNodeDisappear(rn.id, shapeRefs.current, () => {
-        delete shapeRefs.current[rn.id];
+    // Если animateNodeDisappear теперь принимает только 2 аргумента, убираем callback:
+    removedNodesLoop: {
+      const removedNodes = nodes.filter(oldNode => !newVisNodes.some(n => n.id === oldNode.id));
+      removedNodes.forEach(rn => {
+        animateNodeDisappear(rn.id, shapeRefs.current);
+        // Дополнительно можно вызвать удаление ссылки через setTimeout или внутри animateNodeDisappear
+        delete shapeRefs.current[rn.id.toString()];
       });
-    });
-
-    // Animate movement and appearance of nodes
+    }
     for (const newN of newVisNodes) {
       const shapeRef = shapeRefs.current[newN.id.toString()];
       if (!shapeRef) {
         shapeRefs.current[newN.id.toString()] = createShapeRef(newN, layerRef);
       }
-
       const oldNode = nodes.find(p => p.id === newN.id);
       if (oldNode) {
         if (oldNode.x !== newN.x || oldNode.y !== newN.y) {
@@ -89,11 +73,8 @@ export const updateTreeWithNewData = async (
         }, 500);
       }
     }
-
-    // Update parentMap and nodes
     setParentMap(newParentMap);
     setNodes(newVisNodes);
-
     return newVisNodes;
   } catch (error) {
     console.error("Error while updating the tree:", error);
@@ -101,7 +82,6 @@ export const updateTreeWithNewData = async (
   }
 };
 
-// Helper function to create a new shape reference
 const createShapeRef = (node: VisNode, layerRef: React.MutableRefObject<Konva.Layer | null>): Konva.Circle => {
   const newShape = new Konva.Circle({
     x: node.x,
@@ -110,11 +90,9 @@ const createShapeRef = (node: VisNode, layerRef: React.MutableRefObject<Konva.La
     fill: 'black',
     id: node.id.toString(),
   });
-
   if (layerRef.current) {
     layerRef.current.add(newShape);
     layerRef.current.draw();
   }
-
   return newShape;
 };

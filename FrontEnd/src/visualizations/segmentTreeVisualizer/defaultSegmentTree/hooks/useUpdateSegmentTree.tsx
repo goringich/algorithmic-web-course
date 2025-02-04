@@ -7,8 +7,8 @@ import Konva from 'konva';
 interface UseUpdateSegmentTreeProps {
   nodes: VisNode[];
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
-  parentMap: Record<number, number>;
-  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
+  parentMap: Record<number, number | undefined>;
+  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>;
   segmentTree: SegmentTreeWasm | null;
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
   layerRef: React.MutableRefObject<Konva.Layer | null>;
@@ -39,7 +39,7 @@ const useUpdateSegmentTree = ({
         shapeRefs,
         layerRef
       ),
-    [nodes, segmentTree, shapeRefs, setNodes, setParentMap, layerRef]
+    [nodes, segmentTree, shapeRefs, setNodes, setParentMap, layerRef, parentMap]
   );
 
   return { updateTreeWithNewData: updateTree };
