@@ -9,6 +9,7 @@ import (
   httpDelivery "BackEnd/internal/api/delivery/http"
 
   "github.com/gin-gonic/gin"
+  "github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -18,15 +19,24 @@ func main() {
   }
   defer db.Close()
 
-  // Проверяем и загружаем контент только при необходимости
-  loader.EnsureContentLoaded(db, "../DataBase/Content")
+  loader.EnsureContentLoaded(db)
 
   contentRepo := repo.NewContentRepository(db)
-  contentHandler := httpDelivery.NewContentHandler(contentRepo, db) // Передаём db в хендлер
+  contentHandler := httpDelivery.NewContentHandler(contentRepo, db)
 
   r := gin.Default()
+
+  r.Use(cors.New(cors.Config{
+    AllowOrigins:     []string{"http://localhost:5173"}, // Разрешаем фронтенд
+    AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+    AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+    AllowCredentials: true,
+  }))
+
   httpDelivery.RegisterRoutes(r, contentHandler)
 
-  log.Println("Сервер запущен на http://localhost:8081")
+  r.GET("/api/sections", contentHandler.GetSections)
+
+  log.Println("🚀 Сервер запущен на http://localhost:8081")
   r.Run(":8081")
 }
