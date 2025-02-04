@@ -24,14 +24,23 @@ export const updateTreeWithNewData = async (
   try {
     // Update data and rebuild the tree
     await segmentTree.setData(newData);
-    const newVisNodes = await segmentTree.getTreeForVisualization();
+    let newVisNodes = await segmentTree.getTreeForVisualization();
+
+    // Приводим данные к типу, ожидаемому VisNode, устанавливая isHighlighted и children как number[]
+    newVisNodes = newVisNodes.map((node) => ({
+      ...node,
+      isHighlighted: false,
+      // Если children приходит как number[] – оставляем без изменений,
+      // иначе, если это VisNode[], можно преобразовать: children: node.children.map((child: any) => child.id)
+      children: node.children as unknown as number[]
+    }));
 
     const rootId = newVisNodes[0]?.id;
     if (rootId === undefined) {
       throw new Error("No root node found in the new visualization nodes.");
     }
 
-    const newParentMap = buildParentMap(newVisNodes);
+    let newParentMap = buildParentMap(newVisNodes);
 
     // Validate and fix parentMap
     if (!validateParentMap(newVisNodes, newParentMap, rootId)) {
@@ -45,11 +54,10 @@ export const updateTreeWithNewData = async (
       newParentMap = fixedParentMap;
     }
 
-    // Check for orphan nodes
-    const orphanNodes = newVisNodes.filter(node => node.id !== rootId && !newParentMap[node.id]);
+    // Check for orphan nodes – проверяем строго, чтобы не считать 0 за undefined
+    const orphanNodes = newVisNodes.filter(node => node.id !== rootId && newParentMap[node.id] === undefined);
     if (orphanNodes.length > 0) {
       console.warn("Orphan nodes detected, fixing structure.", orphanNodes);
-
       orphanNodes.forEach(node => {
         newParentMap[node.id] = rootId;
       });
