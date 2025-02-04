@@ -5,6 +5,7 @@ import { validateParentMap } from '../../../visualisationComponents/highlightPat
 import { fixParentMap } from '../../../visualisationComponents/highlightPathFromLeaf/utils/fixParentMap';
 import SegmentTreeWasm from '../SegmentTreeWasm';
 import Konva from 'konva';
+import React from 'react';
 
 export const updateTreeWithNewData = async (
   newData: number[],
@@ -23,8 +24,10 @@ export const updateTreeWithNewData = async (
   try {
     await segmentTree.setData(newData);
     let newVisNodes = await segmentTree.getTreeForVisualization();
-    newVisNodes = newVisNodes.map((node) => ({
+    // Приведение типа: добавляем свойство parentId (если отсутствует)
+    newVisNodes = newVisNodes.map((node, index) => ({
       ...node,
+      parentId: node.parentId !== undefined ? node.parentId : (index === 0 ? undefined : 0),
       isHighlighted: false,
       children: node.children as unknown as number[]
     }));
@@ -33,10 +36,10 @@ export const updateTreeWithNewData = async (
       throw new Error("No root node found in the new visualization nodes.");
     }
     let newParentMap = buildParentMap(newVisNodes);
-    if (!validateParentMap(newVisNodes, newParentMap, rootId)) {
+    if (!validateParentMap(newVisNodes, rootId)) {
       console.warn("Invalid parentMap detected. Attempting to fix...");
       const fixedParentMap = fixParentMap(newVisNodes, newParentMap, rootId);
-      if (!validateParentMap(newVisNodes, fixedParentMap, rootId)) {
+      if (!validateParentMap(newVisNodes, rootId)) {
         throw new Error("Unable to fix parentMap: Cycles or orphan nodes remain.");
       }
       newParentMap = fixedParentMap;
@@ -48,15 +51,12 @@ export const updateTreeWithNewData = async (
         newParentMap[node.id] = rootId;
       });
     }
-    // Если animateNodeDisappear теперь принимает только 2 аргумента, убираем callback:
-    removedNodesLoop: {
-      const removedNodes = nodes.filter(oldNode => !newVisNodes.some(n => n.id === oldNode.id));
-      removedNodes.forEach(rn => {
-        animateNodeDisappear(rn.id, shapeRefs.current);
-        // Дополнительно можно вызвать удаление ссылки через setTimeout или внутри animateNodeDisappear
-        delete shapeRefs.current[rn.id.toString()];
-      });
-    }
+    // Обновлённые вызовы функций анимации:
+    const removedNodes = nodes.filter(oldNode => !newVisNodes.some(n => n.id === oldNode.id));
+    removedNodes.forEach(rn => {
+      animateNodeDisappear(rn.id, shapeRefs.current);
+      delete shapeRefs.current[rn.id.toString()];
+    });
     for (const newN of newVisNodes) {
       const shapeRef = shapeRefs.current[newN.id.toString()];
       if (!shapeRef) {

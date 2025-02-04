@@ -1,8 +1,8 @@
-import { useCallback } from 'react';
-import SegmentTreeWasm from '../SegmentTreeWasm';
 import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import SegmentTreeWasm from '../SegmentTreeWasm';
 import { updateTreeWithNewData } from '../utils/updateTreeWithNewData';
 import Konva from 'konva';
+import React from 'react';
 
 interface UseUpdateSegmentTreeProps {
   nodes: VisNode[];
@@ -27,7 +27,7 @@ const useUpdateSegmentTree = ({
   shapeRefs,
   layerRef
 }: UseUpdateSegmentTreeProps): UseUpdateSegmentTreeReturn => {
-  const updateTree = useCallback(
+  const updateTree = React.useCallback(
     (newData: number[]) =>
       updateTreeWithNewData(
         newData,

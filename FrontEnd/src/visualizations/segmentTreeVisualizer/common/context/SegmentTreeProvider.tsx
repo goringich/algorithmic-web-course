@@ -48,13 +48,21 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     if (!segmentTreeWasmRef.current) {
       segmentTreeWasmRef.current = new SegmentTreeWasm(initialData);
       segmentTreeWasmRef.current.getTreeForVisualization().then((visNodes) => {
-        setNodes(visNodes);
-        setParentMap(buildParentMap(visNodes));
+        // Приведение типа: добавляем parentId для каждого узла
+        const visNodesWithParent = visNodes.map((node, index) => ({
+          ...node,
+          parentId: node.parentId !== undefined ? node.parentId : (index === 0 ? undefined : 0),
+          isHighlighted: false,
+          children: node.children as unknown as number[],
+        }));
+        setNodes(visNodesWithParent);
+        setParentMap(buildParentMap(visNodesWithParent));
       }).catch(error => {
         console.error("Ошибка при построении дерева для визуализации:", error);
       });
     }
   }, [initialData]);
+  
 
   useEffect(() => {
     if (layerRef.current) {
