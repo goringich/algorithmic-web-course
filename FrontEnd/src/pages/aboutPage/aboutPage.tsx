@@ -83,7 +83,7 @@ const AboutPage: React.FC = () => {
                 role={member.role}
                 description={member.description}
                 skills={member.skills}
-                imageUrl={member.imageUrl}
+                imageUrl={member.imageUrl}a
               />
             </SwiperSlide>
           ))}

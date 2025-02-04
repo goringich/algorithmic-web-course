@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { VisNode } from "../../nodeAnimations/types/VisNode";
 import { buildPathFromLeaf } from "../buildPathFromLeaf";
-import { validateParentMap } from "../utils/validateParentMap";
+import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
 import useNodeAnimations from "./useNodeAnimations";
 
 interface UseHighlightPathProps {
@@ -19,8 +19,10 @@ export default function useHighlightPath({
 
   const highlightPathFromLeaf = useCallback(
     (leafNodeId: number) => {
+      console.log("Highlighting path for leaf (Подсвечиваем путь для листа):", leafNodeId);
       clearAllTimeouts();
 
+      // Сброс подсветки для всех узлов
       setNodes((oldNodes) =>
         oldNodes.map((node) => ({
           ...node,
@@ -30,14 +32,26 @@ export default function useHighlightPath({
 
       const leafNode = nodes.find((node) => node.id === leafNodeId);
       if (!leafNode) {
-        console.error(`Leaf node with ID '${leafNodeId}' not found.`);
+        console.error(`Leaf node with ID '${leafNodeId}' not found (Листовой узел с ID '${leafNodeId}' не найден).`);
+        return;
+      }
+      console.log("Found leaf node (Найден листовой узел):", leafNode);
+
+      // Пересчитываем карту родителей для актуальности
+      const updatedParentMap = buildParentMap(nodes);
+      console.log("Updated parent map (Обновленная карта родителей):", updatedParentMap);
+
+      const pathIds = buildPathFromLeaf(leafNode.id, nodes, updatedParentMap);
+      console.log("Computed path IDs (Вычисленные ID пути):", pathIds);
+
+      if (pathIds.length === 0) {
+        console.warn("No path computed for leaf node (Путь не вычислен для листового узла):", leafNodeId);
         return;
       }
 
-      const pathIds = buildPathFromLeaf(leafNode.id, nodes, parentMap);
       animatePath(pathIds);
     },
-    [nodes, parentMap, setNodes, animatePath, clearAllTimeouts]
+    [nodes, setNodes, animatePath, clearAllTimeouts]
   );
 
   return highlightPathFromLeaf;
