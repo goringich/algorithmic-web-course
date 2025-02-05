@@ -10,30 +10,35 @@ export const animateNodeMove = (
   const shape = shapeRefs[nodeId];
 
   if (!shape) {
-    console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
+    console.error(`[ERROR] Shape for nodeId ${nodeId} not found in shapeRefs`);
     return;
   }
 
-  // Check if the node is a root
+  console.log(`[INFO] Moving node ${nodeId} to (${newX}, ${newY})`);
+
   const isRoot = parentMap[nodeId] === nodeId;
 
   if (isRoot) {
-    console.log(`Корневой узел ${nodeId} перемещается без анимации.`);
+    console.log(`[DEBUG] Node ${nodeId} is root. Moving instantly.`);
     shape.to({
       x: newX,
       y: newY,
       duration: 0.5,
-      onFinish: () => {},
+      onFinish: () => {
+        console.log(`[INFO] Node ${nodeId} moved to (${newX}, ${newY})`);
+      }
     });
   } else {
-    // Animate node movement using Tween
+    console.log(`[DEBUG] Node ${nodeId} is not root. Animating movement.`);
     new Konva.Tween({
       node: shape,
       duration: 0.5,
       x: newX,
       y: newY,
       easing: Konva.Easings.EaseInOut,
-      onFinish: () => {},
+      onFinish: () => {
+        console.log(`[INFO] Node ${nodeId} finished moving to (${newX}, ${newY})`);
+      }
     }).play();
   }
 };
@@ -46,50 +51,57 @@ export const animateNodeAppear = (
   shapeRefs: Record<number, Konva.Circle>
 ): void => {
   const shape = shapeRefs[nodeId];
+
   if (!shape) {
-    console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
+    console.error(`[ERROR] Shape for nodeId ${nodeId} not found in shapeRefs`);
     return;
   }
 
-  // Set initial attributes for appearance animation
+  console.log(`[INFO] Node ${nodeId} appearing at (${x}, ${y})`);
+
   shape.position({ x, y });
   shape.opacity(0);
-  
-  // Animate node appearance
+
   shape.to({
     opacity: 1,
     duration: 0.5,
-    easing: Konva.Easings.EaseInOut
+    easing: Konva.Easings.EaseInOut,
+    onFinish: () => {
+      console.log(`[INFO] Node ${nodeId} fully appeared at (${x}, ${y})`);
+    }
   });
 };
 
 
+
+
 export const animateNodeDisappear = (
   nodeId: number,
-  shapeRefs: Record<number, Konva.Circle>,
-  callback?: () => void
-): void => {
-  const shape = shapeRefs[nodeId];
-  if (!shape) {
-    console.error(`Shape for nodeId ${nodeId} not found in shapeRefs`);
-    return;
-  }
-
-  // Анимация исчезновения узла
-  shape.to({
-    opacity: 0,
-    duration: 0.5,
-    easing: Konva.Easings.EaseInOut,
-    onFinish: () => {
-      // Удаляем форму из сцены Konva
-      shape.remove();
-      
-      // Удаляем ссылку на форму из shapeRefs
-      delete shapeRefs[nodeId];
-      console.log(`Shape '${nodeId}' removed from canvas`);
-
-      // Выполняем обратный вызов, если он предоставлен
-      if (callback) callback();
+  shapeRefs: Record<number, Konva.Circle>
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const shape = shapeRefs[nodeId];
+    
+    if (!shape) {
+      console.error(`[ERROR] Shape for nodeId ${nodeId} not found in shapeRefs`);
+      return reject(new Error(`Shape for nodeId ${nodeId} not found`));
     }
+
+    console.log(`[INFO] Animating disappearance of node ${nodeId}`);
+
+    shape.to({
+      opacity: 0,
+      duration: 0.5,
+      easing: Konva.Easings.EaseInOut,
+      onFinish: () => {
+        console.log(`[INFO] Node ${nodeId} fully disappeared, removing from canvas`);
+
+        shape.remove();
+        delete shapeRefs[nodeId];
+
+        console.log(`[DEBUG] Node ${nodeId} removed from shapeRefs`);
+        resolve();
+      }
+    });
   });
 };

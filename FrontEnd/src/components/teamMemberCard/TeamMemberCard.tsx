@@ -21,7 +21,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
     <Card className={styles_card.card_style} 
     sx = {{ boxShadow: 3}}
     >
-      <Grid2 container column={12} spacing={2}>
+      <Grid2 container columns={12} spacing={2}>
         <Grid2 gridColumn={{ xs: "span 6", sm: "span 6" }} className={styles_card.left_part}>
           <CardMedia
             component="img"

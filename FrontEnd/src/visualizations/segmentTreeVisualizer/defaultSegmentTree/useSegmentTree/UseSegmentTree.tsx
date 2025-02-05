@@ -7,7 +7,7 @@ import Konva from 'konva';
 
 interface UseSegmentTreeProps {
   initialData: number[];
-  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
+  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
   layerRef: React.MutableRefObject<Konva.Layer | null>; 
 }
 
