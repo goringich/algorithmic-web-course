@@ -4,7 +4,7 @@ import { useDrag } from "../../components/UseDrag";
 import { NotificationSnackbar } from "../../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
 import useHighlightPath from "../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
-import { VisNode } from "../../visualisationComponents/nodeAnimations/types/VisNode";
+import { VisNode } from "../../types/VisNode";
 import Header from "../../components/Header";
 import Controls from "../../components/Controls";
 import TreeArea from "../../components/TreeArea";

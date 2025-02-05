@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import Konva from "konva";
 import { SegmentTreeContextProps } from "./segmentTreeContext/SegmentTreeContextProps";
 import SegmentTreeContext from "./segmentTreeContext/SegmentTreeContext"; 
-import { VisNode } from "../../../visualisationComponents/nodeAnimations/types/VisNode";
+import { VisNode } from "../../../types/VisNode";
 import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
 import useUpdateSegmentTree from "../../defaultSegmentTree/hooks/useUpdateSegmentTree";
 import useHighlightPath from "../../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
 import { useDrag } from "../../../components/UseDrag";
 import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
-// Импорт обработчиков (buildTree больше не передаём)
 import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
 
 interface SegmentTreeProviderProps {
@@ -22,7 +21,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
   const shapeRefs = useRef<Record<string, Konva.Circle>>({});
   const layerRef = useRef<Konva.Layer | null>(null);
   const [nodes, setNodes] = useState<VisNode[]>([]);
-  // Изменили тип: теперь значения могут быть number или undefined
   const [parentMap, setParentMap] = useState<Record<number, number | undefined>>({});
   const [selectedNode, setSelectedNode] = useState<VisNode | null>(null);
   const [delta, setDelta] = useState<number>(0);
@@ -34,7 +32,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
 
   const highlightPathFromLeaf = useHighlightPath({ nodes, parentMap, setNodes });
 
-  // Если в вашем интерфейсе контекста изменить типы событий на React.MouseEvent, то можно напрямую передавать
   const {
     position: editBoxPos,
     handleMouseDown: handleEditBoxMouseDown,
@@ -48,7 +45,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     if (!segmentTreeWasmRef.current) {
       segmentTreeWasmRef.current = new SegmentTreeWasm(initialData);
       segmentTreeWasmRef.current.getTreeForVisualization().then((visNodes) => {
-        // Приведение типа: добавляем parentId для каждого узла
         const visNodesWithParent = visNodes.map((node, index) => ({
           ...node,
           parentId: node.parentId !== undefined ? node.parentId : (index === 0 ? undefined : 0),
@@ -63,7 +59,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     }
   }, [initialData]);
   
-
   useEffect(() => {
     if (layerRef.current) {
       console.log("Redrawing layer due to nodes state change.");
@@ -81,7 +76,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     layerRef,
   });
   
-  // Обработчики
   const onAddElement = () => {
     handleAddElement({
       newValue,
@@ -92,7 +86,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setSnackbarOpen,
       MAX_LEAVES,
       updateTreeWithNewData,
-      // buildTree не передаём
       setParentMap
     });
   };
@@ -107,7 +100,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setData,
       setSnackbarMessage,
       setSnackbarOpen,
-      // Обновлён тип parentMap:
       parentMap,
       highlightPathFromLeaf,
       updateTreeWithNewData
@@ -122,7 +114,6 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setData,
       setSnackbarMessage,
       setSnackbarOpen,
-      // Обновлён тип parentMap:
       parentMap,
       updateTreeWithNewData,
       shapeRefs
@@ -146,7 +137,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     setData,
     nodes,
     setNodes,
-    parentMap, // тип Record<number, number | undefined>
+    parentMap,
     setParentMap,
     selectedNode,
     setSelectedNode,
@@ -159,7 +150,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     newValue,
     setNewValue,
     shapeRefs,
-    layerRef,
+    layerRef,  // Передаём один и тот же layerRef, который используется и в канве
     editBoxPos,
     handleEditBoxMouseDown,
     handleEditBoxMouseMove,

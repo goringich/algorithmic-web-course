@@ -1,4 +1,4 @@
-import { VisNode } from "../../nodeAnimations/types/VisNode";
+import { VisNode } from "../../../types/VisNode";
 
 export const validateParentMap = (nodes: VisNode[], rootId: number): Record<number, number | undefined> => {
   const parentMap: Record<number, number | undefined> = {};

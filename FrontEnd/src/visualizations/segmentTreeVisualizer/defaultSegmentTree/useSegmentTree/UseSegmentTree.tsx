@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import useInitializeSegmentTree from '../hooks/useInitializeSegmentTree';
 import useSegmentTreeState from '../../common/hooks/useSegmentTreeState';
 import useUpdateSegmentTree from '../hooks/useUpdateSegmentTree';
-import { VisNode } from '@src/visualizations/visualisationComponents/nodeAnimations/types/VisNode';
+import { VisNode } from '@src/visualizations/types/VisNode';
 import Konva from 'konva';
 
 interface UseSegmentTreeProps {
@@ -13,10 +13,10 @@ interface UseSegmentTreeProps {
 
 interface UseSegmentTreeReturn {
   nodes: VisNode[];
-  parentMap: Record<number, number>;
+  parentMap: Record<number, number | undefined>;
   updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
-  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number>>>;
+  setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>;
 }
 
 const useSegmentTree = ({ initialData, shapeRefs, layerRef }: UseSegmentTreeProps): UseSegmentTreeReturn => {

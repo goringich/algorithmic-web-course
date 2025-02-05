@@ -1,4 +1,4 @@
-import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { VisNode } from '../../../types/VisNode';
 import {
   animateNodeMove,
   animateNodeAppear,
@@ -11,6 +11,29 @@ import SegmentTreeWasm from '../SegmentTreeWasm';
 import Konva from 'konva';
 import React from 'react';
 
+/**
+ * Ожидает появления layerRef.current в течение timeout (по умолчанию 2000 мс),
+ * проверяя каждые interval мс (по умолчанию 50 мс).
+ */
+async function waitForLayerRef(
+  layerRef: React.MutableRefObject<Konva.Layer | null>,
+  timeout = 2000,
+  interval = 50
+): Promise<Konva.Layer | null> {
+  console.log(`[INFO] Waiting for layerRef to be available...`);
+  let waited = 0;
+  while (!layerRef.current && waited < timeout) {
+    await new Promise((resolve) => setTimeout(resolve, interval));
+    waited += interval;
+  }
+  if (layerRef.current) {
+    console.log(`[INFO] layerRef is now available after ${waited}ms.`);
+  } else {
+    console.error(`[ERROR] layerRef still null after waiting ${timeout}ms.`);
+  }
+  return layerRef.current;
+}
+
 export const updateTreeWithNewData = async (
   newData: number[],
   segmentTree: SegmentTreeWasm | null,
@@ -21,16 +44,12 @@ export const updateTreeWithNewData = async (
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>,
   layerRef: React.MutableRefObject<Konva.Layer | null>
 ): Promise<VisNode[] | null> => {
-  console.log(
-    `[INFO] Starting updateTreeWithNewData with newData:`,
-    newData
-  );
-  
-  // Если layerRef отсутствует, нельзя обновлять фигуры
-  if (!layerRef.current) {
-    console.error(
-      "[ERROR] layerRef.current is null. Aborting updateTreeWithNewData."
-    );
+  console.log(`[INFO] Starting updateTreeWithNewData with newData:`, newData);
+
+  // Ожидаем появления layerRef
+  const currentLayer = await waitForLayerRef(layerRef);
+  if (!currentLayer) {
+    console.error("[ERROR] layerRef.current is null. Aborting updateTreeWithNewData.");
     return null;
   }
   
@@ -43,10 +62,7 @@ export const updateTreeWithNewData = async (
     console.log("[INFO] segmentTree.setData completed.");
     
     let newVisNodes = await segmentTree.getTreeForVisualization();
-    console.log(
-      "[INFO] segmentTree.getTreeForVisualization returned:",
-      newVisNodes
-    );
+    console.log("[INFO] segmentTree.getTreeForVisualization returned:", newVisNodes);
     
     // Приведение типа: добавляем свойство parentId (если отсутствует)
     newVisNodes = newVisNodes.map((node, index) => ({
@@ -95,7 +111,6 @@ export const updateTreeWithNewData = async (
     
     removedNodes.forEach(rn => {
       console.log(`[INFO] Animating disappearance for removed node ${rn.id}`);
-      // Если animateNodeDisappear возвращает промис, можно ждать его завершения
       animateNodeDisappear(rn.id, shapeRefs.current)
         .then(() =>
           console.log(`[DEBUG] Removal animation finished for node ${rn.id}`)
