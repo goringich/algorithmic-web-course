@@ -119,6 +119,7 @@ export const handleUpdateNode = async ({
   setSelectedNode(null);
 };
 
+
 type HandleRemoveLeafParams = {
   selectedNode: VisNode | null;
   setSelectedNode: React.Dispatch<React.SetStateAction<VisNode | null>>;
@@ -126,10 +127,9 @@ type HandleRemoveLeafParams = {
   setData: React.Dispatch<React.SetStateAction<number[]>>;
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
   setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // Обновлён тип parentMap:
   parentMap: Record<number, number | undefined>;
   updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
-  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
+  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>; 
 };
 
 export const handleRemoveLeaf = async ({
@@ -155,11 +155,20 @@ export const handleRemoveLeaf = async ({
     return;
   }
   const pos = selectedNode.range[0];
-  // Если animateNodeDisappear теперь принимает только 2 аргумента,
-  // то callback можно вызвать после анимации (например, через Promise или setTimeout)
-  await animateNodeDisappear(selectedNode.id, shapeRefs.current);
+
+  // Дожидаемся завершения анимации исчезновения
+  try {
+    await animateNodeDisappear(selectedNode.id, shapeRefs.current as unknown as Record<number, Konva.Circle>);
+  } catch (error) {
+    console.error("Ошибка при анимации удаления узла:", error);
+    setSnackbarMessage("Ошибка при анимации удаления узла.");
+    setSnackbarOpen(true);
+    return;
+  }
+
   const newArr = [...data];
   newArr.splice(pos, 1);
+
   const newVisNodes = await updateTreeWithNewData(newArr);
   if (!newVisNodes) {
     setSnackbarMessage("Ошибка при удалении узла.");
@@ -169,6 +178,7 @@ export const handleRemoveLeaf = async ({
   setData(newArr);
   setSelectedNode(null);
 };
+
 
 type HandleNodeClickParams = {
   node: VisNode;

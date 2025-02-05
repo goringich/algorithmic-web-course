@@ -28,8 +28,12 @@ const useUpdateSegmentTree = ({
   layerRef
 }: UseUpdateSegmentTreeProps): UseUpdateSegmentTreeReturn => {
   const updateTree = React.useCallback(
-    (newData: number[]) =>
-      updateTreeWithNewData(
+    (newData: number[]) => {
+      console.log(
+        `[INFO] updateTreeWithNewData called with newData:`,
+        newData
+      );
+      return updateTreeWithNewData(
         newData,
         segmentTree,
         nodes,
@@ -38,7 +42,8 @@ const useUpdateSegmentTree = ({
         setParentMap,
         shapeRefs,
         layerRef
-      ),
+      );
+    },
     [nodes, segmentTree, shapeRefs, setNodes, setParentMap, layerRef, parentMap]
   );
 
