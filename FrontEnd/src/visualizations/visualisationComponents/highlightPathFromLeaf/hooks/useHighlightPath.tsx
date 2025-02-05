@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { VisNode } from "../../nodeAnimations/types/VisNode";
+import { VisNode } from "../../../types/VisNode";
 import { buildPathFromLeaf } from "../buildPathFromLeaf";
 import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
 import useNodeAnimations from "./useNodeAnimations";

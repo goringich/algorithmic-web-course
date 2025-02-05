@@ -1,4 +1,4 @@
-import { VisNode } from "../../../visualisationComponents/nodeAnimations/types/VisNode";
+import { VisNode } from "../../../types/VisNode";
 import { animateNodeDisappear } from "../../../visualisationComponents/nodeAnimations/nodeAnimations";
 import Konva from "konva";
 

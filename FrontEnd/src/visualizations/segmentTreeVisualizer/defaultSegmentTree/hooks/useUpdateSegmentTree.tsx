@@ -1,4 +1,4 @@
-import { VisNode } from '../../../visualisationComponents/nodeAnimations/types/VisNode';
+import { VisNode } from '../../../types/VisNode';
 import SegmentTreeWasm from '../SegmentTreeWasm';
 import { updateTreeWithNewData } from '../utils/updateTreeWithNewData';
 import Konva from 'konva';

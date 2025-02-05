@@ -1,4 +1,4 @@
-import { VisNode } from "../types/VisNode";
+import { VisNode } from "../../../types/VisNode";
 
 export const buildParentMap = (newNodes: VisNode[]): Record<number, number> => {
   const map: Record<number, number> = {};

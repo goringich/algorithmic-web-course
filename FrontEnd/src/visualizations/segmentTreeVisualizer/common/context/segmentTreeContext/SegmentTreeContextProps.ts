@@ -1,5 +1,5 @@
 import Konva from "konva";
-import { VisNode } from "../../../../visualisationComponents/nodeAnimations/types/VisNode";
+import { VisNode } from "../../../../types/VisNode";
 
 export interface SegmentTreeContextProps {
   data: number[];

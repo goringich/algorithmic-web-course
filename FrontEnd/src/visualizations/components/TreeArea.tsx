@@ -1,7 +1,7 @@
 // src/components/TreeArea.tsx
 import React from 'react';
 import { SegmentTreeCanvas } from '../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas';
-import { VisNode } from '../visualisationComponents/nodeAnimations/types/VisNode';
+import { VisNode } from '../types/VisNode';
 
 interface TreeAreaProps {
   selectedNodeId: number | null;
