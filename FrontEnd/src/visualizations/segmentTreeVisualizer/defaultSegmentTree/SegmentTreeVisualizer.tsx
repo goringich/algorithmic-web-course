@@ -1,16 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { useDrag } from "../../components/UseDrag";
 import { NotificationSnackbar } from "../../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
-import useHighlightPath from "../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
-import { VisNode } from "../../types/VisNode";
 import Header from "../../components/Header";
 import Controls from "../../components/Controls";
 import TreeArea from "../../components/TreeArea";
 import TreeStructure from "../../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
 import { useSegmentTreeContext } from "../common/context/segmentTreeContext/SegmentTreeContext"
-import Konva from "konva";
 
 const SegmentTreeVisualizer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);

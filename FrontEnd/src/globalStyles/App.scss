@@ -10,11 +10,28 @@
 //   }
 // }
 
+<<<<<<< HEAD
 // .App{
 //   margin: 0 auto;
 //   max-width: 1450px;
 //   width: 100%;
 // }
+=======
+html, body {
+  width: 100%;
+  // height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+
+.App{
+  margin: 0 auto;
+  max-width: 1450px;
+  width: 100%;
+}
+>>>>>>> 5111d13 (split updateTreeWithNewData.ts logic into separate modules)
 
 // h1, h2, h3 {
 //   font-family: var(--secondary-font);

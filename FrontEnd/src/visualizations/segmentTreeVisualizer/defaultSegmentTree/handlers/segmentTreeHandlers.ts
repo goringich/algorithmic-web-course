@@ -1,5 +1,5 @@
 import { VisNode } from "../../../types/VisNode";
-import { animateNodeDisappear } from "../../../visualisationComponents/nodeAnimations/nodeAnimations";
+import { animateNodeDisappear } from "../../../visualisationComponents/nodeAnimations/animateNodeDisappear";
 import Konva from "konva";
 
 type HandleAddElementParams = {
