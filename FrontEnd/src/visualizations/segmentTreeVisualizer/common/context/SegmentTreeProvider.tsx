@@ -8,7 +8,10 @@ import useUpdateSegmentTree from "../../defaultSegmentTree/hooks/useUpdateSegmen
 import useHighlightPath from "../../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
 import { useDrag } from "../../../components/UseDrag";
 import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
-import { handleCloseSnackbar, handleAddElement, handleUpdateNode, handleRemoveLeaf, handleNodeClick } from "../../defaultSegmentTree/handlers/segmentTreeHandlers";
+import { handleRemoveLeaf } from "../handlers/handleRemoveLeaf";
+import { handleAddElement } from "../handlers/handleAddElement";
+import { handleUpdateNode } from "../handlers/handleUpdateNode";
+import { handleCloseSnackbar, handleNodeClick } from "../handlers/generalHandlers";
 
 interface SegmentTreeProviderProps {
   children: React.ReactNode;
