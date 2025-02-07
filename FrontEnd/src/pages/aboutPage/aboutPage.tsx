@@ -52,7 +52,7 @@ const AboutPage: React.FC = () => {
     <Grid2 container
     className={styles.about_page_container}
     >
-      <Grid2 className={styles.swiper_container}>
+      <Grid2>
         <Swiper
           modules={[Navigation]}
           navigation

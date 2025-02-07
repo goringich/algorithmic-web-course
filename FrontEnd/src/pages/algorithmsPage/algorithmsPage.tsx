@@ -28,12 +28,11 @@ const ContentPage: React.FC = () => {
 
   return (
     <Grid2 container>
-      <Grid2 item sx={{ flex: 1 }}>
+      <Grid2 sx={{ flex: 1 }}>
         {/*основной контент здесь */}
       </Grid2>
 
       <Grid2
-        item
         sx={{
           position: "fixed",  // Фиксируем меню слева
           top: 0,  // Верхняя граница меню

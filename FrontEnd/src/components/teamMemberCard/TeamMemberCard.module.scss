@@ -7,11 +7,8 @@
       font-size: 1.5rem !important;
     }
     @media (min-width: 600px) and (max-width: 749px) {
-      font-size: 1rem !important;
+      font-size: 1.2rem !important;
     }
-    // @media (min-width: 300px) and (max-width: 528px) {
-    //   font-size: 0.7rem !important;
-    // }
   }
     
   .role {
@@ -24,11 +21,8 @@
       font-size: 1.3rem !important;
     }
     @media (min-width: 600px) and (max-width: 749px) {
-      font-size: 0.8rem !important;
+      font-size: 1rem !important;
     }
-    // @media (min-width: 300px) and (max-width: 528px) {
-    //   font-size: 0.5rem !important;
-    // }
   }
   
   .description {
@@ -40,11 +34,8 @@
       font-size: 1.3rem !important;
     }
     @media (min-width: 600px) and (max-width: 749px) {
-      font-size: 0.8rem !important;
+      font-size: 1rem !important;
     }
-    // @media (min-width: 300px) and (max-width: 528px) {
-    //   font-size: 0.5rem !important;
-    // }
   }
   
   .skills {
@@ -56,11 +47,8 @@
       font-size: 1.3rem !important;
     }
     @media (min-width: 600px) and (max-width: 749px) {
-      font-size: 0.8rem !important;
+      font-size: 1rem !important;
     }
-    // @media (min-width: 300px) and (max-width: 528px) {
-    //   font-size: 0.5rem !important;
-    // }
   }
   
   .card_style {
@@ -69,18 +57,13 @@
     background-color: var(--background-color-lilac) !important;
     border-radius: 20px !important;
     margin: auto !important;
-    //display: flex !important;
     flex-direction: row !important;
     transition: all 0.3s ease !important;
   
   }
   
   .left_part {
-    padding: 16px;
-    //width: 46% !important; // убраттт
-    // margin: auto !important;
-    // display: flex !important;
-    // margin-left: 20px !important; 
+    padding: 16px; 
     }
     
   .photo {
@@ -90,24 +73,14 @@
       
   .right_part {
     flex: 1 !important; 
-    //padding: 2% !important;
-    //display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    //margin-top: 5% !important;
     overflow: auto !important;
-  
-    @media (max-width: 768px) {
-      padding: 2% !important;
-    }
   }
   
   .divider {
     border-bottom-width: 2px !important;
     border-color: var(--black) !important;
-    @media (max-width:426px) {
-      border-bottom-width: 1px !important;
-    }
   }
   
   
