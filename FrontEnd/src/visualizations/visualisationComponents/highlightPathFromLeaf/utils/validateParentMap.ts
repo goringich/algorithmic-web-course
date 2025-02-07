@@ -4,9 +4,9 @@ export const validateParentMap = (nodes: VisNode[], rootId: number): Record<numb
   const parentMap: Record<number, number | undefined> = {};
   nodes.forEach(node => {
     if (node.id === rootId) {
-      parentMap[node.id] = undefined; // Root has no parent
+      parentMap[node.id] = undefined; 
     } else {
-      parentMap[node.id] = node.parentId; // Ensure each node has a valid parentId
+      parentMap[node.id] = node.parentId; 
     }
   });
   return parentMap;

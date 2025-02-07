@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
 import { VisNode } from '../../../types/VisNode';
-import { animateNodeMove, animateNodeAppear, animateNodeDisappear } from '../../../visualisationComponents/nodeAnimations/nodeAnimations';
-import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import { animateNodeAppear} from '../../../visualisationComponents/nodeAnimations/animateNodeAppear';
+import { animateNodeDisappear } from "../../../visualisationComponents/nodeAnimations/animateNodeDisappear";
+import { animateNodeMove } from "../../../visualisationComponents/nodeAnimations/animateNodeMove";
 import Konva from 'konva';
+
 
 interface UseSegmentTreeAnimationsProps {
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
