@@ -1,8 +1,8 @@
 import { VisNode } from "../../../types/VisNode";
 
 type HandleAddElementParams = {
-  newValue: string;
-  setNewValue: React.Dispatch<React.SetStateAction<string>>;
+  newValue: number;
+  setNewValue: React.Dispatch<React.SetStateAction<number>>;
   data: number[];
   setData: React.Dispatch<React.SetStateAction<number[]>>;
   setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;

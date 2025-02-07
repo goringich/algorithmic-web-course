@@ -28,7 +28,6 @@ export interface SegmentTreeContextProps {
   shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
   layerRef: React.MutableRefObject<Konva.Layer | null>;
 
-  // Позиция и обработчики для драг-переноса модалки
   editBoxPos: { x: number; y: number };
   handleEditBoxMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleEditBoxMouseMove: (
@@ -40,7 +39,6 @@ export interface SegmentTreeContextProps {
   ) => void;
   handleEditBoxMouseUp: (e: React.MouseEvent<HTMLDivElement>) => void;
 
-  // Ваши функции
   onAddElement: () => void;
   onUpdateNode: () => void;
   onRemoveLeaf: () => void;
@@ -49,7 +47,6 @@ export interface SegmentTreeContextProps {
 
   highlightPathFromLeaf: (leafId: number) => void;
 
-  // Дополнительно (если нужно):
   stageSize: { width: number; height: number };
   setStageSize: React.Dispatch<React.SetStateAction<{ width: number; height: number }>>;
 }
