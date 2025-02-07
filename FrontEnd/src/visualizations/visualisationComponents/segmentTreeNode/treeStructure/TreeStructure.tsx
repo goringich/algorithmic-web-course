@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TreeStructureProps {
-  parentMap: Record<string, string>;
+  parentMap: Record<number, number | undefined >;
 }
 
 const TreeStructure: React.FC<TreeStructureProps> = ({ parentMap }) => {

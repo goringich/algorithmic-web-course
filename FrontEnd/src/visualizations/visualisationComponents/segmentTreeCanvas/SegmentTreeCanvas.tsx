@@ -4,7 +4,7 @@ import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 import { useSegmentTreeContext } from "../../segmentTreeVisualizer/common/context/segmentTreeContext/SegmentTreeContext";
 import { VisNode } from "../../types/VisNode";
 
-function calculateDepth(node: VisNode, nodesMap: Record<string, VisNode>): number {
+function calculateDepth(node: VisNode, nodesMap: Record<number, VisNode>): number {
   let depth = 0;
   let current = node;
 

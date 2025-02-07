@@ -4,7 +4,7 @@ import { SegmentTreeContextProps } from "./segmentTreeContext/SegmentTreeContext
 import SegmentTreeContext from "./segmentTreeContext/SegmentTreeContext"; 
 import { VisNode } from "../../../types/VisNode";
 import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
-import useUpdateSegmentTree from "../../defaultSegmentTree/hooks/useUpdateSegmentTree";
+import useUpdateSegmentTree from "../../defaultSegmentTree/useSegmentTree/hooks/useUpdateSegmentTree";
 import useHighlightPath from "../../../visualisationComponents/highlightPathFromLeaf/hooks/useHighlightPath";
 import { useDrag } from "../../../components/UseDrag";
 import SegmentTreeWasm from "../../defaultSegmentTree/SegmentTreeWasm";
@@ -50,7 +50,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       segmentTreeWasmRef.current.getTreeForVisualization().then((visNodes) => {
         const visNodesWithParent = visNodes.map((node, index) => ({
           ...node,
-          parentId: node.parentId !== undefined ? node.parentId : (index === 0 ? undefined : 0),
+          parentId: (node as any).parentId !== undefined ? (node as any).parentId : (index === 0 ? undefined : 0),
           isHighlighted: false,
           children: node.children as unknown as number[],
         }));
@@ -153,7 +153,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
     newValue,
     setNewValue,
     shapeRefs,
-    layerRef,  // Передаём один и тот же layerRef, который используется и в канве
+    layerRef,  
     editBoxPos,
     handleEditBoxMouseDown,
     handleEditBoxMouseMove,

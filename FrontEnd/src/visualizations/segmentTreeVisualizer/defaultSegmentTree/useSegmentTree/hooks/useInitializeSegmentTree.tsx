@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
-import SegmentTreeWasm from "../SegmentTreeWasm";
-import { VisNode } from "../../../types/VisNode";
-import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
+import SegmentTreeWasm from "../../SegmentTreeWasm";
+import { VisNode } from "../../../../types/VisNode";
+import { buildParentMap } from "../../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
 
 interface UseInitializeSegmentTreeProps {
   initialData: number[];

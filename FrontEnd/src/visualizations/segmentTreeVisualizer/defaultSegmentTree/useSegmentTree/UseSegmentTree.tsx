@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import useInitializeSegmentTree from '../hooks/useInitializeSegmentTree';
+import useInitializeSegmentTree from './hooks/useInitializeSegmentTree';
 import useSegmentTreeState from '../../common/hooks/useSegmentTreeState';
-import useUpdateSegmentTree from '../hooks/useUpdateSegmentTree';
+import useUpdateSegmentTree from './hooks/useUpdateSegmentTree';
 import { VisNode } from '@src/visualizations/types/VisNode';
 import Konva from 'konva';
 

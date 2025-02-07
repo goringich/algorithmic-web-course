@@ -2,8 +2,8 @@ import React from "react";
 import { Box, TextField, Button } from "@mui/material";
 
 interface AddElementFormProps {
-  newValue: string;
-  onChangeValue: (val: string) => void;
+  newValue: number;
+  onChangeValue: (val: number) => void;
   onAdd: () => void;
   disabled?: boolean;
 }
