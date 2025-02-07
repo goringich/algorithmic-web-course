@@ -18,7 +18,7 @@ export function useDrag(initialX: number, initialY: number) {
   };
 
   const handleMouseMove = (
-    e: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLSpanElement>,
+    e: React.MouseEvent<HTMLDivElement | HTMLSpanElement>,
     maxWidth: number,
     maxHeight: number,
     boxWidth: number,

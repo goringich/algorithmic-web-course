@@ -1,6 +1,6 @@
-import { VisNode } from '../../../types/VisNode';
-import SegmentTreeWasm from '../SegmentTreeWasm';
-import { updateTreeWithNewData } from '../utils/updateTreeWithNewData';
+import { VisNode } from '../../../../types/VisNode';
+import SegmentTreeWasm from '../../SegmentTreeWasm';
+import { updateTreeWithNewData } from '../../utils/updateTreeWithNewData';
 import Konva from 'konva';
 import React from 'react';
 

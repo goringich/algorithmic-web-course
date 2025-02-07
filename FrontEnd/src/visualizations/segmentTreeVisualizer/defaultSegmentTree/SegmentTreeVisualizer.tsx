@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { Box } from "@mui/material";
 import { NotificationSnackbar } from "../../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";

@@ -15,7 +15,7 @@ const useSegmentTreeAnimations = ({ shapeRefs }: UseSegmentTreeAnimationsProps) 
     (
       oldNodes: VisNode[],
       newNodes: VisNode[],
-      newParentMap: Record<string, string>
+      newParentMap: Record<number, number | undefined>
     ) => {
       const removedNodes = oldNodes.filter(oldNode => !newNodes.some(n => n.id === oldNode.id));
       removedNodes.forEach(rn => animateNodeDisappear(rn.id, shapeRefs.current));

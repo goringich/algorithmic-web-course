@@ -1,6 +1,5 @@
 export const fixParentMap = (parentMap: Record<number, number | undefined>, rootId: number): Record<number, number | undefined> => {
   const newParentMap: Record<number, number | undefined> = { ...parentMap };
-  const visitedGlobal = new Set<number>();
 
   for (const nodeId in newParentMap) {
     const currentId = Number(nodeId);
@@ -10,7 +9,7 @@ export const fixParentMap = (parentMap: Record<number, number | undefined>, root
       continue;
     }
 
-    let current = currentId;
+    let current: number | undefined = currentId;
     const visitedLocal = new Set<number>();
 
     while (current !== undefined) {
@@ -23,7 +22,7 @@ export const fixParentMap = (parentMap: Record<number, number | undefined>, root
       if (current === rootId) break;
 
       visitedLocal.add(current);
-      const parent = newParentMap[current];
+      const parent: number | undefined = newParentMap[current];
 
       if (parent === current) {
         console.warn(`Node '${current}' points to itself. Reassigning to root.`);
@@ -31,7 +30,7 @@ export const fixParentMap = (parentMap: Record<number, number | undefined>, root
         break;
       }
 
-      current = parent;
+      current = parent ?? undefined; 
     }
 
     // Assign orphan nodes to root

@@ -2,13 +2,13 @@ import React from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 
 interface NodeData {
-  id: string;
+  id: number;
   x: number;
   y: number;
   range: [number, number];
   label: string;
   value: number;
-  children: string[];
+  children: number[];
 }
 
 interface EditNodeModalProps {

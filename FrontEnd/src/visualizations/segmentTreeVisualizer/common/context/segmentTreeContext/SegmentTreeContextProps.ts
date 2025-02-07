@@ -30,15 +30,15 @@ export interface SegmentTreeContextProps {
 
   // Позиция и обработчики для драг-переноса модалки
   editBoxPos: { x: number; y: number };
-  handleEditBoxMouseDown: (e: React.MouseEvent) => void;
+  handleEditBoxMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleEditBoxMouseMove: (
-    e: React.MouseEvent,
+    e: React.MouseEvent<HTMLDivElement>,
     maxWidth: number,
     maxHeight: number,
     boxWidth: number,
     boxHeight: number
   ) => void;
-  handleEditBoxMouseUp: (e: React.MouseEvent) => void;
+  handleEditBoxMouseUp: (e: React.MouseEvent<HTMLDivElement>) => void;
 
   // Ваши функции
   onAddElement: () => void;

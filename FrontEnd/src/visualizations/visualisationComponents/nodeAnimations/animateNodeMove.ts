@@ -5,7 +5,7 @@ export const animateNodeMove = (
   newX: number,
   newY: number,
   shapeRefs: Record<number, Konva.Circle>,
-  parentMap: Record<number, number>
+  parentMap: Record<number, number | undefined>
 ): void => {
   const shape = shapeRefs[nodeId];
 
