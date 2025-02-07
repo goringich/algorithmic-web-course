@@ -18,7 +18,7 @@ const useInitializeSegmentTree = ({
   initialData,
 }: UseInitializeSegmentTreeProps): UseInitializeSegmentTreeReturn => {
   const [initialNodes, setInitialNodes] = useState<VisNode[]>([]);
-  const [initialParentMap, setInitialParentMap] = useState<Record<number, number>>({});
+  const [initialParentMap, setInitialParentMap] = useState<Record<number, number >>({});
   const [segmentTree, setSegmentTree] = useState<SegmentTreeWasm | null>(null);
 
   const initialize = useCallback(async () => {
@@ -34,9 +34,17 @@ const useInitializeSegmentTree = ({
 
       const nodes = await st.getTreeForVisualization();
       console.log("Nodes initialized:", nodes);
-      setInitialNodes(nodes);
 
-      const parentMap = buildParentMap(nodes);
+      const visNodes: VisNode[] = nodes.map((node, index) => ({
+        ...node,
+        parentId: (node as any).parentId ?? (index === 0 ? undefined : 0), 
+        isHighlighted: false, 
+        children: node.children ?? [],
+      }));
+      
+      setInitialNodes(visNodes);
+      const parentMap = buildParentMap(visNodes);
+      
       console.log("Parent map initialized:", parentMap);
       setInitialParentMap(parentMap);
     } catch (error) {

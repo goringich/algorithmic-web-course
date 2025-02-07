@@ -1,7 +1,7 @@
 import { VisNode } from "../../../types/VisNode";
 
-export const buildParentMap = (newNodes: VisNode[]): Record<number, number> => {
-  const map: Record<number, number> = {};
+export const buildParentMap = (newNodes: VisNode[]): Record<number, number | undefined> => {
+  const map: Record<number, number | undefined> = {};
   const nodeIds = new Set(newNodes.map((node) => node.id));
   const childNodes = new Set<number>();
 
