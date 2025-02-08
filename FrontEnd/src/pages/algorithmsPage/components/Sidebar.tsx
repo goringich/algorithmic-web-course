@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "../algorithmsPage.module.scss";
-import SubSectionList from "./SubSectionList";
-import {Box, Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItem, ListItemText, Grid2, Button, useMediaQuery, Drawer, IconButton} from "@mui/material";
+import {Box, Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItemButton, ListItemText, Grid2, Button, useMediaQuery, Drawer, IconButton} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Section } from "./types/types";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
@@ -88,35 +87,38 @@ const SidebarMenu: React.FC = () => {
       )}
 
       <Grid2 size={{sm: 2.5}}
-      sx={{height: "100vh", 
-      borderRight: "1px solid #ddd"}}>
+      sx={{height: "100vh"}}>
         <Drawer
         variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
         open={isMobile ? open : true} // Открыто постоянно для десктопов
         onClose={() => toggleDrawer(false)}
         sx={{
           "& .MuiDrawer-paper": {
-            width: "100%", // ширина `Drawer` в пределах грида
+            width: { xs: "75vw", sm: "75vw", md: "auto"}, // 75% экрана на мобильных, авто на десктопе
             boxSizing: "border-box", // Учитываем padding в ширине
             position: "relative",
-            display: "flex", // Flexbox для управления содержимым
-            flexDirection: "column",
+            display: "flex",
             overflowY: "scroll",
             scrollbarWidth: "none", // Firefox
             "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari, Edge
             },
         }}
         >
-          <Box sx={{height: "100vh"}}> 
+          <Box sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+          }}>
             <Typography className={styles.content}>
               СОДЕРЖАНИЕ
             </Typography>
+          <Box sx={{flexGrow: 1}}> 
             {menuData.map((section, index) => (
               <Accordion
                 key={index}
                 disableGutters
                 elevation={0}
-                keyexpanded={openSection[index]}
+                expanded={openSection[index]}
                 onChange={() => toggleSection(index)}
                 sx={{
                   background: "none",
@@ -127,29 +129,18 @@ const SidebarMenu: React.FC = () => {
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel${index}-content`}
                   id={`panel${index}-header`}
-                  // sx={{
-                  //   display: "flex",
-                  //   justifyContent: "space-between", // Располагаем элементы с отступами // Обеспечиваем, что аккордеон займет всю ширину
-                  //   '& .MuiAccordionSummary-content': {
-                  //     marginRight: '4px', // Добавляем отступ для текста от стрелки
-                  //   },
-                  //   '& .MuiAccordionSummary-expandIconWrapper': {
-                  //     marginLeft: 'auto', // Перемещаем стрелку в крайний правый угол
-                  //   },
-                  // }}
                 >
                   <Typography className={styles.style_for_text_section}>{section.title}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <List>
-                    {/* Динамическое создание аккордеонов для подсекций */}
+                    {/* Динамическое   создание аккордеонов для подсекций */}
                     {section.subSections.map((subSection, subIndex) => {
                       if (typeof subSection === "string") {
                         return (
-                          <ListItem button key={subIndex}>
+                          <ListItemButton key={subIndex}>
                             <ListItemText primary={subSection} />
-                            {/* primary={<Typography className={styles.style_for_text_subsection}>subSection</Typography>} /> */}
-                          </ListItem>
+                          </ListItemButton>
                         );
                       } else {
                         return (
@@ -169,15 +160,16 @@ const SidebarMenu: React.FC = () => {
                               aria-controls={`panel${index}-${subIndex}-content`}
                               id={`panel${index}-${subIndex}-header`}
                             >
-                              <Typography className={styles.style_for_text_subsection}>{subSection.title}</Typography>
+                              <Typography className={styles.style_for_text_subsection}> {subSection.title} </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                               <List>
                                 {/* Динамическое создание аккордеонов для подподсекций */}
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
-                                  <ListItem button key={subSubIndex} className={styles.background_on_hover}>
-                                    <ListItemText primary={subSubSection} />
-                                  </ListItem>
+                                  <ListItemButton key={subSubIndex} className={styles.background_on_hover}>
+                                    <ListItemText primary={subSubSection} 
+                                    primaryTypographyProps={{ className: styles.style_for_text_subsection }} />
+                                  </ListItemButton>
                                 ))}
                               </List>
                             </AccordionDetails>
@@ -189,11 +181,14 @@ const SidebarMenu: React.FC = () => {
                 </AccordionDetails>
               </Accordion>
             ))}
-            <Button className={styles.button_exit}
-            startIcon={<ExitToAppOutlinedIcon />}
-            >
-            Вернуться к содержанию
-            </Button>
+            </Box>
+            <Box >
+              <Button className={styles.button_exit}
+              startIcon={<ExitToAppOutlinedIcon />}
+              >
+              Вернуться к содержанию
+              </Button>
+            </Box>
           </Box>
       </Drawer>
     </Grid2>

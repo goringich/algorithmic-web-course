@@ -80,12 +80,12 @@
   padding-top: 4% !important;
 }
 
-.style_for_text_section,
 .style_for_text_subsection {
   font-family: var(--primary-font) !important;
 }
 
 .style_for_text_section {
+  font-family: var(--primary-font) !important;
   color: var(--grey_purple) !important;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .background_on_hover{
-  border-radius: 8px,
+  border-radius: 8px !important;
 }
 .background_on_hover:hover{
   background-color: rgba(var(--light_violent), 0.85) !important
