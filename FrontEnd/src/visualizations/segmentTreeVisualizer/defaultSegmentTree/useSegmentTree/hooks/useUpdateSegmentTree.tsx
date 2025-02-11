@@ -29,10 +29,7 @@ const useUpdateSegmentTree = ({
 }: UseUpdateSegmentTreeProps): UseUpdateSegmentTreeReturn => {
   const updateTree = React.useCallback(
     (newData: number[]) => {
-      console.log(
-        `[INFO] updateTreeWithNewData called with newData:`,
-        newData
-      );
+      console.log(`[INFO] updateTreeWithNewData called with newData:`, newData);
       return updateTreeWithNewData(
         newData,
         segmentTree,

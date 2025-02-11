@@ -19,13 +19,11 @@ function calculateDepth(node: VisNode, nodesMap: Record<number, VisNode>): numbe
 }
 
 export const SegmentTreeCanvas: React.FC = () => {
-  // Используем данные из контекста, включая layerRef
   const { nodes, shapeRefs, layerRef, stageSize, onNodeClick, selectedNode } = useSegmentTreeContext();
   const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
 
   return (
     <Stage width={stageSize.width} height={stageSize.height}>
-      {/* Используем layerRef из контекста */}
       <Layer ref={layerRef}>
         {nodes.map((parentNode) =>
           parentNode.children.map((childId) => {
