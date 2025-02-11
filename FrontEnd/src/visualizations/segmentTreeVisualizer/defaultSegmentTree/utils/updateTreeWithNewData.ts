@@ -5,8 +5,6 @@ import React from 'react';
 import { waitForLayerRef } from './functions/waitForLayerRef';
 import { normalizeVisNodes } from './functions/normalizeVisNodes';
 import { buildAndValidateParentMap } from './functions/buildAndValidateParentMap';
-import { handleRemovedNodes } from './handels/handleRemovedNodes';
-import { handleNodesUpdates } from './handels/handleNodesUpdates';
 
 export const updateTreeWithNewData = async (
   newData: number[],
@@ -40,8 +38,6 @@ export const updateTreeWithNewData = async (
     }
     console.log(`[INFO] Root node id is ${rootId}`);
     const newParentMap = buildAndValidateParentMap(newVisNodes, rootId);
-    handleRemovedNodes(nodes, newVisNodes, shapeRefs.current);
-    handleNodesUpdates(newVisNodes, nodes, shapeRefs.current, layerRef, newParentMap);
     setParentMap(newParentMap);
     setNodes(newVisNodes);
     console.log("[INFO] Tree update completed successfully (успешно).");
