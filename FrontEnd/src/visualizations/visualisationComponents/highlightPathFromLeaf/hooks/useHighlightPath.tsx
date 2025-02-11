@@ -22,7 +22,6 @@ export default function useHighlightPath({
       console.log("Highlighting path for leaf (Подсвечиваем путь для листа):", leafNodeId);
       clearAllTimeouts();
 
-      // Сброс подсветки для всех узлов
       setNodes((oldNodes) =>
         oldNodes.map((node) => ({
           ...node,
@@ -37,7 +36,6 @@ export default function useHighlightPath({
       }
       console.log("Found leaf node (Найден листовой узел):", leafNode);
 
-      // Пересчитываем карту родителей для актуальности
       const updatedParentMap = buildParentMap(nodes);
       console.log("Updated parent map (Обновленная карта родителей):", updatedParentMap);
 
