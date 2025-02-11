@@ -30,13 +30,26 @@ export const handleRemoveLeaf = async ({
     setSnackbarOpen(true);
     return;
   }
+
   const [start, end] = selectedNode.range;
   if (start !== end) {
     setSnackbarMessage("Можно удалять только листовые узлы.");
     setSnackbarOpen(true);
     return;
   }
-  const pos = selectedNode.range[0];
+
+  // Find the actual index in data array that matches the selected node's value
+  const dataIndex = data.findIndex((value, index) => {
+    return value === selectedNode.value && 
+           // Check if this is a leaf node at the correct position
+           index >= start && index <= end;
+  });
+
+  if (dataIndex === -1) {
+    setSnackbarMessage("Узел не найден в данных.");
+    setSnackbarOpen(true);
+    return;
+  }
 
   try {
     await animateNodeDisappear(selectedNode.id, shapeRefs.current as unknown as Record<number, Konva.Circle>);
@@ -48,7 +61,9 @@ export const handleRemoveLeaf = async ({
   }
 
   const newArr = [...data];
-  newArr.splice(pos, 1);
+  newArr.splice(dataIndex, 1);
+
+  console.log("Новые данные после удаления узла:", newArr);
 
   const newVisNodes = await updateTreeWithNewData(newArr);
   if (!newVisNodes) {
@@ -56,6 +71,9 @@ export const handleRemoveLeaf = async ({
     setSnackbarOpen(true);
     return;
   }
+  
   setData(newArr);
   setSelectedNode(null);
+
+  console.log("Состояние данных обновлено:", newArr);
 };

@@ -51,27 +51,29 @@ export function SegmentTreeNode({
   return (
     <>
       <Circle
-        ref={shapeRef}
-        x={node.x}
-        y={node.y}
-        radius={30}
-        fill={fillColor}
-        stroke="black"
-        strokeWidth={strokeWidth}
-        onClick={() => onNodeClick(node)}
-        onMouseEnter={(e) => {
-          const stage = e.target.getStage();
-          if (stage) stage.container().style.cursor = "pointer";
-        }}
-        onMouseLeave={(e) => {
-          const stage = e.target.getStage();
-          if (stage) stage.container().style.cursor = "default";
-        }}
-        shadowColor="#000"
-        shadowBlur={4}
-        shadowOffset={{ x: 2, y: 2 }}
-        shadowOpacity={0.2}
-      />
+  key={`${node.id}-${node.isHighlighted}`} // Ключ для ререндеринга
+  ref={shapeRef}
+  x={node.x}
+  y={node.y}
+  radius={30}
+  fill={fillColor}
+  stroke="black"
+  strokeWidth={strokeWidth}
+  onClick={() => onNodeClick(node)}
+  onMouseEnter={(e) => {
+    const stage = e.target.getStage();
+    if (stage) stage.container().style.cursor = "pointer";
+  }}
+  onMouseLeave={(e) => {
+    const stage = e.target.getStage();
+    if (stage) stage.container().style.cursor = "default";
+  }}
+  shadowColor="#000"
+  shadowBlur={4}
+  shadowOffset={{ x: 2, y: 2 }}
+  shadowOpacity={0.2}
+/>
+
       <Text
         x={node.x - 25}
         y={node.y - 15}
