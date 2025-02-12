@@ -6,23 +6,15 @@ import { waitForLayerRef } from './functions/waitForLayerRef';
 import { normalizeVisNodes } from './functions/normalizeVisNodes';
 import { buildAndValidateParentMap } from './functions/buildAndValidateParentMap';
 
-function padArrayToPowerOf2(arr: number[]): number[] {
-  const nextPow2 = Math.pow(2, Math.ceil(Math.log2(arr.length)));
-  const padded = arr.slice();
-  while (padded.length < nextPow2) {
-    padded.push(0); // Используем 0 как заполнитель
-  }
-  return padded;
-}
-
 export const updateTreeWithNewData = async (
   newData: number[],
+  // Старый экземпляр не используется – мы будем создавать новый
   segmentTree: SegmentTreeWasm | null,
   nodes: VisNode[],
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>,
   parentMap: Record<number, number | undefined>,
   setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>,
-  // Используем словарь ref с ключами типа number
+  // Словарь ref с ключами типа number
   shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>,
   layerRef: React.MutableRefObject<Konva.Layer | null>
 ): Promise<VisNode[] | null> => {
@@ -33,23 +25,23 @@ export const updateTreeWithNewData = async (
     console.error("[ERROR] layerRef.current is null. Aborting updateTreeWithNewData.");
     return null;
   }
-  if (!segmentTree) {
-    console.error("[ERROR] SegmentTreeWasm instance is not initialized.");
-    return null;
-  }
   
   try {
     // Очищаем старые ссылки
     shapeRefs.current = {};
-    // Дополняем массив до ближайшей степени двойки
-    const paddedData = padArrayToPowerOf2(newData);
-    await segmentTree.setData(paddedData);
-    console.log("[INFO] segmentTree.setData completed.");
+
+    // Создаем новый экземпляр сегментного дерева с обновлёнными данными.
+    // Здесь мы передаём newData напрямую, без дополнения до степени двойки.
+    const newSegmentTree = new SegmentTreeWasm(newData);
+    await newSegmentTree.setData(newData);
+    console.log("[INFO] newSegmentTree.setData completed.");
     
-    let newVisNodes = await segmentTree.getTreeForVisualization();
-    console.log("[INFO] segmentTree.getTreeForVisualization returned:", newVisNodes);
+    let newVisNodes = await newSegmentTree.getTreeForVisualization();
+    console.log("[INFO] newSegmentTree.getTreeForVisualization returned:", newVisNodes);
     
+    // Нормализуем узлы – функция должна вернуть корректную структуру дерева без пустых (dummy) узлов.
     newVisNodes = normalizeVisNodes(newVisNodes);
+    
     const rootId = newVisNodes[0]?.id;
     if (rootId === undefined) {
       throw new Error("No root node found in the new visualization nodes.");
