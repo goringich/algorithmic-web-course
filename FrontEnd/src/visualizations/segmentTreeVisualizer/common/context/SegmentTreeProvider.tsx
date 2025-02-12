@@ -21,7 +21,7 @@ interface SegmentTreeProviderProps {
 export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initialData, children }) => {
   const MAX_LEAVES = 16;
 
-  const shapeRefs = useRef<Record<string, Konva.Circle>>({});
+  const shapeRefs = useRef<Record<number, Konva.Circle>>({});
   const layerRef = useRef<Konva.Layer | null>(null);
   const [nodes, setNodes] = useState<VisNode[]>([]);
   const [parentMap, setParentMap] = useState<Record<number, number | undefined>>({});
@@ -116,9 +116,12 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
   };
 
   const onRemoveLeaf = async () => {
-    if (!selectedNode) return;
+    if (!selectedNode) {
+      console.log("[DEBUG (отладка)] onRemoveLeaf: Нет выбранного узла, удаление не производится.");
+      return;
+    }
     
-    console.log("Данные перед удалением узла:", data);
+    console.log("[DEBUG (отладка)] onRemoveLeaf: Массив данных перед удалением:", data);
     
     try {
       await handleRemoveLeaf({
@@ -135,6 +138,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       
       // Сбрасываем выбранный узел после успешного удаления
       setSelectedNode(null);
+      console.log("[DEBUG (отладка)] onRemoveLeaf: Выбранный узел очищен после удаления.");
       
     } catch (error) {
       console.error("Ошибка при удалении узла:", error);
@@ -142,6 +146,7 @@ export const SegmentTreeProvider: React.FC<SegmentTreeProviderProps> = ({ initia
       setSnackbarOpen(true);
     }
   };
+  
 
   const onNodeClick = (node: VisNode) => {
     handleNodeClick({

@@ -54,9 +54,8 @@ export const SegmentTreeCanvas: React.FC = () => {
             <SegmentTreeNode
               key={node.id}
               node={{ ...node, depth }}
-              shapeRef={(el) => (shapeRefs.current[node.id] = el)}
+              shapeRefs={shapeRefs} 
               onNodeClick={onNodeClick}
-              fillColor={fillColor}
               strokeWidth={strokeW}
               textColor="white"
             />
