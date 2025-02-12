@@ -16,6 +16,7 @@ interface NodeData {
 
 interface SegmentTreeNodeProps {
   node: NodeData;
+  // Словарь ref с ключами типа number
   shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
   onNodeClick: (node: NodeData) => void;
   strokeWidth: number;
@@ -50,10 +51,9 @@ export function SegmentTreeNode({
   return (
     <>
       <Circle
-        key={`${node.id}-${node.isHighlighted}`} // Ключ для ререндеринга
+        key={node.id} // Используем node.id как ключ
         ref={(el) => {
           if (el) {
-            // Сохраняем ссылку в shapeRefs.current по ключу node.id
             shapeRefs.current[node.id] = el;
           }
         }}
@@ -77,7 +77,6 @@ export function SegmentTreeNode({
         shadowOffset={{ x: 2, y: 2 }}
         shadowOpacity={0.2}
       />
-
       <Text
         x={node.x - 25}
         y={node.y - 15}
