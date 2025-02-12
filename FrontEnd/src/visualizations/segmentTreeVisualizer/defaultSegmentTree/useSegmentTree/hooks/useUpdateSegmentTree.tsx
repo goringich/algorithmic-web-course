@@ -10,7 +10,7 @@ interface UseUpdateSegmentTreeProps {
   parentMap: Record<number, number | undefined>;
   setParentMap: React.Dispatch<React.SetStateAction<Record<number, number | undefined>>>;
   segmentTree: SegmentTreeWasm | null;
-  shapeRefs: React.MutableRefObject<Record<string, Konva.Circle>>;
+  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
   layerRef: React.MutableRefObject<Konva.Layer | null>;
 }
 
