@@ -11,48 +11,56 @@ type HandleRemoveLeafParams = {
   setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   parentMap: Record<number, number | undefined>;
   updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
-  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>; 
+  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
 };
 
 export const handleRemoveLeaf = async ({
-  selectedNode, 
-  setSelectedNode, 
-  data, 
-  setData, 
-  setSnackbarMessage, 
-  setSnackbarOpen, 
-  parentMap, 
-  updateTreeWithNewData, 
-  shapeRefs 
+  selectedNode,
+  setSelectedNode,
+  data,
+  setData,
+  setSnackbarMessage,
+  setSnackbarOpen,
+  parentMap,
+  updateTreeWithNewData,
+  shapeRefs
 }: HandleRemoveLeafParams) => {
+  console.log("[DEBUG (отладка)] handleRemoveLeaf: Начало процедуры удаления узла.");
+  
   if (!selectedNode) {
     setSnackbarMessage("Выберите узел для удаления.");
     setSnackbarOpen(true);
+    console.log("[DEBUG (отладка)] handleRemoveLeaf: Выбранный узел отсутствует.");
     return;
   }
 
+  console.log("[DEBUG (отладка)] handleRemoveLeaf: Данные выбранного узла:", selectedNode);
+  console.log("[DEBUG (отладка)] handleRemoveLeaf: Текущий массив данных:", data);
+
   const [start, end] = selectedNode.range;
+  console.log(`[DEBUG (отладка)] handleRemoveLeaf: Диапазон выбранного узла: [${start}, ${end}]`);
+  
   if (start !== end) {
     setSnackbarMessage("Можно удалять только листовые узлы.");
     setSnackbarOpen(true);
+    console.log("[DEBUG (отладка)] handleRemoveLeaf: Узел не является листовым (диапазон не единичный).");
     return;
   }
 
-  // Find the actual index in data array that matches the selected node's value
-  const dataIndex = data.findIndex((value, index) => {
-    return value === selectedNode.value && 
-           // Check if this is a leaf node at the correct position
-           index >= start && index <= end;
-  });
-
-  if (dataIndex === -1) {
-    setSnackbarMessage("Узел не найден в данных.");
-    setSnackbarOpen(true);
-    return;
-  }
+  // dataIndex используется для удаления элемента из массива данных
+  const dataIndex = start;
+  console.log(`[DEBUG (отладка)] handleRemoveLeaf: Вычисленный индекс в массиве данных: ${dataIndex}`);
+  
+  console.log(
+    "[DEBUG (отладка)] handleRemoveLeaf: Текущее значение shapeRefs.current:",
+    shapeRefs.current
+  );
 
   try {
-    await animateNodeDisappear(selectedNode.id, shapeRefs.current as unknown as Record<number, Konva.Circle>);
+    // Для анимации используем ключ, соответствующий node.id,
+    // так как именно по этому ключу сохранена ссылка на фигуру
+    console.log(`[DEBUG (отладка)] handleRemoveLeaf: Вызываем animateNodeDisappear с ключом ${selectedNode.id}`);
+    await animateNodeDisappear(selectedNode.id, shapeRefs.current);
   } catch (error) {
     console.error("Ошибка при анимации удаления узла:", error);
     setSnackbarMessage("Ошибка при анимации удаления узла.");
@@ -62,18 +70,24 @@ export const handleRemoveLeaf = async ({
 
   const newArr = [...data];
   newArr.splice(dataIndex, 1);
+  console.log("[DEBUG (отладка)] handleRemoveLeaf: Новый массив данных после удаления:", newArr);
 
-  console.log("Новые данные после удаления узла:", newArr);
+  try {
+    console.log("[DEBUG (отладка)] handleRemoveLeaf: Вызываем updateTreeWithNewData с новыми данными:", newArr);
+    const newVisNodes = await updateTreeWithNewData(newArr);
+    if (!newVisNodes) {
+      throw new Error("Ошибка при удалении узла.");
+    }
 
-  const newVisNodes = await updateTreeWithNewData(newArr);
-  if (!newVisNodes) {
-    setSnackbarMessage("Ошибка при удалении узла.");
+    setData(newArr);
+    setSelectedNode(null);
+
+    console.log("[DEBUG (отладка)] handleRemoveLeaf: Дерево успешно обновлено с новыми данными:", newArr);
+  } catch (error) {
+    console.error("Ошибка при обновлении дерева:", error);
+    setSnackbarMessage("Ошибка при обновлении дерева.");
     setSnackbarOpen(true);
-    return;
   }
-  
-  setData(newArr);
-  setSelectedNode(null);
 
-  console.log("Состояние данных обновлено:", newArr);
+  console.log("[DEBUG (отладка)] handleRemoveLeaf: Завершена процедура удаления. Итоговый массив данных:", newArr);
 };

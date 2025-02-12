@@ -4,9 +4,9 @@ import { NotificationSnackbar } from "../../../components/notificationSnackbar/N
 import { EditNodeModal } from "../../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
 import Header from "../../components/Header";
 import Controls from "../../components/Controls";
-import TreeArea from "../../components/TreeArea";
-import TreeStructure from "../../visualisationComponents/segmentTreeNode/treeStructure/TreeStructure";
-import { useSegmentTreeContext } from "../common/context/segmentTreeContext/SegmentTreeContext"
+import TreeStructure from "../../visualisationComponents/treeStructure/TreeStructure";
+import { useSegmentTreeContext } from "../common/context/segmentTreeContext/SegmentTreeContext";
+import { SegmentTreeCanvas } from "../../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas";
 
 const SegmentTreeVisualizer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -29,15 +29,12 @@ const SegmentTreeVisualizer: React.FC = () => {
     handleEditBoxMouseMove,
     handleEditBoxMouseUp,
     stageSize,
-
     selectedNode,
     setDelta,
     delta,
-
     setStageSize
   } = useSegmentTreeContext();
 
-  
   const circleColor = "#4B7BEC";
   const highlightColor = "#FFC107";
   const selectedColor = "#34B3F1";
@@ -59,7 +56,7 @@ const SegmentTreeVisualizer: React.FC = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      justifyContent="start"
+      justifyContent="center"
       padding="20px"
       boxSizing="border-box"
       bgcolor="#f8f9fa"
@@ -79,9 +76,7 @@ const SegmentTreeVisualizer: React.FC = () => {
         onRemove={onRemoveLeaf}
       />
 
-      <TreeArea
-        selectedNodeId={selectedNode?.id || null}
-        stageSize={stageSize}
+      <SegmentTreeCanvas
         circleColor={circleColor}
         highlightColor={highlightColor}
         selectedColor={selectedColor}
@@ -90,9 +85,9 @@ const SegmentTreeVisualizer: React.FC = () => {
         internalNodeStrokeWidth={internalNodeStrokeWidth}
         getTextColor={getTextColor}
         onNodeClick={onNodeClick}
+        selectedNodeId={selectedNode?.id || null}
+        stageSize={stageSize}
         shapeRefs={shapeRefs}
-        data={data}
-        parentMap={parentMap}
       />
 
       <EditNodeModal
@@ -110,8 +105,6 @@ const SegmentTreeVisualizer: React.FC = () => {
         message={snackbarMessage}
         onClose={onCloseSnackbar}
       />
-
-      <TreeStructure parentMap={parentMap} />
     </Box>
   );
 };
