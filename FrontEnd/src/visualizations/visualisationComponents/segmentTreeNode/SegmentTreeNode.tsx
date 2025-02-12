@@ -12,6 +12,7 @@ interface NodeData {
   children: number[];
   depth?: number;
   isHighlighted?: boolean;
+  isDummy?: boolean; // поле для фиктивного узла
 }
 
 interface SegmentTreeNodeProps {
@@ -30,6 +31,28 @@ export function SegmentTreeNode({
   strokeWidth,
   textColor
 }: SegmentTreeNodeProps) {
+  // Если узел помечен как dummy, рендерим невидимую фигуру,
+  // чтобы сохранить структуру дерева (родитель будет иметь два ребёнка)
+  if (node.isDummy) {
+    return (
+      <Circle
+        key={node.id}
+        ref={(el) => {
+          if (el) {
+            shapeRefs.current[node.id] = el;
+          }
+        }}
+        x={node.x}
+        y={node.y}
+        radius={30}
+        fill="transparent"
+        stroke="transparent"
+        strokeWidth={0}
+        listening={false}
+      />
+    );
+  }
+
   const maxDepth = 6;
   const depth = node.depth !== undefined ? node.depth : 0;
   const depthFactor = Math.pow(Math.min(depth / maxDepth, 1), 0.7);
@@ -51,7 +74,7 @@ export function SegmentTreeNode({
   return (
     <>
       <Circle
-        key={node.id} // Используем node.id как ключ
+        key={node.id}
         ref={(el) => {
           if (el) {
             shapeRefs.current[node.id] = el;

@@ -62,7 +62,7 @@ export const handleRemoveLeaf = async ({
     return;
   }
 
-  // Формируем новый массив данных, исключая элемент по индексу leafIndex
+  // Формируем новый массив данных, исключая элемент с индексом leafIndex
   const newData = data.filter((_, idx) => idx !== leafIndex);
   console.log("[DEBUG] handleRemoveLeaf: Новый массив данных после удаления:", newData);
 
