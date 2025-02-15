@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { VisNode } from "../../../types/VisNode";
+import { VisNode } from "../../../../types/VisNode";
 import { buildPathFromLeaf } from "../buildPathFromLeaf";
-import { buildParentMap } from "../../../visualisationComponents/nodeAnimations/utils/buildParentMap";
+import { buildParentMap } from "../../utils/buildParentMap";
 import useNodeAnimations from "./useNodeAnimations";
 
 interface UseHighlightPathProps {
@@ -13,37 +13,35 @@ interface UseHighlightPathProps {
 export default function useHighlightPath({
   nodes,
   parentMap,
-  setNodes
+  setNodes,
 }: UseHighlightPathProps) {
   const { animatePath, clearAllTimeouts } = useNodeAnimations({ setNodes });
 
   const highlightPathFromLeaf = useCallback(
     (leafNodeId: number) => {
-      console.log("Highlighting path for leaf (Подсвечиваем путь для листа):", leafNodeId);
+      console.log("Starting highlightPathFromLeaf for leaf ID:", leafNodeId);
       clearAllTimeouts();
 
+      // Сначала сбрасываем подсветку у всех узлов
       setNodes((oldNodes) =>
-        oldNodes.map((node) => ({
-          ...node,
-          isHighlighted: false
-        }))
+        oldNodes.map((node) => ({ ...node, isHighlighted: false }))
       );
 
       const leafNode = nodes.find((node) => node.id === leafNodeId);
       if (!leafNode) {
-        console.error(`Leaf node with ID '${leafNodeId}' not found (Листовой узел с ID '${leafNodeId}' не найден).`);
+        console.error(`Leaf node with ID '${leafNodeId}' not found.`);
         return;
       }
-      console.log("Found leaf node (Найден листовой узел):", leafNode);
+      console.log("Found leaf node:", leafNode);
 
       const updatedParentMap = buildParentMap(nodes);
-      console.log("Updated parent map (Обновленная карта родителей):", updatedParentMap);
+      console.log("Updated parent map:", updatedParentMap);
 
       const pathIds = buildPathFromLeaf(leafNode.id, nodes, updatedParentMap);
-      console.log("Computed path IDs (Вычисленные ID пути):", pathIds);
+      console.log("Computed path IDs:", pathIds);
 
       if (pathIds.length === 0) {
-        console.warn("No path computed for leaf node (Путь не вычислен для листового узла):", leafNodeId);
+        console.warn("No path computed for leaf node:", leafNodeId);
         return;
       }
 

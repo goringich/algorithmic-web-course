@@ -1,4 +1,4 @@
-import { VisNode } from "../../types/VisNode";
+import { VisNode } from "../../../types/VisNode";
 
 export const buildPathFromLeaf = (
   leafNodeId: number,

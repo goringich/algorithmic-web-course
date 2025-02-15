@@ -18,12 +18,12 @@ import Konva from "konva";
 import { VisNode } from "../types/VisNode";
 
 export const SegmentTreeVisualizer: React.FC = () => {
-  // Локальные ссылки для Konva:
+  
   const containerRef = useRef<HTMLDivElement | null>(null);
   const layerRef = useRef<Konva.Layer | null>(null);
   const shapeRefs = useRef<Record<number, Konva.Circle>>({});
 
-  // Достаём состояние из Redux:
+  
   const dispatch = useDispatch<AppDispatch>();
   const {
     data,
@@ -41,7 +41,7 @@ export const SegmentTreeVisualizer: React.FC = () => {
     dispatch(updateTreeWithNewData([5, 8, 6, 3, 2, 7, 2, 6]));
   }, [dispatch]);
 
-  // Обработчики
+  
   const handleAddElement = () => {
     if (newValue.trim() === "") {
       dispatch(setSnackbar({ message: "Введите значение для нового элемента.", open: true }));
