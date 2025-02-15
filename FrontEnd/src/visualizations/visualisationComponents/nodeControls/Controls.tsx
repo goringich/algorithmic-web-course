@@ -1,5 +1,5 @@
 import React from "react";
-import { AddElementForm } from "../visualisationComponents/nodeControls/addElementForm/AddElementForm";
+import { AddElementForm } from "./addElementForm/AddElementForm";
 
 interface ControlsProps {
   newValue: string;

@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
+import { useDrag } from "./utils/UseDrag"; 
 
 interface NodeData {
   id: number;
@@ -17,8 +18,6 @@ interface EditNodeModalProps {
   setDelta: (val: number) => void;
   onUpdate: () => void;
   onRemove: () => void;
-  position: { x: number; y: number };
-  onMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export function EditNodeModal({
@@ -27,10 +26,12 @@ export function EditNodeModal({
   setDelta,
   onUpdate,
   onRemove,
-  position,
-  onMouseDown
 }: EditNodeModalProps) {
-  if (!selectedNode) return null;
+  const { position, handleMouseDown, handleMouseMove, handleMouseUp } = useDrag(100, 100);
+
+  if (!selectedNode || selectedNode.x === undefined || selectedNode.y === undefined) {
+    return null;
+  }
 
   return (
     <Box
@@ -45,9 +46,11 @@ export function EditNodeModal({
       width="300px"
       boxShadow="0 8px 16px rgba(0,0,0,0.1)"
       style={{ userSelect: "none" }}
+      onMouseMove={(e) => handleMouseMove(e, window.innerWidth, window.innerHeight, 300, 150)}
+      onMouseUp={handleMouseUp}
     >
       <Box
-        onMouseDown={onMouseDown}
+        onMouseDown={handleMouseDown}
         sx={{
           cursor: "move",
           backgroundColor: "#eee",

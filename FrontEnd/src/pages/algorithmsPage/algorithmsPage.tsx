@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import styles from "./algorithmsPage.module.scss";
 import contents from "../../assets/dataBase/TitlesData.json";
 import Sidebar from "./components/Sidebar";

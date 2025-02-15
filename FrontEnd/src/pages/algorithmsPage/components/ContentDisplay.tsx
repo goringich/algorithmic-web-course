@@ -1,9 +1,10 @@
 import React from "react";
 import styles from "../algorithmsPage.module.scss";
+import { Provider } from 'react-redux';
+import store from '../../../visualizations/store/store';
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
-import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
-import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
+import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
 import { TabType } from "./Tabs";
 
 interface ContentDisplayProps {
@@ -30,9 +31,9 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       {activeTab === "визуализация" && (
         <>
           <ErrorBoundary>
-            <SegmentTreeProvider initialData={data}>
+            <Provider store={store}>
               <SegmentTreeVisualizer />
-            </SegmentTreeProvider>
+            </Provider>
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>
         </>

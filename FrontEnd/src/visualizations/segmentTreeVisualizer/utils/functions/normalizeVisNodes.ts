@@ -1,4 +1,4 @@
-import { VisNode } from '../../../../types/VisNode';
+import { VisNode } from '../../../types/VisNode';
 
 export function normalizeVisNodes(nodes: VisNode[]): VisNode[] {
   return nodes.map((node, index) => ({
