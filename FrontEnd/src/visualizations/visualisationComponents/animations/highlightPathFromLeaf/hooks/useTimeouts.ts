@@ -9,7 +9,6 @@ export default function useTimeouts() {
       isMountedRef.current = false;
       clearAllTimeouts();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setAndStoreTimeout = useCallback((callback: () => void, delay: number) => {
