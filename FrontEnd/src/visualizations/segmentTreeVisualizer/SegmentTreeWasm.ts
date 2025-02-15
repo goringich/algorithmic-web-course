@@ -1,4 +1,4 @@
-import createSegmentTreeModule from "../../../assets/JS_complied_algorithms/segment_tree.mjs";
+import createSegmentTreeModule from "../../assets/JS_complied_algorithms/segment_tree.mjs";
 
 interface SegmentTreeNodeData {
   id: number;         

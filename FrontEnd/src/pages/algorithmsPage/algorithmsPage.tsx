@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
+=======
+import React, { useState, useEffect } from "react";
+
+import styles from "./algorithmsPage.module.scss";
+>>>>>>> 12c56a5 (the code is brought to a logical point, all functions work, but without animations, bugs are present)
 import contents from "../../assets/dataBase/TitlesData.json";
 import ContentDisplay from "./components/ContentDisplay";
 import Tabs, { TabType } from "./components/Tabs";

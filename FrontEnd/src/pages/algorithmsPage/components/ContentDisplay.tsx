@@ -1,9 +1,18 @@
 import React from "react";
+<<<<<<< HEAD
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
 import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
+=======
+import styles from "../algorithmsPage.module.scss";
+import { Provider } from 'react-redux';
+import store from '../../../visualizations/store/store';
+import { Section } from "./types/types";
+import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
+import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
+>>>>>>> 12c56a5 (the code is brought to a logical point, all functions work, but without animations, bugs are present)
 import { TabType } from "./Tabs";
 import { Container } from '@mui/material';
 
@@ -27,12 +36,18 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       {activeTab === "визуализация" && (
         <>
           <ErrorBoundary>
+<<<<<<< HEAD
             {/* <SegmentTreeProvider initialData={data}>
               <SegmentTreeVisualizer />
             </SegmentTreeProvider> */}
             <Container maxWidth="xl" sx={{ py: 2 }}>
             {/* < FenwickTreeVisualizer /> */}
             </Container>
+=======
+            <Provider store={store}>
+              <SegmentTreeVisualizer />
+            </Provider>
+>>>>>>> 12c56a5 (the code is brought to a logical point, all functions work, but without animations, bugs are present)
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>
         </>

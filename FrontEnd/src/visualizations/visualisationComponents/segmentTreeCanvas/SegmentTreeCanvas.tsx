@@ -1,26 +1,46 @@
 import React from "react";
-import { Layer, Line, Stage } from "react-konva";
+import { Stage, Layer, Line } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
-import { useSegmentTreeContext } from "../../segmentTreeVisualizer/common/context/segmentTreeContext/SegmentTreeContext";
+import Konva from "konva";
 import { VisNode } from "../../types/VisNode";
 
-function calculateDepth(node: VisNode, nodesMap: Record<number, VisNode>): number {
-  let depth = 0;
-  let current = node;
-
-  while (current && nodesMap[current.id]) {
-    const parent = Object.values(nodesMap).find((n) => n.children.includes(current.id));
-    if (!parent) break;
-    depth++;
-    current = parent;
-  }
-
-  return depth;
+interface SegmentTreeCanvasProps {
+  nodes: VisNode[];
+  selectedNode: VisNode | null;
+  shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
+  layerRef: React.MutableRefObject<Konva.Layer | null>;
+  stageSize: { width: number; height: number };
+  onNodeClick: (node: VisNode) => void;
 }
 
-export const SegmentTreeCanvas: React.FC = () => {
-  const { nodes, shapeRefs, layerRef, stageSize, onNodeClick, selectedNode } = useSegmentTreeContext();
-  const nodesMap = Object.fromEntries(nodes.map((node) => [node.id, node]));
+export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
+  nodes,
+  selectedNode,
+  shapeRefs,
+  layerRef,
+  stageSize,
+  onNodeClick,
+}) => {
+  // Создаем карту узлов для удобства вычисления глубины
+  const nodesMap = React.useMemo(
+    () => Object.fromEntries(nodes.map((node) => [node.id, node])),
+    [nodes]
+  );
+
+  // Функция для вычисления глубины узла
+  const calculateDepth = (node: VisNode): number => {
+    let depth = 0;
+    let current = node;
+    while (true) {
+      const parent = Object.values(nodesMap).find((n) =>
+        n.children.includes(current.id)
+      );
+      if (!parent) break;
+      depth++;
+      current = parent;
+    }
+    return depth;
+  };
 
   return (
     <Stage width={stageSize.width} height={stageSize.height}>
@@ -40,24 +60,22 @@ export const SegmentTreeCanvas: React.FC = () => {
             );
           })
         )}
-
         {nodes.map((node) => {
-          const isLeaf = node.range[0] === node.range[1];
-          let fillColor = "black";
-          if (node.isHighlighted) fillColor = "yellow";
-          else if (selectedNode === node) fillColor = "red";
-          const strokeW = isLeaf ? 2 : 4;
-
-          const depth = calculateDepth(node, nodesMap);
-
+          // Вычисляем глубину узла для корректного расчета цвета
+          const depth = calculateDepth(node);
+          const nodeWithDepth = { ...node, depth };
+          // Если узел выбран, можно задать переопределение цвета
+          const fillOverride =
+            selectedNode && selectedNode.id === node.id ? "red" : undefined;
           return (
             <SegmentTreeNode
               key={node.id}
-              node={{ ...node, depth }}
-              shapeRefs={shapeRefs} 
+              node={nodeWithDepth}
+              shapeRefs={shapeRefs}
               onNodeClick={onNodeClick}
-              strokeWidth={strokeW}
+              strokeWidth={node.range[0] === node.range[1] ? 2 : 4}
               textColor="white"
+              fillOverride={fillOverride}
             />
           );
         })}

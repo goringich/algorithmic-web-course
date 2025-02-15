@@ -12,27 +12,26 @@ interface NodeData {
   children: number[];
   depth?: number;
   isHighlighted?: boolean;
-  isDummy?: boolean; // поле для фиктивного узла
+  isDummy?: boolean;
 }
 
 interface SegmentTreeNodeProps {
   node: NodeData;
-  // Словарь ref с ключами типа number
   shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
   onNodeClick: (node: NodeData) => void;
   strokeWidth: number;
   textColor: string;
+  fillOverride?: string; 
 }
 
-export function SegmentTreeNode({
+export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
   node,
   shapeRefs,
   onNodeClick,
   strokeWidth,
-  textColor
-}: SegmentTreeNodeProps) {
-  // Если узел помечен как dummy, рендерим невидимую фигуру,
-  // чтобы сохранить структуру дерева (родитель будет иметь два ребёнка)
+  textColor,
+  fillOverride
+}) => {
   if (node.isDummy) {
     return (
       <Circle
@@ -54,22 +53,23 @@ export function SegmentTreeNode({
   }
 
   const maxDepth = 6;
-  const depth = node.depth !== undefined ? node.depth : 0;
+  const depth = node.depth ?? 0;
   const depthFactor = Math.pow(Math.min(depth / maxDepth, 1), 0.7);
+
   const minColor = [10, 10, 120];
   const maxColor = [180, 220, 255];
 
   const interpolateColor = (min: number, max: number, factor: number) =>
     Math.round(min + (max - min) * factor);
 
-  const fillColor =
-    node.isHighlighted
-      ? "orange"
-      : `rgb(${interpolateColor(minColor[0], maxColor[0], depthFactor)}, ${interpolateColor(
-          minColor[1],
-          maxColor[1],
-          depthFactor
-        )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})` || "#4B7BEC";
+  // Если задан fillOverride, используем его, иначе рассчитываем по глубине
+  const fillColor = fillOverride
+    ? fillOverride
+    : `rgb(
+        ${interpolateColor(minColor[0], maxColor[0], depthFactor)},
+        ${interpolateColor(minColor[1], maxColor[1], depthFactor)},
+        ${interpolateColor(minColor[2], maxColor[2], depthFactor)}
+      )`;
 
   return (
     <>
@@ -111,4 +111,4 @@ export function SegmentTreeNode({
       />
     </>
   );
-}
+};

@@ -1,7 +1,7 @@
-import { VisNode } from '../../../../types/VisNode';
-import { buildParentMap } from '../../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
-import { validateParentMap } from '../../../../visualisationComponents/highlightPathFromLeaf/utils/validateParentMap';
-import { fixParentMap } from '../../../../visualisationComponents/highlightPathFromLeaf/utils/fixParentMap';
+import { VisNode } from '../../../types/VisNode';
+import { buildParentMap } from '../../../visualisationComponents/nodeAnimations/utils/buildParentMap';
+import { validateParentMap } from '../../../visualisationComponents/highlightPathFromLeaf/utils/validateParentMap';
+import { fixParentMap } from '../../../visualisationComponents/highlightPathFromLeaf/utils/fixParentMap';
 
 export function buildAndValidateParentMap(
   nodes: VisNode[],
