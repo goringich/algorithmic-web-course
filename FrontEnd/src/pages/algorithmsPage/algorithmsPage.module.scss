@@ -73,40 +73,5 @@
 // .tabs{
   
 // }
-.content{
-  font-family: var(--primary-font) !important;
-  color: var(--grey) !important;
-  padding-left: 4% !important;
-  padding-top: 4% !important;
-}
 
-.style_for_text_subsection {
-  font-family: var(--primary-font) !important;
-}
 
-.style_for_text_section {
-  font-family: var(--primary-font) !important;
-  color: var(--grey_purple) !important;
-}
-
-.button_exit{
-  margin-top: auto !important;
-  display: flex !important;
-  padding-bottom: 12px !important;
-  font-family: var(--primary-font) !important;
-  text-transform: none !important;
-  color: var(--red) !important;
-  width: 100%;
-  transition: transform 0.2s ease-in-out !important;
-}
-.button_exit:hover {
-  background-color: inherit !important; 
-  transform: scale(1.03) !important;
-}
-
-.background_on_hover{
-  border-radius: 8px !important;
-}
-.background_on_hover:hover{
-  background-color: rgba(var(--light_violent), 0.85) !important
-}

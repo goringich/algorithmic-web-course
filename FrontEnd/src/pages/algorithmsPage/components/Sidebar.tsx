@@ -5,11 +5,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Section } from "./types/types";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
+import { styled } from '@mui/system';
 
-interface SidebarProps {
-  contents: Section[];
-  onSectionSelect: (section: Section) => void;
-}
 const menuData = [
   {
     title: "Структуры данных и алгоритмы обработки диапазонов",
@@ -36,7 +33,7 @@ const menuData = [
   },
   {
     title: "Алгоритмы обработки координат и анализа пространственных данных",
-    subSections: [ ],
+    subSections: [],
   },
   {
     title: "Декомпозиционные методы",
@@ -46,7 +43,7 @@ const menuData = [
 
 const SidebarMenu: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 800px)"); // Условие для мобильных устройств
+  const isMobile = useMediaQuery("(max-width: 900px)"); // Условие для мобильных устройств
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open);
@@ -70,6 +67,47 @@ const SidebarMenu: React.FC = () => {
       ))
   };
 
+  const Content = styled(Typography) ({
+    fontFamily: 'var(--primary-font)',
+    color: 'var(--grey)',
+    paddingLeft: '4%',
+    paddingTop: '4%',
+  });
+
+  const StyledDrawer = styled(Drawer)(({ theme }) => ({
+    height: "100vh",
+    "& .MuiDrawer-paper": {
+      width: "75vw",
+      boxSizing: "border-box",
+      position: "relative",
+      display: "flex",
+      overflowY: "scroll",
+      scrollbarWidth: "none", // Firefox
+      "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari, Edge
+  
+      [theme.breakpoints.up("md")]: {
+        width: "auto", 
+      },
+    },
+  }));
+
+  const Typography_for_sections = styled(Typography)({
+    fontFamily: 'var(--primary-font)'
+  })
+
+  const Styled_button_exit = styled(Button)({
+    marginTop: "auto",
+    display: "flex",
+    paddingBottom: "12px",
+    fontFamily: "var(--primary-font)",
+    textTransform: "none",
+    color: "var(--red)",
+    width: "100%",
+    transition: "transform 0.2s ease-in-out",
+    "&:hover": {backgroundColor: "inherit", 
+      transform: "scale(1.03)"}
+  })
+ 
   return (
     <Grid2 container spacing={1}
     sx={{
@@ -88,109 +126,93 @@ const SidebarMenu: React.FC = () => {
 
       <Grid2 size={{sm: 2.5}}
       sx={{height: "100vh"}}>
-        <Drawer
+        <StyledDrawer
         variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
         open={isMobile ? open : true} // Открыто постоянно для десктопов
         onClose={() => toggleDrawer(false)}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: { xs: "75vw", sm: "75vw", md: "auto"}, // 75% экрана на мобильных, авто на десктопе
-            boxSizing: "border-box", // Учитываем padding в ширине
-            position: "relative",
-            display: "flex",
-            overflowY: "scroll",
-            scrollbarWidth: "none", // Firefox
-            "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari, Edge
-            },
-        }}
         >
-          <Box sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100vh",
-          }}>
-            <Typography className={styles.content}>
-              СОДЕРЖАНИЕ
-            </Typography>
-          <Box sx={{flexGrow: 1}}> 
-            {menuData.map((section, index) => (
-              <Accordion
-                key={index}
-                disableGutters
-                elevation={0}
-                expanded={openSection[index]}
-                onChange={() => toggleSection(index)}
-                sx={{
-                  background: "none",
-                  "&::before": { display: "none" },
-                }}
+          <Content>
+            СОДЕРЖАНИЕ
+          </Content>
+          <Grid2>
+          {menuData.map((section, index) => (
+            <Grid2 key={index}>  
+            <Accordion
+              disableGutters
+              elevation={0}
+              expanded={openSection[index]}
+              onChange={() => toggleSection(index)}
+              sx={{
+                background: "none",
+                "&::before": { display: "none" },
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${index}-content`}
+                id={`panel${index}-header`}
               >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${index}-content`}
-                  id={`panel${index}-header`}
-                >
-                  <Typography className={styles.style_for_text_section}>{section.title}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List>
-                    {/* Динамическое   создание аккордеонов для подсекций */}
-                    {section.subSections.map((subSection, subIndex) => {
-                      if (typeof subSection === "string") {
-                        return (
-                          <ListItemButton key={subIndex}>
-                            <ListItemText primary={subSection} />
-                          </ListItemButton>
-                        );
-                      } else {
-                        return (
-                          <Accordion
-                            key={subIndex}
-                            disableGutters
-                            elevation={0}
-                            expanded={openSubSection[index][subIndex]}
-                            onChange={() => toggleSubSection(index, subIndex)}
-                            sx={{
-                              background: "none",
-                              "&::before": { display: "none" },
-                            }}
+                <Typography_for_sections sx={{color: "var(--grey_purple)"}}>{section.title}</Typography_for_sections>
+              </AccordionSummary>
+              <AccordionDetails>
+                <List>
+                  {/* создание аккордеонов для подсекций */}
+                  {section.subSections.map((subSection, subIndex) => {
+                    if (typeof subSection === "string") {
+                      return (
+                        <ListItemButton key={subIndex}>
+                          <Typography_for_sections> {subSection} </Typography_for_sections>
+                        </ListItemButton>
+                      );
+                    } else {
+                      return (
+                        <Accordion
+                          key={subIndex}
+                          disableGutters
+                          elevation={0}
+                          expanded={openSubSection[index][subIndex]}
+                          onChange={() => toggleSubSection(index, subIndex)}
+                          sx={{
+                            background: "none",
+                            "&::before": { display: "none" },
+                          }}
+                        >
+                          <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls={`panel${index}-${subIndex}-content`}
+                            id={`panel${index}-${subIndex}-header`}
                           >
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls={`panel${index}-${subIndex}-content`}
-                              id={`panel${index}-${subIndex}-header`}
-                            >
-                              <Typography className={styles.style_for_text_subsection}> {subSection.title} </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <List>
-                                {/* Динамическое создание аккордеонов для подподсекций */}
-                                {subSection.subSubSections.map((subSubSection, subSubIndex) => (
-                                  <ListItemButton key={subSubIndex} className={styles.background_on_hover}>
-                                    <ListItemText primary={subSubSection} 
-                                    primaryTypographyProps={{ className: styles.style_for_text_subsection }} />
-                                  </ListItemButton>
-                                ))}
-                              </List>
-                            </AccordionDetails>
-                          </Accordion>
-                        );
-                      }
-                    })}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-            </Box>
-            <Box >
-              <Button className={styles.button_exit}
-              startIcon={<ExitToAppOutlinedIcon />}
-              >
-              Вернуться к содержанию
-              </Button>
-            </Box>
+                            <Typography_for_sections> {subSection.title} </Typography_for_sections>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <List>
+                              {/* Динамическое создание аккордеонов для подподсекций */}
+                              {subSection.subSubSections.map((subSubSection, subSubIndex) => (
+                                <ListItemButton key={subSubIndex} sx ={{borderRadius: "8px", "&:hover" : {backgroundColor: "rgba(var(--light_violent), 0.85)"}}}>
+                                  <Typography_for_sections> {subSubSection} </Typography_for_sections>
+                                </ListItemButton>
+                              ))}
+                            </List>
+                          </AccordionDetails>
+                        </Accordion>
+                      );
+                    }
+                  })}
+                </List>
+              </AccordionDetails>
+            </Accordion>
+            </Grid2>
+          ))}
+          </Grid2>
+          
+          <Box >
+            <Styled_button_exit
+            startIcon={<ExitToAppOutlinedIcon />}
+            >
+            Вернуться к содержанию
+            </Styled_button_exit>
           </Box>
-      </Drawer>
+      </StyledDrawer>
     </Grid2>
     </Grid2>
   );
