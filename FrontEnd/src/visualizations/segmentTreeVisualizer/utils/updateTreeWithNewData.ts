@@ -40,7 +40,7 @@ export const updateTreeWithNewDataThunk = createAsyncThunk<
       await newSegmentTree.setData(newData);
       console.log("[INFO] newSegmentTree.setData completed.");
 
-      let newVisNodes = await newSegmentTree.getTreeForVisualization();
+      let newVisNodes: VisNode[] = await newSegmentTree.getTreeForVisualization();
       console.log("[INFO] newSegmentTree.getTreeForVisualization returned:", newVisNodes);
 
       newVisNodes = normalizeVisNodes(newVisNodes);

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { VisNode } from "../../../types/VisNode";
+import { VisNode } from "../../../../types/VisNode";
 import useTimeouts from "./useTimeouts";
 
 interface UseNodeAnimationsProps {
@@ -13,48 +13,34 @@ export default function useNodeAnimations({ setNodes }: UseNodeAnimationsProps) 
     (pathIds: number[]) => {
       console.log("Animating path for IDs:", pathIds);
       
+      // Сброс предыдущих таймаутов
+      clearAllTimeouts();
+      const delay = 400;
+
+      // Для каждого узла устанавливаем таймаут на подсветку, а затем на снятие подсветки
       pathIds.forEach((nodeId, index) => {
-        console.log(`Setting timeout to highlight node ${nodeId} at ${index * 400}ms`);
-        
+        // Подсветка узла
         setAndStoreTimeout(() => {
-          console.log(`Highlighting node ${nodeId}`);
+          console.log(`Highlighting node ${nodeId} at ${index * delay}ms`);
           setNodes((old) =>
             old.map((n) =>
               n.id === nodeId ? { ...n, isHighlighted: true } : n
             )
           );
-        }, index * 400);
+        }, index * delay);
 
-        
-        if (index > 0) {
-          const prevNodeId = pathIds[index - 1];
-          console.log(`Setting timeout to unhighlight node ${prevNodeId} at ${index * 400}ms`);
-          setAndStoreTimeout(() => {
-            console.log(`Unhighlighting node ${prevNodeId}`);
-            setNodes((old) =>
-              old.map((n) =>
-                n.id === prevNodeId ? { ...n, isHighlighted: false } : n
-              )
-            );
-          }, index * 400);
-        }
-      });
-
-      
-      if (pathIds.length > 0) {
-        const lastNodeId = pathIds[pathIds.length - 1];
-        console.log(`Setting timeout to unhighlight last node ${lastNodeId} at ${pathIds.length * 400}ms`);
+        // Снятие подсветки с того же узла через delay
         setAndStoreTimeout(() => {
-          console.log(`Final unhighlight of node ${lastNodeId}`);
+          console.log(`Unhighlighting node ${nodeId} at ${(index + 1) * delay}ms`);
           setNodes((old) =>
             old.map((n) =>
-              n.id === lastNodeId ? { ...n, isHighlighted: false } : n
+              n.id === nodeId ? { ...n, isHighlighted: false } : n
             )
           );
-        }, pathIds.length * 400);
-      }
+        }, (index + 1) * delay);
+      });
     },
-    [setAndStoreTimeout, setNodes]
+    [setAndStoreTimeout, setNodes, clearAllTimeouts]
   );
 
   return { animatePath, clearAllTimeouts };

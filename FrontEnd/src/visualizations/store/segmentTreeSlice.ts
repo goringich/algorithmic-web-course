@@ -1,10 +1,9 @@
+// segmentTreeSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import SegmentTreeWasm from "../segmentTreeVisualizer/SegmentTreeWasm";
 import { VisNode } from "../types/VisNode";
 import { normalizeVisNodes } from "../segmentTreeVisualizer/utils/functions/normalizeVisNodes";
 import { buildAndValidateParentMap } from "../segmentTreeVisualizer/utils/functions/buildAndValidateParentMap";
-
-
 
 interface SegmentTreeState {
   data: number[];
@@ -17,7 +16,6 @@ interface SegmentTreeState {
   newValue: string;
   stageSize: { width: number; height: number };
 }
-
 
 const initialState: SegmentTreeState = {
   data: [],
@@ -34,13 +32,12 @@ const initialState: SegmentTreeState = {
 let segmentTreeWasmInstance: SegmentTreeWasm | null = null;
 
 /**
- * Асинхронная (asynchronous) операция, которая создаёт / перестраивает
- * сегментное дерево на базе переданного массива newData.
+ * Асинхронная операция, перестраивает дерево из нового массива данных.
  */
 export const updateTreeWithNewData = createAsyncThunk<
-  { nodes: VisNode[]; data: number[]; parentMap: Record<number, number | undefined> }, 
-  number[],                                                                            
-  { rejectValue: string }                                                              
+  { nodes: VisNode[]; data: number[]; parentMap: Record<number, number | undefined> },
+  number[],
+  { rejectValue: string }
 >(
   "segmentTree/updateTreeWithNewData",
   async (newData, { rejectWithValue }) => {
@@ -85,9 +82,6 @@ const segmentTreeSlice = createSlice({
     setStageSize(state, action: PayloadAction<{ width: number; height: number }>) {
       state.stageSize = action.payload;
     },
-
-    
-    
   },
   extraReducers: (builder) => {
     builder.addCase(updateTreeWithNewData.fulfilled, (state, action) => {
@@ -102,13 +96,12 @@ const segmentTreeSlice = createSlice({
   },
 });
 
-
 export const {
   setNewValue,
   setSelectedNode,
   setDelta,
   setSnackbar,
-  setStageSize
+  setStageSize,
 } = segmentTreeSlice.actions;
 
 export default segmentTreeSlice.reducer;
