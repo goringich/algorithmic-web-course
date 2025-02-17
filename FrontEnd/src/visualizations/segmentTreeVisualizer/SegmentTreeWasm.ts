@@ -1,14 +1,6 @@
+// SegmentTreeWasm.ts
 import createSegmentTreeModule from "../../assets/JS_complied_algorithms/segment_tree.mjs";
-
-interface SegmentTreeNodeData {
-  id: number;         
-  x: number;
-  y: number;
-  value: number;
-  label: string;
-  range: [number, number];
-  children: number[];  
-}
+import { VisNode } from "../types/VisNode";
 
 export default class SegmentTreeWasm {
   private array: number[];
@@ -21,44 +13,34 @@ export default class SegmentTreeWasm {
     this.array = array.slice();
     this.modulePromise = createSegmentTreeModule().then((module: any) => {
       const vectorInt = new module.VectorInt();
-      
-      // Заполняем значениями
       this.array.forEach((val) => vectorInt.push_back(val));
       module.setArray(vectorInt);
-      
-      // Если есть метод buildTree - вызываем
-      if (typeof module.buildTree === 'function') {
+
+      if (typeof module.buildTree === "function") {
         module.buildTree(0, 0, this.array.length - 1);
-      } else {
-        console.warn("Метод buildTree не найден в WASM модуле. Возможно дерево строится автоматически.");
       }
-      
+
       vectorInt.delete();
       return module;
     });
   }
 
-  // Полное обновление массива и перестройка дерева
   async setData(newData: number[]): Promise<void> {
     const module = await this.modulePromise;
     const vectorInt = new module.VectorInt();
     newData.forEach((val) => vectorInt.push_back(val));
     module.setArray(vectorInt);
 
-    if (typeof module.buildTree === 'function') {
+    if (typeof module.buildTree === "function") {
       module.buildTree(0, 0, newData.length - 1);
       console.log("Дерево перестроено с новыми данными.");
-    } else {
-      console.error("Метод buildTree не найден в WASM модуле.");
     }
     vectorInt.delete();
     this.array = newData.slice();
   }
 
-  // Пример точечного update, если захотите использовать:
   async update(index: number, value: number): Promise<void> {
     const module = await this.modulePromise;
-    // Здесь в C++ добавляем value:
     module.updateTree(0, 0, this.array.length - 1, index, value);
     this.array[index] += value;
   }
@@ -68,8 +50,7 @@ export default class SegmentTreeWasm {
     return module.queryTree(0, 0, this.array.length - 1, l, r);
   }
 
-  // Получение «сырых» узлов для визуализации (числовые ID)
-  async getTreeForVisualization(): Promise<SegmentTreeNodeData[]> {
+  async getTreeForVisualization(): Promise<VisNode[]> {
     const module = await this.modulePromise;
     const rawTreeVector = module.getTree();
     if (
@@ -85,11 +66,9 @@ export default class SegmentTreeWasm {
     for (let i = 0; i < rawTreeVector.size(); i++) {
       rawTree.push(rawTreeVector.get(i));
     }
-    // rawTree[i] — значения в segtree
 
-    const nodes: SegmentTreeNodeData[] = [];
+    const nodes: VisNode[] = [];
 
-    // Рекурсивная функция для «нарисованных» координат
     const buildVisualization = (
       node: number,
       start: number,
@@ -97,23 +76,24 @@ export default class SegmentTreeWasm {
       x: number,
       y: number,
       spacingX: number,
-      spacingY: number
+      spacingY: number,
+      parentId: number
     ): number => {
-      const id = node; // узел в segtree
+      const id = node;
       const value = rawTree[node];
-
-      const nodeData: SegmentTreeNodeData = {
+      const currentNode: VisNode = {
         id,
         x,
         y,
         value,
         label: start === end ? `Index ${start}` : `${start}-${end}`,
         range: [start, end],
-        children: []
+        children: [],
+        parentId,
       };
 
       if (start === end) {
-        nodes.push(nodeData);
+        nodes.push(currentNode);
         return id;
       }
 
@@ -128,7 +108,8 @@ export default class SegmentTreeWasm {
         x - spacingX / 2,
         y + spacingY,
         spacingX / 2,
-        spacingY
+        spacingY,
+        id
       );
       const rightChildId = buildVisualization(
         rightChild,
@@ -137,20 +118,19 @@ export default class SegmentTreeWasm {
         x + spacingX / 2,
         y + spacingY,
         spacingX / 2,
-        spacingY
+        spacingY,
+        id
       );
 
-      nodeData.children = [leftChildId, rightChildId];
-      nodes.push(nodeData);
+      currentNode.children = [leftChildId, rightChildId];
+      nodes.push(currentNode);
       return id;
     };
 
-    // Начинаем с корня
     if (this.array.length > 0) {
-      buildVisualization(0, 0, this.array.length - 1, 400, 50, 300, 100);
+      buildVisualization(0, 0, this.array.length - 1, 400, 50, 300, 100, -1);
     }
 
     return nodes;
   }
 }
-

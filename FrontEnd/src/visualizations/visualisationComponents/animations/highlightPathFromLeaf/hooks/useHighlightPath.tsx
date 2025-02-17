@@ -10,7 +10,7 @@ interface UseHighlightPathProps {
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
 }
 
-export default function useHighlightPath({
+export default function useHighlightPath({A
   nodes,
   parentMap,
   setNodes,
@@ -22,7 +22,6 @@ export default function useHighlightPath({
       console.log("Starting highlightPathFromLeaf for leaf ID:", leafNodeId);
       clearAllTimeouts();
 
-      // Сначала сбрасываем подсветку у всех узлов
       setNodes((oldNodes) =>
         oldNodes.map((node) => ({ ...node, isHighlighted: false }))
       );

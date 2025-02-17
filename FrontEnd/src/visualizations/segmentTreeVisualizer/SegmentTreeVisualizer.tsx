@@ -1,7 +1,8 @@
+// SegmentTreeVisualizer.tsx
 import React, { useRef, useEffect } from "react";
 import { Box } from "@mui/material";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../store/store';
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../store/store";
 import {
   setNewValue,
   setSelectedNode,
@@ -18,12 +19,10 @@ import Konva from "konva";
 import { VisNode } from "../types/VisNode";
 
 export const SegmentTreeVisualizer: React.FC = () => {
-  
   const containerRef = useRef<HTMLDivElement | null>(null);
   const layerRef = useRef<Konva.Layer | null>(null);
   const shapeRefs = useRef<Record<number, Konva.Circle>>({});
 
-  
   const dispatch = useDispatch<AppDispatch>();
   const {
     data,
@@ -37,11 +36,11 @@ export const SegmentTreeVisualizer: React.FC = () => {
     stageSize,
   } = useSelector((state: RootState) => state.segmentTree);
 
+  // При первом рендере создаём дерево с начальными данными (пример)
   useEffect(() => {
     dispatch(updateTreeWithNewData([5, 8, 6, 3, 2, 7, 2, 6]));
   }, [dispatch]);
 
-  
   const handleAddElement = () => {
     if (newValue.trim() === "") {
       dispatch(setSnackbar({ message: "Введите значение для нового элемента.", open: true }));
@@ -57,7 +56,7 @@ export const SegmentTreeVisualizer: React.FC = () => {
       return;
     }
     const updatedData = [...data, value];
-    dispatch(updateTreeWithNewData(updatedData));
+    dispatch(updateTreeWithNewData(updatedData)); // Полная перестройка
     dispatch(setNewValue(""));
   };
 
@@ -72,8 +71,9 @@ export const SegmentTreeVisualizer: React.FC = () => {
       return;
     }
     const updatedData = [...data];
-    updatedData[start] = delta;
-    dispatch(updateTreeWithNewData(updatedData));
+    updatedData[start] = delta; // Меняем значение листа
+    dispatch(updateTreeWithNewData(updatedData)); // Полная перестройка
+
     dispatch(
       setSnackbar({
         message: `Значение узла [${start}, ${end}] обновлено до ${delta}`,
@@ -93,7 +93,9 @@ export const SegmentTreeVisualizer: React.FC = () => {
       dispatch(setSnackbar({ message: "Можно удалять только листовые узлы.", open: true }));
       return;
     }
+    // Удаляем элемент массива, который соответствует листу [start, end]
     const updatedData = data.filter((_, idx) => idx !== start);
+    // Вызываем полную перестройку сегментного дерева
     dispatch(updateTreeWithNewData(updatedData));
     dispatch(setSelectedNode(null));
   };
@@ -109,10 +111,9 @@ export const SegmentTreeVisualizer: React.FC = () => {
     dispatch(setSnackbar({ message: "", open: false }));
   };
 
-
   const modalPosition = { x: 100, y: 100 };
   const handleModalMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-
+    // Можно реализовать логику перемещения модального окна, если нужно
   };
 
   return (

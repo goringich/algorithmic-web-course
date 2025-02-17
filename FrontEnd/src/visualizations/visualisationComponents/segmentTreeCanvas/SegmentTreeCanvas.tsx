@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Stage, Layer, Line } from "react-konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 import Konva from "konva";
@@ -21,13 +21,11 @@ export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
   stageSize,
   onNodeClick,
 }) => {
-  // Создаем карту узлов для удобства вычисления глубины
   const nodesMap = React.useMemo(
     () => Object.fromEntries(nodes.map((node) => [node.id, node])),
     [nodes]
   );
 
-  // Функция для вычисления глубины узла
   const calculateDepth = (node: VisNode): number => {
     let depth = 0;
     let current = node;
@@ -42,16 +40,24 @@ export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
     return depth;
   };
 
+  // При изменении узлов принудительно перерисовываем слой
+  useEffect(() => {
+    if (layerRef.current) {
+      layerRef.current.batchDraw();
+    }
+  }, [nodes, layerRef]);
+
   return (
     <Stage width={stageSize.width} height={stageSize.height}>
       <Layer ref={layerRef}>
+        {/* Рисуем линии между узлами */}
         {nodes.map((parentNode) =>
           parentNode.children.map((childId) => {
             const childNode = nodes.find((n) => n.id === childId);
             if (!childNode) return null;
             return (
               <Line
-                key={`${parentNode.id}-${childId}`}
+                key={`line-${parentNode.id}-${childId}`}
                 points={[parentNode.x, parentNode.y, childNode.x, childNode.y]}
                 stroke="black"
                 strokeWidth={2}
@@ -60,16 +66,17 @@ export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
             );
           })
         )}
+        {/* Рисуем сами узлы */}
         {nodes.map((node) => {
-          // Вычисляем глубину узла для корректного расчета цвета
           const depth = calculateDepth(node);
           const nodeWithDepth = { ...node, depth };
-          // Если узел выбран, можно задать переопределение цвета
+
           const fillOverride =
             selectedNode && selectedNode.id === node.id ? "red" : undefined;
+          // Используем ключ на основе диапазона, чтобы избежать проблем при обновлении
           return (
             <SegmentTreeNode
-              key={node.id}
+              key={`${node.range[0]}-${node.range[1]}`}
               node={nodeWithDepth}
               shapeRefs={shapeRefs}
               onNodeClick={onNodeClick}

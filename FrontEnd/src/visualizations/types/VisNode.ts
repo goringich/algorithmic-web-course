@@ -1,4 +1,3 @@
-// ../../../visualisationComponents/nodeAnimations/types/VisNode.ts
 export interface VisNode {
   id: number;
   x: number;
