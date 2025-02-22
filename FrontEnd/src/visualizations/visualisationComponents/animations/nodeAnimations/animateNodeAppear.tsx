@@ -1,5 +1,3 @@
-// src/hooks/useNodeAppearAnimation.ts
-
 import { useEffect, useRef } from "react";
 import Konva from "konva";
 
@@ -13,7 +11,6 @@ export const useNodeAppearAnimation = (
 
   useEffect(() => {
     if (circleRef.current) {
-      // Начинаем с прозрачности 0
       circleRef.current.opacity(0);
       circleRef.current.to({
         opacity: 1,
@@ -23,11 +20,10 @@ export const useNodeAppearAnimation = (
           console.log(`[INFO] Node ${nodeId} fully appeared at (${x}, ${y})`),
       });
     }
-    // Регистрируем узел в shapeRefs, если он ещё не зарегистрирован
     if (circleRef.current && !shapeRefs.current[nodeId]) {
       shapeRefs.current[nodeId] = circleRef.current;
     }
-  }, []); // Запускаем только при монтировании
+  }, []); 
 
   return circleRef;
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Circle, Text } from "react-konva";
 import Konva from "konva";
 import { VisNode } from "@src/visualizations/types/VisNode";
@@ -12,6 +12,7 @@ interface SegmentTreeNodeProps {
   strokeWidth: number;
   textColor: string;
   fillOverride?: string;
+  isHighlighted: boolean;
 }
 
 const buildNodeMap = (nodes: VisNode[]): Record<number, VisNode> => {
@@ -39,13 +40,14 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
   shapeRefs,
   onNodeClick,
   strokeWidth,
+  isHighlighted,
   textColor,
   fillOverride,
 }) => {
   const nodeMap = buildNodeMap(allNodes);
   const depthComputed = computeDepth(node, nodeMap);
 
-  // Вычисляем цвет с учётом глубины
+  
   const minColor = [200, 230, 255];
   const maxColor = [50, 80, 150];
   const maxDepth = 6;
@@ -62,11 +64,40 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         depthFactor
       )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
-  // Если узел выделен, используем акцентный цвет Material UI
-  const computedFillColor = node.isHighlighted ? "#e53935" : baseFillColor;
+  const computedFillColor = isHighlighted ? "#e53935" : baseFillColor;
 
-  // Используем кастомный хук для анимации появления
+  
   const circleRef = useNodeAppearAnimation(node.id, node.x, node.y, shapeRefs);
+
+  
+  const prevPosition = useRef({ x: node.x, y: node.y });
+  useEffect(() => {
+    if (circleRef.current) {
+      
+      if (prevPosition.current.x !== node.x || prevPosition.current.y !== node.y) {
+        circleRef.current.to({
+          x: node.x,
+          y: node.y,
+          duration: 0.5,
+          easing: Konva.Easings.EaseInOut,
+        });
+        prevPosition.current = { x: node.x, y: node.y };
+      }
+    }
+  }, [node.x, node.y, circleRef]);
+
+  
+  const textRef = useRef<Konva.Text>(null);
+  useEffect(() => {
+    if (textRef.current) {
+      textRef.current.to({
+        x: node.x - 25,
+        y: node.y - 15,
+        duration: 0.5,
+        easing: Konva.Easings.EaseInOut,
+      });
+    }
+  }, [node.x, node.y]);
 
   return (
     <>
@@ -79,15 +110,13 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         y={node.y}
         radius={30}
         fill={computedFillColor}
-        // Добавляем радиальный градиент (при необходимости можно настроить дополнительные цвета)
         fillRadialGradientStartPoint={{ x: 0, y: 0 }}
         fillRadialGradientEndPoint={{ x: 30, y: 30 }}
         fillRadialGradientColorStops={[0, computedFillColor, 1, "#fff"]}
-        // Тонкая светлая обводка для современного вида
         stroke="#fff"
         strokeWidth={3}
         onClick={() => {
-          // Лёгкий эффект «отскока» при клике
+          
           if (circleRef.current) {
             circleRef.current.to({
               scaleX: 0.9,
@@ -122,13 +151,13 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
             duration: 0.2,
           });
         }}
-        // Тень для современного плоского стиля
         shadowColor="rgba(0, 0, 0, 0.4)"
         shadowBlur={10}
         shadowOffset={{ x: 4, y: 4 }}
         shadowOpacity={0.6}
       />
       <Text
+        ref={textRef}
         x={node.x - 25}
         y={node.y - 15}
         text={`${node.label}\n(${node.value})`}
@@ -138,7 +167,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         fill={textColor}
         align="center"
         width={50}
-        // Лёгкая тень для повышения читаемости текста
+        listening={false}
         shadowColor="rgba(0, 0, 0, 0.2)"
         shadowBlur={2}
         shadowOffset={{ x: 1, y: 1 }}
