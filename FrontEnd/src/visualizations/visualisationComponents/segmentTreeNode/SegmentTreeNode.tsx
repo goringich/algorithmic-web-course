@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Circle, Text } from "react-konva";
 import Konva from "konva";
 import { VisNode } from "@src/visualizations/types/VisNode";
@@ -32,17 +32,6 @@ function computeDepth(node: VisNode, nodeMap: Record<number, VisNode>): number {
   return depth;
 }
 
-function getPathToRoot(leaf: VisNode, nodeMap: Record<number, VisNode>): number[] {
-  const path: number[] = [];
-  let current: VisNode | undefined = leaf;
-  while (current && current.parentId !== current.id) {
-    path.push(current.id);
-    current = nodeMap[current.parentId];
-  }
-  if (current) path.push(current.id);
-  return path.reverse();
-}
-
 export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
   node,
   allNodes,
@@ -54,25 +43,6 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
 }) => {
   const nodeMap = buildNodeMap(allNodes);
   const depthComputed = computeDepth(node, nodeMap);
-  const path = getPathToRoot(node, nodeMap);
-
-  if (node.isDummy) {
-    return (
-      <Circle
-        key={node.id}
-        ref={(el) => {
-          if (el) shapeRefs.current[node.id] = el;
-        }}
-        x={node.x}
-        y={node.y}
-        radius={30}
-        fill="transparent"
-        stroke="transparent"
-        strokeWidth={0}
-        listening={false}
-      />
-    );
-  }
 
   const minColor = [180, 220, 255];
   const maxColor = [10, 10, 120];
@@ -80,7 +50,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
   const depthFactor = Math.pow(Math.min(depthComputed / maxDepth, 1), 0.7);
 
   const interpolateColor = (min: number, max: number, factor: number) =>
-    Math.round(min + (max - min) * factor); // interpolate (интерполировать)
+    Math.round(min + (max - min) * factor);
 
   const baseFillColor = fillOverride
     ? fillOverride
@@ -90,13 +60,34 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         depthFactor
       )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
-  const computedFillColor = node.isHighlighted ? "red" : baseFillColor; // computed (вычисленный)
+  const computedFillColor = node.isHighlighted ? "red" : baseFillColor;
+
+  // Создаем локальный ref для анимации
+  const circleRef = useRef<Konva.Circle>(null);
+
+  useEffect(() => {
+    if (circleRef.current) {
+      // Начинаем с прозрачности 0
+      circleRef.current.opacity(0);
+      circleRef.current.to({
+        opacity: 1,
+        duration: 0.5,
+        easing: Konva.Easings.EaseInOut,
+        onFinish: () =>
+          console.log(`[INFO] Node ${node.id} fully appeared at (${node.x}, ${node.y})`),
+      });
+    }
+    // Регистрируем узел в shapeRefs, если ещё не зарегистрирован
+    if (circleRef.current && !shapeRefs.current[node.id]) {
+      shapeRefs.current[node.id] = circleRef.current;
+    }
+  }, []); // Запускается только при монтировании
 
   return (
     <>
       <Circle
-        key={node.id}
         ref={(el) => {
+          circleRef.current = el;
           if (el) shapeRefs.current[node.id] = el;
         }}
         x={node.x}
@@ -105,9 +96,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         fill={computedFillColor}
         stroke="black"
         strokeWidth={strokeWidth}
-        onClick={() => {
-          onNodeClick(node);
-        }}
+        onClick={() => onNodeClick(node)}
         onMouseEnter={(e) => {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "pointer";

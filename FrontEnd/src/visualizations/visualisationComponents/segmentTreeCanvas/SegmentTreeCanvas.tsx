@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Stage, Layer, Line } from "react-konva";
 import Konva from "konva";
 import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
@@ -7,7 +7,6 @@ import { VisNode } from "../../types/VisNode";
 interface SegmentTreeCanvasProps {
   nodes: VisNode[];
   shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
-  layerRef: React.MutableRefObject<Konva.Layer | null>;
   stageSize: { width: number; height: number };
   onNodeClick: (node: VisNode) => void;
 }
@@ -15,22 +14,31 @@ interface SegmentTreeCanvasProps {
 export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
   nodes,
   shapeRefs,
-  layerRef,
   stageSize,
   onNodeClick,
 }) => {
+  const layerRef = useRef<Konva.Layer | null>(null);
+
+  // Создаем объект для быстрого поиска узлов
+  const nodeMap = React.useMemo(() => {
+    return nodes.reduce<Record<number, VisNode>>((acc, node) => {
+      acc[node.id] = node;
+      return acc;
+    }, {});
+  }, [nodes]);
+
   useEffect(() => {
     if (layerRef.current) {
       layerRef.current.batchDraw();
     }
-  }, [nodes, layerRef]);
+  }, [nodes]);
 
   return (
     <Stage width={stageSize.width} height={stageSize.height}>
       <Layer ref={layerRef}>
-        {nodes.map((parentNode) =>
+        {nodes.flatMap((parentNode) =>
           parentNode.children.map((childId) => {
-            const childNode = nodes.find((n) => n.id === childId);
+            const childNode = nodeMap[childId];
             if (!childNode) return null;
             return (
               <Line
