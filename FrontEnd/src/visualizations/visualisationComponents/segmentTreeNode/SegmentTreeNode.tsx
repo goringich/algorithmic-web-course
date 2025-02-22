@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Circle, Text } from "react-konva";
 import Konva from "konva";
 import { VisNode } from "@src/visualizations/types/VisNode";
@@ -13,7 +13,6 @@ interface SegmentTreeNodeProps {
   fillOverride?: string;
 }
 
-// Создаёт карту узлов (nodeMap) для быстрого доступа по id
 const buildNodeMap = (nodes: VisNode[]): Record<number, VisNode> => {
   const map: Record<number, VisNode> = {};
   nodes.forEach((n) => {
@@ -22,7 +21,6 @@ const buildNodeMap = (nodes: VisNode[]): Record<number, VisNode> => {
   return map;
 };
 
-// Вычисляет глубину (depth — глубина) узла на основе поля parentId
 function computeDepth(node: VisNode, nodeMap: Record<number, VisNode>): number {
   let depth = 0;
   let current: VisNode | undefined = node;
@@ -34,7 +32,6 @@ function computeDepth(node: VisNode, nodeMap: Record<number, VisNode>): number {
   return depth;
 }
 
-// Вычисляет путь от листа до корня (path — путь)
 function getPathToRoot(leaf: VisNode, nodeMap: Record<number, VisNode>): number[] {
   const path: number[] = [];
   let current: VisNode | undefined = leaf;
@@ -57,17 +54,9 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
 }) => {
   const nodeMap = buildNodeMap(allNodes);
   const depthComputed = computeDepth(node, nodeMap);
-  // Для примера можно получить и путь от листа до корня
   const path = getPathToRoot(node, nodeMap);
 
-  useEffect(() => {
-    console.log(
-      `Rendering node id: ${node.id} - isHighlighted: ${node.isHighlighted}, computed depth: ${depthComputed}, path: ${path}`
-    );
-  }, [node, depthComputed, path]);
-
   if (node.isDummy) {
-    console.log(`Node ${node.id} is dummy`);
     return (
       <Circle
         key={node.id}
@@ -85,13 +74,13 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
     );
   }
 
-  const minColor = [10, 10, 120];
-  const maxColor = [180, 220, 255];
+  const minColor = [180, 220, 255];
+  const maxColor = [10, 10, 120];
   const maxDepth = 6;
   const depthFactor = Math.pow(Math.min(depthComputed / maxDepth, 1), 0.7);
 
   const interpolateColor = (min: number, max: number, factor: number) =>
-    Math.round(min + (max - min) * factor);
+    Math.round(min + (max - min) * factor); // interpolate (интерполировать)
 
   const baseFillColor = fillOverride
     ? fillOverride
@@ -101,11 +90,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         depthFactor
       )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
-  const computedFillColor = node.isHighlighted ? "red" : baseFillColor;
-
-  console.log(
-    `Node ${node.id} baseFillColor: ${baseFillColor}, computedFillColor: ${computedFillColor}`
-  );
+  const computedFillColor = node.isHighlighted ? "red" : baseFillColor; // computed (вычисленный)
 
   return (
     <>
@@ -121,7 +106,6 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         stroke="black"
         strokeWidth={strokeWidth}
         onClick={() => {
-          console.log(`Node ${node.id} clicked`);
           onNodeClick(node);
         }}
         onMouseEnter={(e) => {

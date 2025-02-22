@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { VisNode } from "../../types/VisNode";
 import SegmentTreeWasm from "../SegmentTreeWasm";
 import Konva from "konva";
-import { waitForLayerRef } from "./functions/waitForLayerRef";
+// import { waitForLayerRef } from "./functions/waitForLayerRef";
 import { normalizeVisNodes } from "./functions/normalizeVisNodes";
 import { buildAndValidateParentMap } from "./functions/buildAndValidateParentMap";
 
@@ -25,11 +25,11 @@ export const updateTreeWithNewDataThunk = createAsyncThunk<
   async ({ newData, shapeRefs, layerRef }, { rejectWithValue }) => {
     console.log("[INFO] Starting updateTreeWithNewData with newData:", newData);
 
-    const currentLayer = await waitForLayerRef(layerRef);
-    if (!currentLayer) {
-      console.error("[ERROR] layerRef.current is null. Aborting updateTreeWithNewData.");
-      return rejectWithValue("Layer not available");
-    }
+    // const currentLayer = await waitForLayerRef(layerRef);
+    // if (!currentLayer) {
+    //   console.error("[ERROR] layerRef.current is null. Aborting updateTreeWithNewData.");
+    //   return rejectWithValue("Layer not available (Слой недоступен)");
+    // }
 
     try {
       // Очищаем словарь ссылок
@@ -57,7 +57,8 @@ export const updateTreeWithNewDataThunk = createAsyncThunk<
       return { nodes: newVisNodes, data: newData, parentMap: newParentMap };
     } catch (error) {
       console.error("[ERROR] Error while updating the tree:", error);
-      return rejectWithValue("Error updating tree");
+      const errorMsg = error instanceof Error ? error.message : "Error updating tree";
+      return rejectWithValue(errorMsg);
     }
   }
 );
