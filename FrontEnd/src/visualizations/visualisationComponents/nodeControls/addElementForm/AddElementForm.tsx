@@ -8,18 +8,13 @@ interface AddElementFormProps {
   disabled?: boolean;
 }
 
-export function AddElementForm({
-  newValue,
-  onChangeValue,
-  onAdd,
-  disabled
-}: AddElementFormProps) {
+export function AddElementForm({ newValue, onChangeValue, onAdd, disabled }: AddElementFormProps) {
   return (
     <Box display="flex" justifyContent="center" gap={2} marginBottom={2}>
       <TextField
         label="Новый лист"
         value={newValue}
-        onChange={(e) => onChangeValue(e.target.value)}
+        onChange={(e) => onChangeValue(Number(e.target.value) || 0)} // ✅ Передаём число в Redux
         type="number"
         variant="outlined"
         sx={{ width: "150px" }}

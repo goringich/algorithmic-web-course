@@ -12,7 +12,7 @@ import {
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
 import Header from "../components/Header";
-import Controls from "../visualisationComponents/nodeControls/Controls";
+import { AddElementForm } from "../visualisationComponents/nodeControls/addElementForm/AddElementForm";
 import { SegmentTreeCanvas } from "../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas";
 import Konva from "konva";
 import { VisNode } from "../types/VisNode";
@@ -75,7 +75,7 @@ export const SegmentTreeVisualizer: React.FC = () => {
 
   const onAddElement = async () => {
     await handleAddElement(newValue, MAX_LEAVES, dispatch, data);
-  };
+  };  
 
   const onRemoveLeaf = async () => {
     await handleRemoveLeaf(selectedNode, data, dispatch, shapeRefs);
@@ -112,13 +112,11 @@ export const SegmentTreeVisualizer: React.FC = () => {
     >
       <Header />
 
-      <Controls
+      <AddElementForm
         newValue={newValue}
-        setNewValue={(val) => dispatch(setNewValue(val))}
-        handleAddElement={onAddElement}
+        onChangeValue={(val) => dispatch(setNewValue(Number(val) || 0))}
+        onAdd={onAddElement} // 🔹 Передаём функцию в AddElementForm
         disabled={data.length >= MAX_LEAVES}
-        onUpdate={onUpdateNode}
-        onRemove={onRemoveLeaf}
       />
 
       <SegmentTreeCanvas
