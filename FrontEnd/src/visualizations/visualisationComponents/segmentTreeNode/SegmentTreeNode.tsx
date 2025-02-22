@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Circle, Text } from "react-konva";
 import Konva from "konva";
 import { VisNode } from "@src/visualizations/types/VisNode";
+import { useNodeAppearAnimation } from "../animations/nodeAnimations/animateNodeAppear";
 
 interface SegmentTreeNodeProps {
   node: VisNode;
@@ -44,8 +45,9 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
   const nodeMap = buildNodeMap(allNodes);
   const depthComputed = computeDepth(node, nodeMap);
 
-  const minColor = [180, 220, 255];
-  const maxColor = [10, 10, 120];
+  // Вычисляем цвет с учётом глубины
+  const minColor = [200, 230, 255];
+  const maxColor = [50, 80, 150];
   const maxDepth = 6;
   const depthFactor = Math.pow(Math.min(depthComputed / maxDepth, 1), 0.7);
 
@@ -60,28 +62,11 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         depthFactor
       )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
-  const computedFillColor = node.isHighlighted ? "red" : baseFillColor;
+  // Если узел выделен, используем акцентный цвет Material UI
+  const computedFillColor = node.isHighlighted ? "#e53935" : baseFillColor;
 
-  // Создаем локальный ref для анимации
-  const circleRef = useRef<Konva.Circle>(null);
-
-  useEffect(() => {
-    if (circleRef.current) {
-      // Начинаем с прозрачности 0
-      circleRef.current.opacity(0);
-      circleRef.current.to({
-        opacity: 1,
-        duration: 0.5,
-        easing: Konva.Easings.EaseInOut,
-        onFinish: () =>
-          console.log(`[INFO] Node ${node.id} fully appeared at (${node.x}, ${node.y})`),
-      });
-    }
-    // Регистрируем узел в shapeRefs, если ещё не зарегистрирован
-    if (circleRef.current && !shapeRefs.current[node.id]) {
-      shapeRefs.current[node.id] = circleRef.current;
-    }
-  }, []); // Запускается только при монтировании
+  // Используем кастомный хук для анимации появления
+  const circleRef = useNodeAppearAnimation(node.id, node.x, node.y, shapeRefs);
 
   return (
     <>
@@ -94,30 +79,69 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         y={node.y}
         radius={30}
         fill={computedFillColor}
-        stroke="black"
-        strokeWidth={strokeWidth}
-        onClick={() => onNodeClick(node)}
+        // Добавляем радиальный градиент (при необходимости можно настроить дополнительные цвета)
+        fillRadialGradientStartPoint={{ x: 0, y: 0 }}
+        fillRadialGradientEndPoint={{ x: 30, y: 30 }}
+        fillRadialGradientColorStops={[0, computedFillColor, 1, "#fff"]}
+        // Тонкая светлая обводка для современного вида
+        stroke="#fff"
+        strokeWidth={3}
+        onClick={() => {
+          // Лёгкий эффект «отскока» при клике
+          if (circleRef.current) {
+            circleRef.current.to({
+              scaleX: 0.9,
+              scaleY: 0.9,
+              duration: 0.1,
+              onFinish: () => {
+                circleRef.current?.to({
+                  scaleX: 1,
+                  scaleY: 1,
+                  duration: 0.1,
+                });
+              },
+            });
+          }
+          onNodeClick(node);
+        }}
         onMouseEnter={(e) => {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "pointer";
+          e.target.to({
+            scaleX: 1.1,
+            scaleY: 1.1,
+            duration: 0.2,
+          });
         }}
         onMouseLeave={(e) => {
           const stage = e.target.getStage();
           if (stage) stage.container().style.cursor = "default";
+          e.target.to({
+            scaleX: 1,
+            scaleY: 1,
+            duration: 0.2,
+          });
         }}
-        shadowColor="#000"
-        shadowBlur={4}
-        shadowOffset={{ x: 2, y: 2 }}
-        shadowOpacity={0.2}
+        // Тень для современного плоского стиля
+        shadowColor="rgba(0, 0, 0, 0.4)"
+        shadowBlur={10}
+        shadowOffset={{ x: 4, y: 4 }}
+        shadowOpacity={0.6}
       />
       <Text
         x={node.x - 25}
         y={node.y - 15}
         text={`${node.label}\n(${node.value})`}
-        fontSize={12}
+        fontSize={14}
+        fontFamily="Roboto"
+        fontStyle="bold"
         fill={textColor}
         align="center"
         width={50}
+        // Лёгкая тень для повышения читаемости текста
+        shadowColor="rgba(0, 0, 0, 0.2)"
+        shadowBlur={2}
+        shadowOffset={{ x: 1, y: 1 }}
       />
     </>
   );
