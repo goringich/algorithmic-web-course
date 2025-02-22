@@ -7,9 +7,13 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.4",
 =======
+=======
+    "@mui/icons-material": "^6.4.5",
+>>>>>>> fcbe330 (feat: improving the appearance of the model, adding a smart closure)
     "@mui/material": "^6.3.0",
     "@reduxjs/toolkit": "^2.5.1",
 >>>>>>> 2ea0d5c (Before the handlers return)

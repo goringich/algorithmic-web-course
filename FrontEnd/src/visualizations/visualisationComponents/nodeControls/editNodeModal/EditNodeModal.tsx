@@ -1,6 +1,7 @@
-import React from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
-import { useDrag } from "./utils/UseDrag"; 
+import React, { useEffect, useCallback } from "react";
+import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { useDrag } from "./utils/UseDrag";
 
 interface NodeData {
   id: number;
@@ -18,6 +19,7 @@ interface EditNodeModalProps {
   setDelta: (val: number) => void;
   onUpdate: () => void;
   onRemove: () => void;
+  onClose: () => void; // Новый метод для закрытия окна
 }
 
 export function EditNodeModal({
@@ -26,10 +28,31 @@ export function EditNodeModal({
   setDelta,
   onUpdate,
   onRemove,
+  onClose,
 }: EditNodeModalProps) {
   const { position, handleMouseDown, handleMouseMove, handleMouseUp } = useDrag(100, 100);
 
-  if (!selectedNode || selectedNode.x === undefined || selectedNode.y === undefined) {
+  // Закрытие окна при нажатии Escape
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  // Закрытие окна при изменении `selectedNode`
+  useEffect(() => {
+    if (!selectedNode) {
+      onClose();
+    }
+  }, [selectedNode, onClose]);
+
+  if (!selectedNode) {
     return null;
   }
 
@@ -49,19 +72,27 @@ export function EditNodeModal({
       onMouseMove={(e) => handleMouseMove(e, window.innerWidth, window.innerHeight, 300, 150)}
       onMouseUp={handleMouseUp}
     >
+      {/* Заголовок с кнопкой закрытия */}
       <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
         onMouseDown={handleMouseDown}
         sx={{
           cursor: "move",
           backgroundColor: "#eee",
-          padding: "5px 0",
-          textAlign: "center",
+          padding: "5px 10px",
           fontWeight: "bold",
-          borderRadius: "5px"
+          borderRadius: "5px 5px 0 0",
         }}
       >
-        Перетащи меня
+        <Typography variant="body1">Редактирование узла</Typography>
+        <IconButton size="small" onClick={onClose} sx={{ padding: "5px" }}>
+          <CloseIcon />
+        </IconButton>
       </Box>
+
+      {/* Информация о узле */}
       <Typography variant="h6" sx={{ fontWeight: "bold", marginTop: 1 }}>
         Узел: {selectedNode.label}
       </Typography>
@@ -81,6 +112,8 @@ export function EditNodeModal({
         <strong>Дети:</strong>{" "}
         {selectedNode.children.length > 0 ? selectedNode.children.join(", ") : "Нет"}
       </Typography>
+
+      {/* Поле для изменения значения */}
       <TextField
         type="number"
         value={delta}
@@ -88,8 +121,13 @@ export function EditNodeModal({
         fullWidth
         sx={{ marginTop: 1 }}
       />
+
+      {/* Кнопки Обновить / Удалить */}
       <Button
-        onClick={onUpdate}
+        onClick={() => {
+          onUpdate();
+          onClose(); // Закрываем после обновления
+        }}
         variant="contained"
         color="success"
         fullWidth
@@ -97,8 +135,12 @@ export function EditNodeModal({
       >
         Обновить
       </Button>
+
       <Button
-        onClick={onRemove}
+        onClick={() => {
+          onRemove();
+          onClose(); // Закрываем после удаления
+        }}
         variant="contained"
         color="error"
         fullWidth
