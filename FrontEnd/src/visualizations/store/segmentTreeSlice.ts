@@ -1,4 +1,3 @@
-// segmentTreeSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import SegmentTreeWasm from "../segmentTreeVisualizer/SegmentTreeWasm";
 import { VisNode } from "../types/VisNode";
@@ -15,6 +14,7 @@ interface SegmentTreeState {
   snackbarMessage: string;
   newValue: string;
   stageSize: { width: number; height: number };
+  highlightedNodes: number[];
 }
 
 const initialState: SegmentTreeState = {
@@ -22,6 +22,7 @@ const initialState: SegmentTreeState = {
   nodes: [],
   parentMap: {},
   selectedNode: null,
+  highlightedNodes: [],
   delta: 0,
   snackbarOpen: false,
   snackbarMessage: "",
@@ -31,9 +32,6 @@ const initialState: SegmentTreeState = {
 
 let segmentTreeWasmInstance: SegmentTreeWasm | null = null;
 
-/**
- * Thunk для полной перестройки дерева на основе нового массива данных.
- */
 export const updateTreeWithNewData = createAsyncThunk<
   { nodes: VisNode[]; data: number[]; parentMap: Record<number, number | undefined> },
   number[],
@@ -44,17 +42,13 @@ export const updateTreeWithNewData = createAsyncThunk<
     try {
       segmentTreeWasmInstance = new SegmentTreeWasm(newData);
       await segmentTreeWasmInstance.setData(newData);
-
       let nodes = await segmentTreeWasmInstance.getTreeForVisualization();
       nodes = normalizeVisNodes(nodes);
-
       if (nodes.length === 0) {
         throw new Error("Дерево не было построено.");
       }
-
       const rootId = nodes[0].id;
       const parentMap = buildAndValidateParentMap(nodes, rootId);
-
       return { nodes, data: newData, parentMap };
     } catch (error) {
       return rejectWithValue("Ошибка при обновлении дерева через WASM модуль.");
@@ -82,12 +76,20 @@ const segmentTreeSlice = createSlice({
     setStageSize(state, action: PayloadAction<{ width: number; height: number }>) {
       state.stageSize = action.payload;
     },
+    setHighlightedNodes(state, action: PayloadAction<number[]>) {
+      state.highlightedNodes = action.payload;
+    },
+    clearHighlightedNodes(state) {
+      state.highlightedNodes = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateTreeWithNewData.fulfilled, (state, action) => {
       state.data = action.payload.data;
       state.nodes = action.payload.nodes;
       state.parentMap = action.payload.parentMap;
+      // сохраняем подсветку, чтобы она не обнулялась
+      state.highlightedNodes = [...state.highlightedNodes];
     });
     builder.addCase(updateTreeWithNewData.rejected, (state, action) => {
       state.snackbarMessage = action.payload || "Ошибка обновления.";
@@ -102,6 +104,8 @@ export const {
   setDelta,
   setSnackbar,
   setStageSize,
+  setHighlightedNodes,
+  clearHighlightedNodes,
 } = segmentTreeSlice.actions;
 
 export default segmentTreeSlice.reducer;

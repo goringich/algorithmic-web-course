@@ -1,41 +1,30 @@
 import { useCallback } from "react";
 import useTimeouts from "./useTimeouts";
+import { AppDispatch } from "../../../../store/store";
+import { setHighlightedNodes } from "../../../../store/segmentTreeSlice";
 
 interface UseNodeAnimationsProps {
-  setHighlightedNodes: React.Dispatch<React.SetStateAction<number[]>>;
+  dispatch: AppDispatch;
 }
 
-export default function useNodeAnimations({ setHighlightedNodes }: UseNodeAnimationsProps) {
+export default function useNodeAnimations({ dispatch }: UseNodeAnimationsProps) {
   const { setAndStoreTimeout, clearAllTimeouts } = useTimeouts();
 
   const animatePath = useCallback(
-    (pathIds: number[]) => {
+    (pathIds: number[], onUpdate: (nodes: number[]) => void) => {
       clearAllTimeouts();
       const delay = 400;
+      let updatedNodes: number[] = [];
+
       pathIds.forEach((nodeId, index) => {
         setAndStoreTimeout(() => {
-          console.log("Подсвечиваем узел с id:", nodeId);
-          setHighlightedNodes((prev) => {
-            if (!prev.includes(nodeId)) return [...prev, nodeId];
-            return prev;
-          });
+          updatedNodes = [...updatedNodes, nodeId];
+          dispatch(setHighlightedNodes(updatedNodes)); // 🔹 Обновляем в Redux
+          onUpdate(updatedNodes);
         }, index * delay);
-        setAndStoreTimeout(() => {
-          console.log("Подсвечиваем узел:", nodeId);
-          setHighlightedNodes((prev) => {
-            console.log("Предыдущее состояние:", prev);
-            if (!prev.includes(nodeId)) {
-              const updated = [...prev, nodeId];
-              console.log("Новое состояние:", updated);
-              return updated;
-            }
-            return prev;
-          });
-        }, index * delay);
-        
       });
     },
-    [setAndStoreTimeout, setHighlightedNodes, clearAllTimeouts]
+    [setAndStoreTimeout, clearAllTimeouts, dispatch]
   );
 
   return { animatePath, clearAllTimeouts };

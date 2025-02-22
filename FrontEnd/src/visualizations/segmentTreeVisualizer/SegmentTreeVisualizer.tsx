@@ -8,6 +8,7 @@ import {
   setDelta,
   updateTreeWithNewData,
   setSnackbar,
+  setHighlightedNodes as updateHighlightedNodesAction,
 } from "../store/segmentTreeSlice";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
@@ -27,6 +28,7 @@ import useHighlightPath from "../visualisationComponents/animations/highlightPat
 export const SegmentTreeVisualizer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shapeRefs = useRef<Record<number, Konva.Circle>>({});
+  const { highlightPathFromLeaf, highlightedNodes } = useHighlightPath();
 
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -39,17 +41,23 @@ export const SegmentTreeVisualizer: React.FC = () => {
     snackbarOpen,
     snackbarMessage,
     stageSize,
+    // highlightedNodes,
   } = useSelector((state: RootState) => state.segmentTree);
   
 
   
-  const [highlightedNodes, setHighlightedNodes] = useState<number[]>([]);
+  // const [highlightedNodes, setHighlightedNodes] = useState<number[]>([]);
   
   const nodesWithHighlight = nodes.map((n) => ({
     ...n,
     isHighlighted: highlightedNodes.includes(n.id),
   }));
 
+
+  useEffect(() => {
+    console.log("[DEBUG] Обновлённые подсвеченные узлы:", highlightedNodes);
+  }, [highlightedNodes]);
+  
   
   const isTreeInitialized = useRef(false);
 
@@ -63,11 +71,14 @@ export const SegmentTreeVisualizer: React.FC = () => {
 
   const MAX_LEAVES = 16;
 
-  const highlightPathFromLeaf = useHighlightPath({
-    nodes,
-    parentMap,
-    setHighlightedNodes,
-  });
+  // const highlightPathFromLeaf = useHighlightPath({
+  //   nodes,
+  //   parentMap,
+  //   setHighlightedNodes: (nodes) => dispatch(setHighlightedNodes(nodes)), // ✅ Теперь правильно
+  // });
+  
+  
+  
 
   const onNodeClick = (node: VisNode) => {
     handleNodeClick(node, dispatch);
@@ -132,6 +143,7 @@ export const SegmentTreeVisualizer: React.FC = () => {
         shapeRefs={shapeRefs}
         stageSize={stageSize}
         onNodeClick={onNodeClick}
+        highlightedNodes={highlightedNodes}
       />
 
       <EditNodeModal
