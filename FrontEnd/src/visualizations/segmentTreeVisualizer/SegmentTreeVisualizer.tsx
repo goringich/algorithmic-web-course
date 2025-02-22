@@ -26,7 +26,6 @@ import useHighlightPath from "../visualisationComponents/animations/highlightPat
 
 export const SegmentTreeVisualizer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const layerRef = useRef<Konva.Layer | null>(null);
   const shapeRefs = useRef<Record<number, Konva.Circle>>({});
 
   const dispatch = useDispatch<AppDispatch>();
@@ -41,18 +40,26 @@ export const SegmentTreeVisualizer: React.FC = () => {
     snackbarMessage,
     stageSize,
   } = useSelector((state: RootState) => state.segmentTree);
+  
 
-  // Локальное состояние для хранения id выделённых узлов (highlighted — подсвеченных)
+  
   const [highlightedNodes, setHighlightedNodes] = useState<number[]>([]);
-  // Объединяем данные из Redux с информацией о выделении
+  
   const nodesWithHighlight = nodes.map((n) => ({
     ...n,
     isHighlighted: highlightedNodes.includes(n.id),
   }));
 
+  
+  const isTreeInitialized = useRef(false);
+
   useEffect(() => {
-    dispatch(updateTreeWithNewData([5, 8, 6, 3, 2, 7, 2, 6]));
+    if (!isTreeInitialized.current) {
+      dispatch(updateTreeWithNewData([5, 8, 6, 3, 2, 7, 2, 6]));
+      isTreeInitialized.current = true;
+    }
   }, [dispatch]);
+  
 
   const MAX_LEAVES = 16;
 
@@ -64,6 +71,7 @@ export const SegmentTreeVisualizer: React.FC = () => {
 
   const onNodeClick = (node: VisNode) => {
     handleNodeClick(node, dispatch);
+    
     if (node.range[0] === node.range[1]) {
       highlightPathFromLeaf(node.id);
     }
@@ -75,11 +83,11 @@ export const SegmentTreeVisualizer: React.FC = () => {
 
   const onAddElement = async () => {
     await handleAddElement(newValue, MAX_LEAVES, dispatch, data);
-  };  
+  };
 
   const onRemoveLeaf = async () => {
     await handleRemoveLeaf(selectedNode, data, dispatch, shapeRefs);
-    handleCloseModal(); 
+    handleCloseModal();
   };
 
   const onUpdateNode = async () => {
@@ -91,11 +99,11 @@ export const SegmentTreeVisualizer: React.FC = () => {
       highlightPathFromLeaf,
       parentMap
     );
-    handleCloseModal(); 
+    handleCloseModal();
   };
 
   const handleCloseModal = () => {
-    dispatch(setSelectedNode(null)); 
+    dispatch(setSelectedNode(null));
   };
 
   return (
@@ -115,14 +123,13 @@ export const SegmentTreeVisualizer: React.FC = () => {
       <AddElementForm
         newValue={newValue}
         onChangeValue={(val) => dispatch(setNewValue(Number(val) || 0))}
-        onAdd={onAddElement} // 🔹 Передаём функцию в AddElementForm
+        onAdd={onAddElement}
         disabled={data.length >= MAX_LEAVES}
       />
 
       <SegmentTreeCanvas
         nodes={nodesWithHighlight}
         shapeRefs={shapeRefs}
-        layerRef={layerRef}
         stageSize={stageSize}
         onNodeClick={onNodeClick}
       />
@@ -134,7 +141,7 @@ export const SegmentTreeVisualizer: React.FC = () => {
         onUpdate={onUpdateNode}
         onRemove={onRemoveLeaf}
         position={{ x: 100, y: 100 }}
-        onClose={handleCloseModal} 
+        onClose={handleCloseModal}
       />
 
       <NotificationSnackbar

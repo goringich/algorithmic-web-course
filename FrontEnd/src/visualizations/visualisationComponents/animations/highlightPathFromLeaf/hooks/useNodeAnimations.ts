@@ -11,17 +11,28 @@ export default function useNodeAnimations({ setHighlightedNodes }: UseNodeAnimat
   const animatePath = useCallback(
     (pathIds: number[]) => {
       clearAllTimeouts();
-      const delay = 400; // задержка (delay)
+      const delay = 400;
       pathIds.forEach((nodeId, index) => {
         setAndStoreTimeout(() => {
+          console.log("Подсвечиваем узел с id:", nodeId);
           setHighlightedNodes((prev) => {
             if (!prev.includes(nodeId)) return [...prev, nodeId];
             return prev;
           });
         }, index * delay);
         setAndStoreTimeout(() => {
-          setHighlightedNodes((prev) => prev.filter((id) => id !== nodeId));
-        }, index * delay + 1000);
+          console.log("Подсвечиваем узел:", nodeId);
+          setHighlightedNodes((prev) => {
+            console.log("Предыдущее состояние:", prev);
+            if (!prev.includes(nodeId)) {
+              const updated = [...prev, nodeId];
+              console.log("Новое состояние:", updated);
+              return updated;
+            }
+            return prev;
+          });
+        }, index * delay);
+        
       });
     },
     [setAndStoreTimeout, setHighlightedNodes, clearAllTimeouts]

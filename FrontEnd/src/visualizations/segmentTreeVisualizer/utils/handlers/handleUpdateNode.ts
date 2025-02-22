@@ -40,11 +40,11 @@ export const handleUpdateNode = async (
     return;
   }
   
-  // Даем небольшую задержку, чтобы дерево обновилось,
-  // и затем запускаем анимацию подсветки пути.
+  // Держим подсветку после обновления
   setTimeout(() => {
-    highlightPathFromLeaf(leafNode.id);
+    highlightPathFromLeaf(selectedNode?.id || -1);
   }, 100);
+
   
   dispatch(setSnackbar({ message: `Значение узла [${start},${end}] обновлено до ${delta}`, open: true }));
   dispatch(setSelectedNode(null));
