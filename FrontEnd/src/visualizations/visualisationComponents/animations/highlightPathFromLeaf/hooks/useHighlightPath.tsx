@@ -10,7 +10,7 @@ interface UseHighlightPathProps {
   setNodes: React.Dispatch<React.SetStateAction<VisNode[]>>;
 }
 
-export default function useHighlightPath({A
+export default function useHighlightPath({
   nodes,
   parentMap,
   setNodes,
@@ -22,9 +22,8 @@ export default function useHighlightPath({A
       console.log("Starting highlightPathFromLeaf for leaf ID:", leafNodeId);
       clearAllTimeouts();
 
-      setNodes((oldNodes) =>
-        oldNodes.map((node) => ({ ...node, isHighlighted: false }))
-      );
+      // Сбрасываем подсветку у всех узлов
+      setNodes((oldNodes) => oldNodes.map((node) => ({ ...node, isHighlighted: false })));
 
       const leafNode = nodes.find((node) => node.id === leafNodeId);
       if (!leafNode) {
@@ -33,9 +32,11 @@ export default function useHighlightPath({A
       }
       console.log("Found leaf node:", leafNode);
 
+      // Обновляем parentMap, если нужно
       const updatedParentMap = buildParentMap(nodes);
       console.log("Updated parent map:", updatedParentMap);
 
+      // Считаем путь
       const pathIds = buildPathFromLeaf(leafNode.id, nodes, updatedParentMap);
       console.log("Computed path IDs:", pathIds);
 
@@ -44,6 +45,7 @@ export default function useHighlightPath({A
         return;
       }
 
+      // Запускаем анимацию
       animatePath(pathIds);
     },
     [nodes, setNodes, animatePath, clearAllTimeouts]

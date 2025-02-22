@@ -1,66 +1,52 @@
+import { setSelectedNode, setSnackbar, setDelta, updateTreeWithNewData } from "../../../store/segmentTreeSlice";
+import { AppDispatch } from "../../../store/store";
 import { VisNode } from "../../../types/VisNode";
 
-type HandleUpdateNodeParams = {
-  selectedNode: VisNode | null;
-  setSelectedNode: React.Dispatch<React.SetStateAction<VisNode | null>>;
-  delta: number;
-  setDelta: React.Dispatch<React.SetStateAction<number>>;
-  data: number[];
-  setData: React.Dispatch<React.SetStateAction<number[]>>;
-  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  parentMap: Record<number, number | undefined>;
-  highlightPathFromLeaf: (leafId: number) => void;
-  updateTreeWithNewData: (newData: number[]) => Promise<VisNode[] | null>;
-};
-
-export const handleUpdateNode = async ({
-  selectedNode, 
-  setSelectedNode, 
-  delta, 
-  setDelta, 
-  data, 
-  setData, 
-  setSnackbarMessage, 
-  setSnackbarOpen, 
-  parentMap, 
-  highlightPathFromLeaf, 
-  updateTreeWithNewData
-}: HandleUpdateNodeParams) => {
+export const handleUpdateNode = async (
+  selectedNode: VisNode | null,
+  delta: number,
+  data: number[],
+  dispatch: AppDispatch,
+  highlightPathFromLeaf: (leafId: number) => void,
+  parentMap: Record<number, number | undefined>
+) => {
   if (!selectedNode) {
-    setSnackbarMessage("Выберите узел для обновления.");
-    setSnackbarOpen(true);
+    dispatch(setSnackbar({ message: "Выберите узел для обновления.", open: true }));
     return;
   }
   const [start, end] = selectedNode.range;
   if (start !== end) {
-    setSnackbarMessage("Можно обновлять только листовые узлы.");
-    setSnackbarOpen(true);
+    dispatch(setSnackbar({ message: "Можно обновлять только листовые узлы.", open: true }));
     return;
   }
+  
   const updatedData = [...data];
   updatedData[start] = delta;
-  const newVisNodes = await updateTreeWithNewData(updatedData);
-  if (!newVisNodes) {
-    setSnackbarMessage("Ошибка при обновлении узла.");
-    setSnackbarOpen(true);
+  const resultAction = await dispatch(updateTreeWithNewData(updatedData));
+  if (updateTreeWithNewData.rejected.match(resultAction)) {
+    dispatch(setSnackbar({ message: "Ошибка при обновлении узла.", open: true }));
     return;
   }
+  
+  const newVisNodes = (resultAction.payload as { nodes: VisNode[] }).nodes;
   const leafNode = newVisNodes.find(n => n.range[0] === start && n.range[1] === end);
   if (!leafNode) {
-    console.error(`Leaf node for range [${start}, ${end}] not found.`);
-    setSnackbarMessage(`Узел [${start}, ${end}] не найден.`);
-    setSnackbarOpen(true);
+    dispatch(setSnackbar({ message: `Узел [${start}, ${end}] не найден.`, open: true }));
     return;
   }
+  
   if (Object.keys(parentMap).length === 0) {
-    console.warn("Skipping highlight: parentMap is empty.");
-    setSnackbarMessage("parentMap пуст. Подсветка невозможна.");
-    setSnackbarOpen(true);
+    dispatch(setSnackbar({ message: "parentMap пуст. Подсветка невозможна.", open: true }));
     return;
   }
-  highlightPathFromLeaf(leafNode.id);
-  setSnackbarMessage(`Значение узла [${start},${end}] обновлено до ${delta}`);
-  setSnackbarOpen(true);
-  setSelectedNode(null);
+  
+  // Даем небольшую задержку, чтобы дерево обновилось,
+  // и затем запускаем анимацию подсветки пути.
+  setTimeout(() => {
+    highlightPathFromLeaf(leafNode.id);
+  }, 100);
+  
+  dispatch(setSnackbar({ message: `Значение узла [${start},${end}] обновлено до ${delta}`, open: true }));
+  dispatch(setSelectedNode(null));
+  dispatch(setDelta(0));
 };
