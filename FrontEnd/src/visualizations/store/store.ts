@@ -1,3 +1,4 @@
+// store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import segmentTreeReducer from './segmentTreeSlice';
 

@@ -32,7 +32,7 @@ const initialState: SegmentTreeState = {
 let segmentTreeWasmInstance: SegmentTreeWasm | null = null;
 
 /**
- * Асинхронная операция, перестраивает дерево из нового массива данных.
+ * Thunk для полной перестройки дерева на основе нового массива данных.
  */
 export const updateTreeWithNewData = createAsyncThunk<
   { nodes: VisNode[]; data: number[]; parentMap: Record<number, number | undefined> },

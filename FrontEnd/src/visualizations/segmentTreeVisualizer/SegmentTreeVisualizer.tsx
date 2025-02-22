@@ -1,5 +1,4 @@
-// SegmentTreeVisualizer.tsx
-import React, { useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
@@ -7,8 +6,8 @@ import {
   setNewValue,
   setSelectedNode,
   setDelta,
-  setSnackbar,
   updateTreeWithNewData,
+  setSnackbar,
 } from "../store/segmentTreeSlice";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
@@ -18,6 +17,13 @@ import { SegmentTreeCanvas } from "../visualisationComponents/segmentTreeCanvas/
 import Konva from "konva";
 import { VisNode } from "../types/VisNode";
 
+import { handleNodeClick } from "./utils/handlers/handleNodeClick";
+import { handleCloseSnackbar } from "./utils/handlers/handleCloseSnackbar";
+import { handleAddElement } from "./utils/handlers/handleAddElement";
+import { handleRemoveLeaf } from "./utils/handlers/handleRemoveLeaf";
+import { handleUpdateNode } from "./utils/handlers/handleUpdateNode";
+import useHighlightPath from "../visualisationComponents/animations/highlightPathFromLeaf/hooks/useHighlightPath";
+
 export const SegmentTreeVisualizer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const layerRef = useRef<Konva.Layer | null>(null);
@@ -26,8 +32,8 @@ export const SegmentTreeVisualizer: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
     data,
-    nodes,
-    parentMap,
+    nodes,          
+    parentMap,      
     selectedNode,
     delta,
     newValue,
@@ -36,84 +42,70 @@ export const SegmentTreeVisualizer: React.FC = () => {
     stageSize,
   } = useSelector((state: RootState) => state.segmentTree);
 
-  // При первом рендере создаём дерево с начальными данными (пример)
+  
+  const [animatedNodes, setAnimatedNodes] = useState<VisNode[]>(nodes);
+
+  
+  useEffect(() => {
+    setAnimatedNodes((prev) =>
+      nodes.map((n) => {
+        const old = prev.find((p) => p.id === n.id);
+        return {
+          ...n,
+          
+          isHighlighted: old ? old.isHighlighted : false,
+        };
+      })
+    );
+  }, [nodes]);
+
+  
   useEffect(() => {
     dispatch(updateTreeWithNewData([5, 8, 6, 3, 2, 7, 2, 6]));
   }, [dispatch]);
 
-  const handleAddElement = () => {
-    if (newValue.trim() === "") {
-      dispatch(setSnackbar({ message: "Введите значение для нового элемента.", open: true }));
-      return;
-    }
-    const value = parseInt(newValue, 10);
-    if (isNaN(value)) {
-      dispatch(setSnackbar({ message: "Неверный формат числа.", open: true }));
-      return;
-    }
-    if (data.length >= 16) {
-      dispatch(setSnackbar({ message: "Максимальное число листьев (16) достигнуто.", open: true }));
-      return;
-    }
-    const updatedData = [...data, value];
-    dispatch(updateTreeWithNewData(updatedData)); // Полная перестройка
-    dispatch(setNewValue(""));
-  };
+  const MAX_LEAVES = 16;
 
-  const handleUpdateNode = () => {
-    if (!selectedNode) {
-      dispatch(setSnackbar({ message: "Выберите узел для обновления.", open: true }));
-      return;
-    }
-    const [start, end] = selectedNode.range;
-    if (start !== end) {
-      dispatch(setSnackbar({ message: "Можно обновлять только листовые узлы.", open: true }));
-      return;
-    }
-    const updatedData = [...data];
-    updatedData[start] = delta; // Меняем значение листа
-    dispatch(updateTreeWithNewData(updatedData)); // Полная перестройка
+  
+  const highlightPathFromLeaf = useHighlightPath({
+    nodes: animatedNodes,
+    parentMap,
+    setNodes: setAnimatedNodes,
+  });
 
-    dispatch(
-      setSnackbar({
-        message: `Значение узла [${start}, ${end}] обновлено до ${delta}`,
-        open: true,
-      })
-    );
-    dispatch(setSelectedNode(null));
-  };
+  const onNodeClick = (node: VisNode) => {
+    handleNodeClick(node, dispatch);
 
-  const handleRemoveLeaf = () => {
-    if (!selectedNode) {
-      dispatch(setSnackbar({ message: "Выберите узел для удаления.", open: true }));
-      return;
-    }
-    const [start, end] = selectedNode.range;
-    if (start !== end) {
-      dispatch(setSnackbar({ message: "Можно удалять только листовые узлы.", open: true }));
-      return;
-    }
-    // Удаляем элемент массива, который соответствует листу [start, end]
-    const updatedData = data.filter((_, idx) => idx !== start);
-    // Вызываем полную перестройку сегментного дерева
-    dispatch(updateTreeWithNewData(updatedData));
-    dispatch(setSelectedNode(null));
-  };
-
-  const handleNodeClick = (node: VisNode) => {
+    
     if (node.range[0] === node.range[1]) {
-      dispatch(setSelectedNode(node));
-      dispatch(setDelta(node.value));
+      highlightPathFromLeaf(node.id);
     }
   };
 
-  const handleCloseSnackbar = () => {
-    dispatch(setSnackbar({ message: "", open: false }));
+  const onCloseSnackbar = () => {
+    handleCloseSnackbar(dispatch);
   };
 
-  const modalPosition = { x: 100, y: 100 };
-  const handleModalMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Можно реализовать логику перемещения модального окна, если нужно
+  const onAddElement = async () => {
+    await handleAddElement(newValue, MAX_LEAVES, dispatch, data);
+  };
+
+  const onRemoveLeaf = async () => {
+    await handleRemoveLeaf(selectedNode, data, dispatch, shapeRefs);
+  };
+
+  
+  const onUpdateNode = async () => {
+    await handleUpdateNode(
+      selectedNode,
+      delta,
+      data,
+      dispatch,
+      
+      
+      highlightPathFromLeaf,
+      parentMap
+    );
   };
 
   return (
@@ -133,35 +125,33 @@ export const SegmentTreeVisualizer: React.FC = () => {
       <Controls
         newValue={newValue}
         setNewValue={(val) => dispatch(setNewValue(val))}
-        handleAddElement={handleAddElement}
-        disabled={data.length >= 16}
-        onUpdate={handleUpdateNode}
-        onRemove={handleRemoveLeaf}
+        handleAddElement={onAddElement}
+        disabled={data.length >= MAX_LEAVES}
+        onUpdate={onUpdateNode}
+        onRemove={onRemoveLeaf}
       />
 
       <SegmentTreeCanvas
-        nodes={nodes}
-        selectedNode={selectedNode}
+        nodes={animatedNodes} 
         shapeRefs={shapeRefs}
         layerRef={layerRef}
         stageSize={stageSize}
-        onNodeClick={handleNodeClick}
+        onNodeClick={onNodeClick}
       />
 
       <EditNodeModal
         selectedNode={selectedNode}
         delta={delta}
         setDelta={(val) => dispatch(setDelta(val))}
-        onUpdate={handleUpdateNode}
-        onRemove={handleRemoveLeaf}
-        position={modalPosition}
-        onMouseDown={handleModalMouseDown}
+        onUpdate={onUpdateNode}
+        onRemove={onRemoveLeaf}
+        position={{ x: 100, y: 100 }}
       />
 
       <NotificationSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
-        onClose={handleCloseSnackbar}
+        onClose={onCloseSnackbar}
       />
     </Box>
   );
