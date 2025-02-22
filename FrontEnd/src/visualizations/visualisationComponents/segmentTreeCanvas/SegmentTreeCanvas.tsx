@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Stage, Layer, Line } from "react-konva";
-import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 import Konva from "konva";
+import { SegmentTreeNode } from "../segmentTreeNode/SegmentTreeNode";
 import { VisNode } from "../../types/VisNode";
 
 interface SegmentTreeCanvasProps {
-  nodes: VisNode[]; // <- именно локальное состояние
+  nodes: VisNode[];
   shapeRefs: React.MutableRefObject<Record<number, Konva.Circle>>;
   layerRef: React.MutableRefObject<Konva.Layer | null>;
   stageSize: { width: number; height: number };
@@ -47,11 +47,11 @@ export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
           <SegmentTreeNode
             key={node.id}
             node={node}
+            allNodes={nodes}
             shapeRefs={shapeRefs}
             onNodeClick={onNodeClick}
             strokeWidth={node.range[0] === node.range[1] ? 2 : 4}
             textColor="white"
-            // fillOverride=""
           />
         ))}
       </Layer>
