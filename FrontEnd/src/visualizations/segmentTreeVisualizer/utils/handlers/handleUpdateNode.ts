@@ -7,14 +7,8 @@ export const handleUpdateNode = async (
   delta: number,
   data: number[],
   dispatch: AppDispatch,
-  highlightPathFromLeaf: (leafId: number) => void,
-  parentMap: Record<number, number | undefined>
+  highlightPathFromLeaf: (leafId: number) => void
 ) => {
-  if (!parentMap || Object.keys(parentMap).length === 0) {
-    dispatch(setSnackbar({ message: "parentMap пуст или не определён. Подсветка невозможна.", open: true }));
-    return;
-  }
-  
   if (!selectedNode) {
     dispatch(setSnackbar({ message: "Выберите узел для обновления.", open: true }));
     return;
@@ -33,13 +27,8 @@ export const handleUpdateNode = async (
     return;
   }
 
-  // Проверяем, что есть родительская карта
-  if (Object.keys(parentMap).length === 0) {
-    dispatch(setSnackbar({ message: "parentMap пуст. Подсветка невозможна.", open: true }));
-    return;
-  }
-
-  // Даем задержку в 800 мс, чтобы новое дерево успело установиться
+  // После обновления дерева (tree, дерево) новое состояние подтягивается из Redux,
+  // поэтому highlightPathFromLeaf уже использует актуальные данные, включая parentMap.
   setTimeout(() => {
     highlightPathFromLeaf(selectedNode.id);
   }, 800);
