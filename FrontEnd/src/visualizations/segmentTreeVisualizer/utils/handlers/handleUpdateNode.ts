@@ -1,6 +1,6 @@
-import { setSelectedNode, setSnackbar, setDelta, updateTreeWithNewData } from "../../../store/segmentTreeSlice";
 import { AppDispatch } from "../../../store/store";
 import { VisNode } from "../../../types/VisNode";
+import { setSnackbar, setSelectedNode, setDelta, updateTreeWithNewData } from "../../../store/segmentTreeSlice";
 
 export const handleUpdateNode = async (
   selectedNode: VisNode | null,
@@ -10,6 +10,11 @@ export const handleUpdateNode = async (
   highlightPathFromLeaf: (leafId: number) => void,
   parentMap: Record<number, number | undefined>
 ) => {
+  if (!parentMap || Object.keys(parentMap).length === 0) {
+    dispatch(setSnackbar({ message: "parentMap пуст или не определён. Подсветка невозможна.", open: true }));
+    return;
+  }
+  
   if (!selectedNode) {
     dispatch(setSnackbar({ message: "Выберите узел для обновления.", open: true }));
     return;
@@ -19,7 +24,7 @@ export const handleUpdateNode = async (
     dispatch(setSnackbar({ message: "Можно обновлять только листовые узлы.", open: true }));
     return;
   }
-  
+
   const updatedData = [...data];
   updatedData[start] = delta;
   const resultAction = await dispatch(updateTreeWithNewData(updatedData));
@@ -27,26 +32,19 @@ export const handleUpdateNode = async (
     dispatch(setSnackbar({ message: "Ошибка при обновлении узла.", open: true }));
     return;
   }
-  
-  const newVisNodes = (resultAction.payload as { nodes: VisNode[] }).nodes;
-  const leafNode = newVisNodes.find(n => n.range[0] === start && n.range[1] === end);
-  if (!leafNode) {
-    dispatch(setSnackbar({ message: `Узел [${start}, ${end}] не найден.`, open: true }));
-    return;
-  }
-  
+
+  // Проверяем, что есть родительская карта
   if (Object.keys(parentMap).length === 0) {
     dispatch(setSnackbar({ message: "parentMap пуст. Подсветка невозможна.", open: true }));
     return;
   }
-  
-  // Держим подсветку после обновления
-  setTimeout(() => {
-    highlightPathFromLeaf(selectedNode?.id || -1);
-  }, 100);
 
-  
-  dispatch(setSnackbar({ message: `Значение узла [${start},${end}] обновлено до ${delta}`, open: true }));
+  // Даем задержку в 800 мс, чтобы новое дерево успело установиться
+  setTimeout(() => {
+    highlightPathFromLeaf(selectedNode.id);
+  }, 800);
+
+  dispatch(setSnackbar({ message: `Узел [${start},${end}] обновлён до ${delta}`, open: true }));
   dispatch(setSelectedNode(null));
   dispatch(setDelta(0));
 };

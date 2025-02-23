@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import {
@@ -7,8 +7,7 @@ import {
   setSelectedNode,
   setDelta,
   updateTreeWithNewData,
-  setSnackbar,
-  setHighlightedNodes as updateHighlightedNodesAction,
+  setSnackbar
 } from "../store/segmentTreeSlice";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
@@ -17,50 +16,40 @@ import { AddElementForm } from "../visualisationComponents/nodeControls/addEleme
 import { SegmentTreeCanvas } from "../visualisationComponents/segmentTreeCanvas/SegmentTreeCanvas";
 import Konva from "konva";
 import { VisNode } from "../types/VisNode";
-
 import { handleNodeClick } from "./utils/handlers/handleNodeClick";
 import { handleCloseSnackbar } from "./utils/handlers/handleCloseSnackbar";
 import { handleAddElement } from "./utils/handlers/handleAddElement";
 import { handleRemoveLeaf } from "./utils/handlers/handleRemoveLeaf";
 import { handleUpdateNode } from "./utils/handlers/handleUpdateNode";
-import useHighlightPath from "../visualisationComponents/animations/highlightPathFromLeaf/hooks/useHighlightPath";
+import useStepHighlightPath from "../visualisationComponents/animations/highlightPathFromLeaf/hooks/useStepHighlightPath";
 
 export const SegmentTreeVisualizer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shapeRefs = useRef<Record<number, Konva.Circle>>({});
-  const { highlightPathFromLeaf, highlightedNodes } = useHighlightPath();
-
+  const { initHighlightPath, nextStep, previousStep, finishAnimation, clearAnimation, currentStep, totalSteps } = useStepHighlightPath();
   const dispatch = useDispatch<AppDispatch>();
   const {
     data,
     nodes,
-    parentMap,
     selectedNode,
     delta,
     newValue,
     snackbarOpen,
     snackbarMessage,
     stageSize,
-    // highlightedNodes,
+    highlightedNodes
   } = useSelector((state: RootState) => state.segmentTree);
-  
-
-  
-  // const [highlightedNodes, setHighlightedNodes] = useState<number[]>([]);
   
   const nodesWithHighlight = nodes.map((n) => ({
     ...n,
-    isHighlighted: highlightedNodes.includes(n.id),
+    isHighlighted: highlightedNodes.includes(n.id)
   }));
-
 
   useEffect(() => {
     console.log("[DEBUG] Обновлённые подсвеченные узлы:", highlightedNodes);
   }, [highlightedNodes]);
   
-  
   const isTreeInitialized = useRef(false);
-
   useEffect(() => {
     if (!isTreeInitialized.current) {
       dispatch(updateTreeWithNewData([5, 8, 6, 3, 2, 7, 2, 6]));
@@ -68,24 +57,10 @@ export const SegmentTreeVisualizer: React.FC = () => {
     }
   }, [dispatch]);
   
-
   const MAX_LEAVES = 16;
-
-  // const highlightPathFromLeaf = useHighlightPath({
-  //   nodes,
-  //   parentMap,
-  //   setHighlightedNodes: (nodes) => dispatch(setHighlightedNodes(nodes)), // ✅ Теперь правильно
-  // });
-  
-  
-  
 
   const onNodeClick = (node: VisNode) => {
     handleNodeClick(node, dispatch);
-    
-    if (node.range[0] === node.range[1]) {
-      highlightPathFromLeaf(node.id);
-    }
   };
 
   const onCloseSnackbar = () => {
@@ -102,14 +77,10 @@ export const SegmentTreeVisualizer: React.FC = () => {
   };
 
   const onUpdateNode = async () => {
-    await handleUpdateNode(
-      selectedNode,
-      delta,
-      data,
-      dispatch,
-      highlightPathFromLeaf,
-      parentMap
-    );
+    await handleUpdateNode(selectedNode, delta, data, dispatch);
+    if (selectedNode) {
+      initHighlightPath(selectedNode.id);
+    }
     handleCloseModal();
   };
 
@@ -130,14 +101,12 @@ export const SegmentTreeVisualizer: React.FC = () => {
       bgcolor="#f8f9fa"
     >
       <Header />
-
       <AddElementForm
         newValue={newValue}
         onChangeValue={(val) => dispatch(setNewValue(Number(val) || 0))}
         onAdd={onAddElement}
         disabled={data.length >= MAX_LEAVES}
       />
-
       <SegmentTreeCanvas
         nodes={nodesWithHighlight}
         shapeRefs={shapeRefs}
@@ -145,7 +114,20 @@ export const SegmentTreeVisualizer: React.FC = () => {
         onNodeClick={onNodeClick}
         highlightedNodes={highlightedNodes}
       />
-
+      <Box display="flex" gap="10px" marginTop="20px">
+        <Button variant="contained" onClick={previousStep} disabled={currentStep <= 1}>
+          Назад
+        </Button>
+        <Button variant="contained" onClick={nextStep} disabled={currentStep >= totalSteps}>
+          Вперёд
+        </Button>
+        <Button variant="contained" onClick={finishAnimation} disabled={currentStep >= totalSteps}>
+          Закончить анимацию
+        </Button>
+        <Button variant="contained" onClick={clearAnimation} disabled={currentStep === 0}>
+          Снять анимацию
+        </Button>
+      </Box>
       <EditNodeModal
         selectedNode={selectedNode}
         delta={delta}
@@ -155,7 +137,6 @@ export const SegmentTreeVisualizer: React.FC = () => {
         position={{ x: 100, y: 100 }}
         onClose={handleCloseModal}
       />
-
       <NotificationSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
