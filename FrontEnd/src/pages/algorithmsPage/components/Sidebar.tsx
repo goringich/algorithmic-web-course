@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import styles from "../algorithmsPage.module.scss";
-import {Box, Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItemButton, ListItemText, Grid2, Button, useMediaQuery, Drawer, IconButton} from "@mui/material";
+import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItemButton, Grid2, Button, useMediaQuery, Drawer, IconButton} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Section } from "./types/types";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
+import { useTheme } from "@mui/material/styles";
 
 const menuData = [
   {
@@ -40,8 +39,49 @@ const menuData = [
     subSections: [ ],
   },
 ];
+const Content = styled(Typography)(({ theme }) => ({
+  color: theme.palette.grey[500],
+  paddingLeft: theme.spacing(2),
+  paddingTop: theme.spacing(2),
+}));
+
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  height: "100vh",
+  "& .MuiDrawer-paper": {
+    width: "75vw",
+    boxSizing: "border-box",
+    position: "relative",
+    //display: "flex",
+    overflowY: "scroll",
+    scrollbarWidth: "none", // Firefox
+    "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari, Edge
+
+    [theme.breakpoints.up("md")]: {
+      width: "auto", 
+    },
+  },
+}));
+
+const Typography_for_sections = styled(Typography)({
+  fontFamily: 'var(--primary-font)',
+  wordBreak: "break-word",
+})
+
+const Styled_button_exit = styled(Button)({
+  marginTop: "auto",
+  display: "flex",
+  paddingBottom: "12px",
+  fontFamily: "var(--primary-font)",
+  textTransform: "none",
+  color: "var(--red)",
+  width: "100%",
+  transition: "transform 0.2s ease-in-out",
+  "&:hover": {backgroundColor: "inherit", 
+    transform: "scale(1.03)"}
+})
 
 const SidebarMenu: React.FC = () => {
+
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 900px)"); // Условие для мобильных устройств
 
@@ -66,47 +106,6 @@ const SidebarMenu: React.FC = () => {
           : subSections
       ))
   };
-
-  const Content = styled(Typography) ({
-    fontFamily: 'var(--primary-font)',
-    color: 'var(--grey)',
-    paddingLeft: '4%',
-    paddingTop: '4%',
-  });
-
-  const StyledDrawer = styled(Drawer)(({ theme }) => ({
-    height: "100vh",
-    "& .MuiDrawer-paper": {
-      width: "75vw",
-      boxSizing: "border-box",
-      position: "relative",
-      display: "flex",
-      overflowY: "scroll",
-      scrollbarWidth: "none", // Firefox
-      "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari, Edge
-  
-      [theme.breakpoints.up("md")]: {
-        width: "auto", 
-      },
-    },
-  }));
-
-  const Typography_for_sections = styled(Typography)({
-    fontFamily: 'var(--primary-font)'
-  })
-
-  const Styled_button_exit = styled(Button)({
-    marginTop: "auto",
-    display: "flex",
-    paddingBottom: "12px",
-    fontFamily: "var(--primary-font)",
-    textTransform: "none",
-    color: "var(--red)",
-    width: "100%",
-    transition: "transform 0.2s ease-in-out",
-    "&:hover": {backgroundColor: "inherit", 
-      transform: "scale(1.03)"}
-  })
  
   return (
     <Grid2 container spacing={1}
@@ -124,7 +123,7 @@ const SidebarMenu: React.FC = () => {
         </IconButton>
       )}
 
-      <Grid2 size={{sm: 2.5}}
+      <Grid2 size={{sm: 3}}
       sx={{height: "100vh"}}>
         <StyledDrawer
         variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
@@ -134,84 +133,82 @@ const SidebarMenu: React.FC = () => {
           <Content>
             СОДЕРЖАНИЕ
           </Content>
-          <Grid2>
-          {menuData.map((section, index) => (
-            <Grid2 key={index}>  
-            <Accordion
-              disableGutters
-              elevation={0}
-              expanded={openSection[index]}
-              onChange={() => toggleSection(index)}
-              sx={{
-                background: "none",
-                "&::before": { display: "none" },
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${index}-content`}
-                id={`panel${index}-header`}
+          <Grid2 sx = {{flexGrow: "1"}}>
+            {menuData.map((section, index) => (
+              <Accordion
+                disableGutters
+                elevation={0}
+                expanded={openSection[index]}
+                onChange={() => toggleSection(index)}
+                sx={{
+                  background: "none",
+                  "&::before": { display: "none" },
+                }}
               >
-                <Typography_for_sections sx={{color: "var(--grey_purple)"}}>{section.title}</Typography_for_sections>
-              </AccordionSummary>
-              <AccordionDetails>
-                <List>
-                  {/* создание аккордеонов для подсекций */}
-                  {section.subSections.map((subSection, subIndex) => {
-                    if (typeof subSection === "string") {
-                      return (
-                        <ListItemButton key={subIndex}>
-                          <Typography_for_sections> {subSection} </Typography_for_sections>
-                        </ListItemButton>
-                      );
-                    } else {
-                      return (
-                        <Accordion
-                          key={subIndex}
-                          disableGutters
-                          elevation={0}
-                          expanded={openSubSection[index][subIndex]}
-                          onChange={() => toggleSubSection(index, subIndex)}
-                          sx={{
-                            background: "none",
-                            "&::before": { display: "none" },
-                          }}
-                        >
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls={`panel${index}-${subIndex}-content`}
-                            id={`panel${index}-${subIndex}-header`}
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${index}-content`}
+                  id={`panel${index}-header`}
+                >
+                  <Typography_for_sections sx={{color: "var(--grey_purple)"}}>{section.title}</Typography_for_sections>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <List>
+                    {/* создание аккордеонов для подсекций */}
+                    {section.subSections.map((subSection, subIndex) => {
+                      if (typeof subSection === "string") {
+                        return (
+                          <ListItemButton key={subIndex}>
+                            <Typography_for_sections> {subSection} </Typography_for_sections>
+                          </ListItemButton>
+                        );
+                      } else {
+                        return (
+                          <Accordion
+                            key={subIndex}
+                            disableGutters
+                            elevation={0}
+                            expanded={openSubSection[index][subIndex]}
+                            onChange={() => toggleSubSection(index, subIndex)}
+                            sx={{
+                              background: "none",
+                              "&::before": { display: "none" },
+                            }}
                           >
-                            <Typography_for_sections> {subSection.title} </Typography_for_sections>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <List>
-                              {/* Динамическое создание аккордеонов для подподсекций */}
-                              {subSection.subSubSections.map((subSubSection, subSubIndex) => (
-                                <ListItemButton key={subSubIndex} sx ={{borderRadius: "8px", "&:hover" : {backgroundColor: "rgba(var(--light_violent), 0.85)"}}}>
-                                  <Typography_for_sections> {subSubSection} </Typography_for_sections>
-                                </ListItemButton>
-                              ))}
-                            </List>
-                          </AccordionDetails>
-                        </Accordion>
-                      );
-                    }
-                  })}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-            </Grid2>
-          ))}
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls={`panel${index}-${subIndex}-content`}
+                              id={`panel${index}-${subIndex}-header`}
+                            >
+                              <Typography_for_sections> {subSection.title} </Typography_for_sections>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <List>
+                                {/* Динамическое создание аккордеонов для подподсекций */}
+                                {subSection.subSubSections.map((subSubSection, subSubIndex) => (
+                                  <ListItemButton key={subSubIndex} sx ={{borderRadius: "8px", "&:hover" : {backgroundColor: "rgba(var(--light_violent), 0.85)"}}}>
+                                    <Typography_for_sections> {subSubSection} </Typography_for_sections>
+                                  </ListItemButton>
+                                ))}
+                              </List>
+                            </AccordionDetails>
+                          </Accordion>
+                        );
+                      }
+                    })}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
+            ))}
           </Grid2>
           
-          <Box >
+          <Grid2>
             <Styled_button_exit
             startIcon={<ExitToAppOutlinedIcon />}
             >
             Вернуться к содержанию
             </Styled_button_exit>
-          </Box>
+          </Grid2>
       </StyledDrawer>
     </Grid2>
     </Grid2>
@@ -219,26 +216,3 @@ const SidebarMenu: React.FC = () => {
 };
 
 export default SidebarMenu;
-// const Sidebar: React.FC<SidebarProps> = ({ contents, onSectionSelect }) => {
-//   return (
-//     <nav className={styles.sidebar}>
-//       <h3>Содержание</h3>
-//       {contents.map((section, index) => (
-//         <div key={index}>
-//           <button
-//             onClick={() => onSectionSelect(section)}
-//             className={styles.section}
-//           >
-//             {section.title}
-//           </button>
-//           <SubSectionList subSections={section.subSection} onSectionSelect={onSectionSelect} />
-//         </div>
-//       ))}
-//       <button className={styles.back_button}>
-//         Вернуться к содержанию
-//       </button>
-//     </nav>
-//   );
-// };
-
-// export default Sidebar;

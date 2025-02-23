@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styles from "./algorithmsPage.module.scss";
 import contents from "../../assets/dataBase/TitlesData.json";
 import Sidebar from "./components/Sidebar";
 import ContentDisplay from "./components/ContentDisplay";
@@ -47,16 +46,6 @@ const ContentPage: React.FC = () => {
         <SidebarMenu/>
       </Grid2>
     </Grid2>
-    // <div className={styles.content_page}>
-    //   <Sidebar
-    //     contents={contents}
-    //     onSectionSelect={(section) => setActiveSection(section)}
-    //   />
-    //   <main className={styles.main}>
-    //     <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
-    //     <Tabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab)} />
-    //   </main>
-    // </div>
   );
 };
 

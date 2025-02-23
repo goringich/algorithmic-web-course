@@ -59,7 +59,6 @@
     margin: auto !important;
     flex-direction: row !important;
     transition: all 0.3s ease !important;
-  
   }
   
   .left_part {
@@ -70,14 +69,7 @@
     aspect-ratio: 41 / 61 !important; 
     border-radius: 20px !important;
   }
-      
-  .right_part {
-    flex: 1 !important; 
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    overflow: auto !important;
-  }
-  
+        
   .divider {
     border-bottom-width: 2px !important;
     border-color: var(--black) !important;

@@ -1,7 +1,8 @@
 import React from "react";
 import styles_card from "./TeamMemberCard.module.scss";
 import {Grid2, Card, CardMedia, CardContent, Typography, Divider, Box, Shadows } from "@mui/material";
-
+import { styled } from '@mui/system';
+import { Theme } from "@mui/material/styles";
 interface TeamMemberProps {
   name: string;
   role: string;
@@ -9,7 +10,22 @@ interface TeamMemberProps {
   skills: string[];
   imageUrl: string;
 }
-const isMobile = window.matchMedia("(max-width: 599px)").matches;
+
+const Cards = styled(Card)<{ theme: Theme }>(({ theme }) => ({
+  width: "80vw",
+  maxWidth: "987px",
+  backgroundColor: "var(--background-color-lilac)",
+  borderRadius: "20px",
+  margin: "auto",
+  boxShadow: theme.shadows[3], 
+  flexDirection: "row",
+  transition: "all 0.3s ease",
+}));
+
+const CardMediaStyled = styled(CardMedia)({
+  aspectRatio: "41 / 61", 
+  borderRadius: "20px"
+})
 const TeamMemberCard: React.FC<TeamMemberProps> = ({
   name,
   role,
@@ -18,24 +34,17 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
   imageUrl,
 }) => {
   return (
-    <Card className={styles_card.card_style} 
-    sx = {{ boxShadow: 3}}
-    >
+    <Cards>
       <Grid2 container spacing={2}> 
         <Grid2 size={{ xs: 12, sm: 6 }}
-          // sx={{
-          //   display: "flex",
-          //   justifyContent: "center",
-          //   alignItems: "center",
-          // }}
-          className={styles_card.left_part}
+          sx ={{padding: "16px"}}
         >
           <CardMedia
             component="img"
             image={imageUrl}
             alt={name}
-            sx = {{ boxShadow: 3}}
-            className={styles_card.photo}
+            sx = {{ boxShadow: 3, aspectRatio: "41 / 61", 
+              borderRadius: "20px"}}
           />
         </Grid2>
 
@@ -49,7 +58,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
               {role}
             </Typography>
             <Divider className={styles_card.divider} />
-            <Typography variant="body2" paragraph className={styles_card.description}
+            <Typography variant="body2" className={styles_card.description}
             >
               {description}
             </Typography>
@@ -59,7 +68,7 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
           </CardContent>
         </Grid2>
       </Grid2>
-    </Card>
+    </Cards>
   );
 };
 export default TeamMemberCard;

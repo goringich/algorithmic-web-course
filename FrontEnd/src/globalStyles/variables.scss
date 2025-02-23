@@ -8,25 +8,25 @@
   --border-radius: 8px;
 
   // Default light theme variables
-  --primary-color: #9b59b6; 
-  --background-color: #F2F0F0;
+  --primary-color: #9b59b6; //+
+  --background-color: #F2F0F0; //+
   --background-color-none-use: #dddddd;
   --background-color-lilac: #eaddff;
-  --black: #000;
+  --black: #000; //+
   --secondary-color: #fff;
-  --pink: #B13EEA;
-  --grey: #b0afaf;
-  --grey_purple: #755088;
-  --red: #810F0F;
+  --pink: #B13EEA;//+
+  --grey: #b0afaf; //+
+  --grey_purple: #755088;//+
+  --red: #810F0F; //+
   --light_violent: 238, 230, 255;
 }
 
 html.theme-dark {
   --primary-color: #8e44ad;
-  --background-color: #2A2431;
-  --background-color-none-use: #333333;
-  --black: #fff;
-  --secondary-color: #ccc;
+  --background-color: #2A2431; //+
+  --background-color-none-use: #333333; //+
+  --black: #fff; //+
+  --secondary-color: #ccc; //+
   --pink: #CA71F6;
 }
 
