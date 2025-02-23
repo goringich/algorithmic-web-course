@@ -3,6 +3,7 @@ import { Circle, Text } from "react-konva";
 import Konva from "konva";
 import { VisNode } from "@src/visualizations/types/VisNode";
 import { useNodeAppearAnimation } from "../animations/nodeAnimations/animateNodeAppear";
+import useAnimatedValue from "../animations/highlightPathFromLeaf/hooks/useAnimateValue";
 
 interface SegmentTreeNodeProps {
   node: VisNode;
@@ -46,7 +47,6 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
 }) => {
   const nodeMap = buildNodeMap(allNodes);
   const depthComputed = computeDepth(node, nodeMap);
-
   
   const minColor = [200, 230, 255];
   const maxColor = [50, 80, 150];
@@ -65,15 +65,12 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
       )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
   const computedFillColor = isHighlighted ? "#e53935" : baseFillColor;
-
   
   const circleRef = useNodeAppearAnimation(node.id, node.x, node.y, shapeRefs);
-
   
   const prevPosition = useRef({ x: node.x, y: node.y });
   useEffect(() => {
     if (circleRef.current) {
-      
       if (prevPosition.current.x !== node.x || prevPosition.current.y !== node.y) {
         circleRef.current.to({
           x: node.x,
@@ -85,7 +82,6 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
       }
     }
   }, [node.x, node.y, circleRef]);
-
   
   const textRef = useRef<Konva.Text>(null);
   useEffect(() => {
@@ -98,6 +94,8 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
       });
     }
   }, [node.x, node.y]);
+
+  const animatedValue = useAnimatedValue(node.value, 500);
 
   return (
     <>
@@ -116,7 +114,6 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         stroke="#fff"
         strokeWidth={3}
         onClick={() => {
-          
           if (circleRef.current) {
             circleRef.current.to({
               scaleX: 0.9,
@@ -160,7 +157,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
         ref={textRef}
         x={node.x - 25}
         y={node.y - 15}
-        text={`${node.label}\n(${node.value})`}
+        text={`${node.label}\n(${Math.round(animatedValue)})`}
         fontSize={14}
         fontFamily="Roboto"
         fontStyle="bold"
