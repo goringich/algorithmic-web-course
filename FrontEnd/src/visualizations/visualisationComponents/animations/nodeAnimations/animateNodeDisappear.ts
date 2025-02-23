@@ -30,7 +30,6 @@ export const animateNodeDisappear = (
       return resolve();
     }
 
-    // Проверяем, что узел прикреплён к слою
     if (!shape.getLayer()) {
       console.warn(
         `[WARN] animateNodeDisappear: Фигура с key ${nodeKey} не прикреплена к слою, пропускаем анимацию.`

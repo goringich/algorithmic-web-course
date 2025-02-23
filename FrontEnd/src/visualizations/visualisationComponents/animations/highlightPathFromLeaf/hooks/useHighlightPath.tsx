@@ -13,30 +13,29 @@ export default function useHighlightPath() {
   const highlightPathFromLeaf = useCallback(
     (leafNodeId: number) => {
       clearAllTimeouts();
-      dispatch(setHighlightedNodes([]));
-  
+      dispatch(setHighlightedNodes([])); // Очищаем подсветку
+
       const leafNode = nodes.find((node) => node.id === leafNodeId);
       if (!leafNode) {
         console.error(`[ERROR] Узел ${leafNodeId} не найден.`);
         return;
       }
-  
+
       const pathIds = buildPathFromLeaf(leafNode.id, nodes, parentMap);
       console.log("[DEBUG] Вычисленный путь:", pathIds);
+
       if (pathIds.length === 0) {
         console.warn("[WARN] Нет пути для узла:", leafNodeId);
         return;
       }
-  
-      // Временно:
-      dispatch(setHighlightedNodes(pathIds));
-      // Вместо:
-      // animatePath(pathIds, (updatedNodes) => {
-      //   dispatch(setHighlightedNodes(updatedNodes));
-      // });
+
+      // Постепенное добавление узлов
+      animatePath(pathIds, (updatedNodes) => {
+        console.log("[DEBUG] Gradual highlight update:", updatedNodes);
+      });
     },
-    [dispatch, nodes, parentMap, clearAllTimeouts]
+    [dispatch, nodes, parentMap, animatePath, clearAllTimeouts]
   );
-  
+
   return { highlightPathFromLeaf, highlightedNodes };
 }

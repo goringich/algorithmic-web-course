@@ -89,7 +89,7 @@ const segmentTreeSlice = createSlice({
       state.nodes = action.payload.nodes;
       state.parentMap = action.payload.parentMap;
       // сохраняем подсветку, чтобы она не обнулялась
-      state.highlightedNodes = [...state.highlightedNodes];
+      // state.highlightedNodes = [...state.highlightedNodes];
     });
     builder.addCase(updateTreeWithNewData.rejected, (state, action) => {
       state.snackbarMessage = action.payload || "Ошибка обновления.";
