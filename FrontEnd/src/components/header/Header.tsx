@@ -8,7 +8,6 @@ import { ThemeContext } from "../../context/ThemeContext";
 const Header = () => {
   const theme = useTheme();
   const { mode, toggleTheme } = useContext(ThemeContext);
-  // mui
   return (
     <header className={styles.header}>
       <img src="" alt="" className={styles.header__logo} />

@@ -12,7 +12,6 @@ const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'
 
 
 function App() {
-  //return <div>Просто текст для теста</div>;
   return (
     <ThemeProviderWrapper>
       <ErrorBoundary>

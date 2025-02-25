@@ -1,8 +1,8 @@
 import React from "react";
-import styles_card from "./TeamMemberCard.module.scss";
 import {Grid2, Card, CardMedia, CardContent, Typography, Divider, Box, Shadows } from "@mui/material";
 import { styled } from '@mui/system';
 import { Theme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 interface TeamMemberProps {
   name: string;
   role: string;
@@ -14,57 +14,76 @@ interface TeamMemberProps {
 const Cards = styled(Card)<{ theme: Theme }>(({ theme }) => ({
   width: "80vw",
   maxWidth: "987px",
-  backgroundColor: "var(--background-color-lilac)",
-  borderRadius: "20px",
+  backgroundColor: theme.palette.background.card,
+  borderRadius: theme.shape.cardRadius,
   margin: "auto",
   boxShadow: theme.shadows[3], 
-  flexDirection: "row",
-  transition: "all 0.3s ease",
 }));
 
-const CardMediaStyled = styled(CardMedia)({
-  aspectRatio: "41 / 61", 
-  borderRadius: "20px"
-})
+const TypographyForDescription = styled(Typography)(({ theme }) =>({
+  fontSize: "1.6rem",
+  color: theme.palette.text.primary,
+  [theme.breakpoints.between(749, 950)]: {
+    fontSize: "1.3rem",
+  },
+  [theme.breakpoints.between(600, 749)]: {
+    fontSize: "1rem",
+  },
+}));
+
+const TitleTypography = styled(Typography)(({ theme }) => ({
+  fontSize: "1.9rem",
+  fontWeight: "bold", 
+  textAlign: "center", 
+  color: theme.palette.text.primary,
+  [theme.breakpoints.between(749, 950)]: {
+    fontSize: "1.5rem",
+  },
+  [theme.breakpoints.between(600, 749)]: {
+    fontSize: "1.2rem",
+  },
+}))
+
 const TeamMemberCard: React.FC<TeamMemberProps> = ({
   name,
   role,
   description,
   skills,
-  imageUrl,
+  imageUrl, 
 }) => {
+  const theme = useTheme();
   return (
     <Cards>
       <Grid2 container spacing={2}> 
         <Grid2 size={{ xs: 12, sm: 6 }}
-          sx ={{padding: "16px"}}
+          sx ={{padding: theme.spacing(4)}}
         >
           <CardMedia
             component="img"
             image={imageUrl}
             alt={name}
             sx = {{ boxShadow: 3, aspectRatio: "41 / 61", 
-              borderRadius: "20px"}}
+              borderRadius: theme.shape.cardRadius}}
           />
         </Grid2>
 
         <Grid2 size={{ xs: 12, sm: 6}}>
           <CardContent>
-            <Typography variant="h5" component="div" gutterBottom className={styles_card.name} >
+            <TitleTypography>
               {name}
-            </Typography>
-            <Typography variant="subtitle1" gutterBottom className={styles_card.role}
-            >
+            </TitleTypography>
+            <TypographyForDescription
+            sx = {{textAlign: "center", fontStyle: "italic"}}>
               {role}
-            </Typography>
-            <Divider className={styles_card.divider} />
-            <Typography variant="body2" className={styles_card.description}
+            </TypographyForDescription>
+            <Divider sx ={{borderBottomWidth: "2px", borderColor: theme.palette.text.primary}} />
+            <TypographyForDescription
             >
               {description}
-            </Typography>
-            <Typography variant="body2" className={styles_card.skills}>
+            </TypographyForDescription>
+            <TypographyForDescription>
               <strong>Навыки:</strong> {skills.join(", ")}
-            </Typography>
+            </TypographyForDescription>
           </CardContent>
         </Grid2>
       </Grid2>

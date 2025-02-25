@@ -45,30 +45,25 @@ const teamMembers = [
     imageUrl: photo_ksenon,
   },
 ];
-const AboutPageContainer = styled(Grid2)({
-  position: "relative",
-  width: "100%",
-  display: "flex",
+
+const AboutPageContainer = styled(Grid2)(({ theme }) =>({
   justifyContent: "center",
-  alignItems: "stretch" 
-})
+}))
 
-const ContactButton = styled(Button)({
-  backgroundColor: "var(--pink)",
-  color: "var(--secondary-color)",
-  textTransform: "none",
-  fontFamily: "var(--primary-font)",
-  borderRadius: "7px",
+const ContactButton = styled(Button)(({ theme }) =>({
+  backgroundColor: theme.palette.purple.light,
+  color: theme.palette.text.secondary,
+  borderRadius: theme.shape.borderRadius,
   width: "100%",
-  marginBottom: "16px"
-})
+  marginBottom: theme.spacing(4)
+}))
 
-const StyledSwiper = styled(Swiper)({
+const StyledSwiper = styled(Swiper)(({ theme }) =>({
   "& .swiper-button-next, & .swiper-button-prev": {
-    color: "var(--black)",
+    color: theme.palette.text.primary,
     width: "6%",
   },
-});
+}))
 
 const AboutPage: React.FC = () => {
   return (

@@ -3,9 +3,9 @@ import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListIte
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
-import { styled, width } from '@mui/system';
+import { styled } from '@mui/system';
 import { useTheme } from "@mui/material/styles";
-import { hexToRgb } from "@mui/material";
+
 
 const menuData = [
   {
@@ -112,8 +112,7 @@ const SidebarMenu: React.FC = () => {
         </IconButton>
       )}
 
-      <Grid2 size={{sm: 3}}
-      sx={{height: "100vh"}}>
+      <Grid2 size={{sm: 3}}>
         <StyledDrawer
         variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
         open={isMobile ? open : true} // Открыто постоянно для десктопов
