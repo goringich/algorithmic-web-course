@@ -109,14 +109,13 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 declare module "@mui/material/styles" {
   interface Palette {
-    purple: Palette["primary"]; // Добавляем "purple" в Palette
+    purple: Palette["primary"]; 
   }
   interface PaletteOptions {
-    purple?: PaletteOptions["primary"]; // Добавляем "purple" в PaletteOptions (чтобы можно было его задавать)
+    purple?: PaletteOptions["primary"]; 
   }
 }
 
-// Функция, создающая темы
 const getTheme = (mode: "light" | "dark") =>
   createTheme({
     palette: {
@@ -135,16 +134,20 @@ const getTheme = (mode: "light" | "dark") =>
         light: "#B13EEA",
         main: "#9b59b6",
         dark : "#755088",
-        contrastText: "#000"},
+        contrastText: "238, 230, 255"},
     },
     typography: {
       fontFamily: "'Comfortaa', cursive",
       allVariants: {
         wordBreak: "break-word",
+        textTransform: "none",
       },
     },
-    spacing: "4px",
-  });
+    spacing: 4,
+    shape: {
+      borderRadius: 3, 
+    },
+  }); 
 
 
 interface ThemeContextType {

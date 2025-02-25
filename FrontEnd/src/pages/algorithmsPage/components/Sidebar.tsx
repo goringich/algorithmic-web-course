@@ -3,8 +3,9 @@ import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListIte
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
-import { styled } from '@mui/system';
+import { styled, width } from '@mui/system';
 import { useTheme } from "@mui/material/styles";
+import { hexToRgb } from "@mui/material";
 
 const menuData = [
   {
@@ -49,10 +50,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   height: "100vh",
   "& .MuiDrawer-paper": {
     width: "75vw",
-    boxSizing: "border-box",
     position: "relative",
-    //display: "flex",
-    overflowY: "scroll",
     scrollbarWidth: "none", // Firefox
     "&::-webkit-scrollbar": { display: "none" }, // Chrome, Safari, Edge
 
@@ -62,26 +60,18 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-const Typography_for_sections = styled(Typography)({
-  fontFamily: 'var(--primary-font)',
-  wordBreak: "break-word",
-})
-
-const Styled_button_exit = styled(Button)({
-  marginTop: "auto",
-  display: "flex",
-  paddingBottom: "12px",
-  fontFamily: "var(--primary-font)",
-  textTransform: "none",
-  color: "var(--red)",
+const StyledButtonExit = styled(Button)(({ theme }) =>({
+  paddingBottom: theme.spacing(3),
+  color: theme.palette.error.main,
   width: "100%",
   transition: "transform 0.2s ease-in-out",
   "&:hover": {backgroundColor: "inherit", 
     transform: "scale(1.03)"}
-})
+}));
 
 const SidebarMenu: React.FC = () => {
 
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 900px)"); // Условие для мобильных устройств
 
@@ -110,7 +100,6 @@ const SidebarMenu: React.FC = () => {
   return (
     <Grid2 container spacing={1}
     sx={{
-      minHeight: "100vh", // Растягиваем меню на всю высоту экрана
       width: "100vw"
     }}>
       {/* Для мобильных устройств - кнопка меню */}
@@ -150,7 +139,7 @@ const SidebarMenu: React.FC = () => {
                   aria-controls={`panel${index}-content`}
                   id={`panel${index}-header`}
                 >
-                  <Typography_for_sections sx={{color: "var(--grey_purple)"}}>{section.title}</Typography_for_sections>
+                  <Typography sx={{color: theme.palette.purple.dark}}>{section.title}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <List>
@@ -159,7 +148,7 @@ const SidebarMenu: React.FC = () => {
                       if (typeof subSection === "string") {
                         return (
                           <ListItemButton key={subIndex}>
-                            <Typography_for_sections> {subSection} </Typography_for_sections>
+                            <Typography> {subSection} </Typography>
                           </ListItemButton>
                         );
                       } else {
@@ -180,14 +169,16 @@ const SidebarMenu: React.FC = () => {
                               aria-controls={`panel${index}-${subIndex}-content`}
                               id={`panel${index}-${subIndex}-header`}
                             >
-                              <Typography_for_sections> {subSection.title} </Typography_for_sections>
+                              <Typography> {subSection.title} </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                               <List>
                                 {/* Динамическое создание аккордеонов для подподсекций */}
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
-                                  <ListItemButton key={subSubIndex} sx ={{borderRadius: "8px", "&:hover" : {backgroundColor: "rgba(var(--light_violent), 0.85)"}}}>
-                                    <Typography_for_sections> {subSubSection} </Typography_for_sections>
+                                  <ListItemButton key={subSubIndex}
+                                   sx ={{borderRadius: theme.shape.borderRadius, 
+                                   "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.contrastText}, 0.85)`}}}>
+                                    <Typography> {subSubSection} </Typography>
                                   </ListItemButton>
                                 ))}
                               </List>
@@ -203,11 +194,11 @@ const SidebarMenu: React.FC = () => {
           </Grid2>
           
           <Grid2>
-            <Styled_button_exit
+            <StyledButtonExit
             startIcon={<ExitToAppOutlinedIcon />}
             >
             Вернуться к содержанию
-            </Styled_button_exit>
+            </StyledButtonExit>
           </Grid2>
       </StyledDrawer>
     </Grid2>
