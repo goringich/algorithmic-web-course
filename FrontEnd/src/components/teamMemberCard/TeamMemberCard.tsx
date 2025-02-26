@@ -24,7 +24,7 @@ const TypographyForDescription = styled(Typography)(({ theme }) =>({
   fontSize: "1.6rem",
   color: theme.palette.text.primary,
   [theme.breakpoints.between(749, 950)]: {
-    fontSize: "1.3rem",
+    fontSize: "1.2rem",
   },
   [theme.breakpoints.between(600, 749)]: {
     fontSize: "1rem",
@@ -37,7 +37,7 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
   textAlign: "center", 
   color: theme.palette.text.primary,
   [theme.breakpoints.between(749, 950)]: {
-    fontSize: "1.5rem",
+    fontSize: "1.4rem",
   },
   [theme.breakpoints.between(600, 749)]: {
     fontSize: "1.2rem",

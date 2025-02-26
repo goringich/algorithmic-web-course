@@ -1,6 +1,6 @@
 import React, {useState, lazy, Suspense} from "react";
 import './globalStyles/App.scss';
-import Header from './components/header/Header';
+import Header from './components/header/HeaderForMainPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from "./components/errorBoundary/ErrorBoundary";
 import { ThemeProviderWrapper } from "./context/ThemeContext";
