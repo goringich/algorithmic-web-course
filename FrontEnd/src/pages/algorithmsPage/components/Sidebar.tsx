@@ -46,8 +46,11 @@ const Content = styled(Typography)(({ theme }) => ({
   paddingTop: theme.spacing(2),
 }));
 
+const headerHeight = 50;
+
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
-  height: "100vh",
+  height: `calc(100vh - ${headerHeight}px)`, 
+  top: `${headerHeight}px`, 
   "& .MuiDrawer-paper": {
     width: "75vw",
     position: "relative",

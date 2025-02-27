@@ -4,14 +4,15 @@ import { Grid2, Typography } from "@mui/material";
 import { styled } from '@mui/system';
 import { ThemeContext } from "../../context/ThemeContext";
 import { useTheme } from "@mui/material/styles";
+import { useLocation } from 'react-router-dom';
 
-const StyledHeader = styled("header")(({ theme }) => ({
-  backgroundColor: theme.palette.background.header,
-  padding: theme.spacing(2, 15),
-  width: "100%",
-  display: "flex",
-  justifyContent: "space-between", 
-  marginBottom: theme.spacing(4),
+const StyledHeader = styled("header")(({ theme, marginBottom }: any) => ({
+    backgroundColor: theme.palette.background.header,
+    padding: theme.spacing(2, 15),
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: marginBottom || theme.spacing(4), 
   }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -22,9 +23,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const Header = () => {
+  const location = useLocation();
   const theme = useTheme();
+  const isSpecificPage = location.pathname === '/algorithmsPage';
   return (
-  <StyledHeader sx={{boxShadow : "2"}}>
+  <StyledHeader marginBottom={isSpecificPage ? 1 : undefined} sx={{boxShadow : "2"}}>
     <Grid2>
         <StyledLink to="/">
         <Typography variant="h1" 
