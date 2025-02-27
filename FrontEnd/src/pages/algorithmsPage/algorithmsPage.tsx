@@ -10,27 +10,27 @@ import SidebarMenu from "./components/Sidebar";
 
 const ContentPage: React.FC = () => {
 
-  return (
-    <Grid2 container>
-      <Grid2 sx={{ flex: 1 }}>
-        {/*основной контент здесь */}
-      </Grid2>
+  // return (
+  //   <Grid2 container>
+  //     <Grid2 sx={{ flex: 1 }}>
+  //       {/*основной контент здесь */}
+  //     </Grid2>
 
-      <Grid2
-        sx={{
-          position: "fixed",  // Фиксируем меню слева
-          top: 0,  // Верхняя граница меню
-          bottom: 0,  // Нижняя граница меню
-          overflowY: "auto",  // Прокрутка только внутри менюч
-          boxShadow: "2",
-          '&::-webkit-scrollbar': {
-            display: 'none',  // Скрыть полосу прокрутки
-          },
-        }}
-      >
-        <SidebarMenu/>
-      </Grid2>
-    </Grid2>
+  //     <Grid2
+  //       sx={{
+  //         position: "fixed",  // Фиксируем меню слева
+  //         top: 0,  // Верхняя граница меню
+  //         bottom: 0,  // Нижняя граница меню
+  //         overflowY: "auto",  // Прокрутка только внутри менюч
+  //         boxShadow: "2",
+  //         '&::-webkit-scrollbar': {
+  //           display: 'none',  // Скрыть полосу прокрутки
+  //         },
+  //       }}
+  //     >
+  //       <SidebarMenu/>
+  //     </Grid2>
+  //   </Grid2>
 
   // useEffect(() => {
   //   const fetchSections = async () => {

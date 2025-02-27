@@ -67,7 +67,7 @@ const Header = () => {
       <StyledNav>
         <StyledLink sx = {{marginLeft: "10px"}}to="/AboutPage">О нас</StyledLink>
         <StyledLink to="/CourseContent">Содержание</StyledLink>
-        <StyledLink sx = {{marginRight: "10px"}} to="#faq">Вопросы</StyledLink>
+        <StyledLink sx = {{marginRight: "10px"}} to="/FAQPage">Вопросы</StyledLink>
       </StyledNav>
       
       <ThemeButton onClick={toggleTheme}>

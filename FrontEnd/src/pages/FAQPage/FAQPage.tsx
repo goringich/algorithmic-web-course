@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails, Paper, Fab } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import styles from './CoursePage.module.scss';
+import styles from './FAQPage.module.scss';
 import courseContent from "../../assets/dataBase/TitlesData.json";
 import Grid from '@mui/material/Grid2';
 
-const CourseContent: React.FC = () => {
-  const [openSection, setOpenSection] = useState<number | null>(null);
+const FAQPage: React.FC = () => {
+  const [openQuestion, setOpenQuestion] = useState<number | null>(null);
 
-  const toggleSection = (index: number) => {
-    setOpenSection(openSection === index ? null : index);
+  const toggleQuestion = (index: number) => {
+    setOpenQuestion(openQuestion === index ? null : index);
   };
 
   return (
-    <Grid container justifyContent="center" className={styles.course__content}>
+    <Grid container justifyContent="center" className={styles.faq__content}>
       <Grid size={{ xs: 12 }}>
-        <h4 className={styles.customTitle}>Содержание курса</h4>
+        <h4 className={styles.customTitle}>Вопросы</h4>
       </Grid>
 
-      <Grid size= {{xs: 12, md: 10, lg:8}}>
+      <Grid size={{ xs: 12, md: 10, lg: 8 }}>
         <Paper elevation={3} className={styles.accordionContainer}>
-          {courseContent.map((section, index) => (
+          {courseContent.map((_, index) => (
             <Accordion
               key={index}
-              expanded={openSection === index}
-              onChange={() => toggleSection(index)}
+              expanded={openQuestion === index}
+              onChange={() => toggleQuestion(index)}
               className={styles.accordion}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />} className={styles.accordionSummary}>
@@ -43,7 +43,7 @@ const CourseContent: React.FC = () => {
                         wordBreak: "break-word",
                       }}
                     >
-                      {section.title}
+                      Вопрос
                     </h2>
                   </Grid>
                 </Grid>
@@ -51,9 +51,9 @@ const CourseContent: React.FC = () => {
 
               <AccordionDetails className={styles.accordionDetails} sx={{ paddingLeft: 4, paddingRight: 4 }}>
                 <Grid container>
-                  <Grid size ={{ xs: 12 }}>
+                  <Grid size={{ xs: 12 }}>
                     <ul className={styles.course__box}>
-                      {section.subSections.map((sub, idx) => (
+                      {courseContent[index].subSections.map((sub, idx) => (
                         <li
                           key={idx}
                           className={styles.listItem}
@@ -78,4 +78,4 @@ const CourseContent: React.FC = () => {
   );
 };
 
-export default CourseContent;
+export default FAQPage;
