@@ -13,7 +13,7 @@ const Header = () => {
       <nav>
         <a href="AboutPage">О нас</a>
         <a href="CourseContent">Содержание</a>
-        <a href="#faq">Вопросы</a>
+        <a href="FAQPage">Вопросы</a>
       </nav>
       <button className={styles.header__toggle} onClick={toggleTheme}>
         <img src={mode ? img2 : img1} alt="" />
