@@ -1,4 +1,4 @@
-package content_loader
+package loader
 
 import (
   "database/sql"
@@ -134,6 +134,7 @@ func insertSubSection(db *sql.DB, sectionID int, title string) (int, error) {
   log.Printf("insertSubSection: Success, id=%d", id)
   return id, nil
 }
+
 
 func insertFile(db *sql.DB, subSectionID int, fileType string, filePath string) error {
   log.Printf("insertFile: Start, fileType=%s, filePath=%s, subSectionID=%d", fileType, filePath, subSectionID)

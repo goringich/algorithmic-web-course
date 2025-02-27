@@ -9,7 +9,7 @@ import AlternateHeader from './components/header/Header';
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
 const CoursePage = lazy(() => import('./pages/coursePage/CoursePage'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
-const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'));
+const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/components/Sidebar'));
 
 function Layout() {
   const location = useLocation();
