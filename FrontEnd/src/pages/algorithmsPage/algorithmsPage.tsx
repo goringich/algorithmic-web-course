@@ -32,36 +32,36 @@ const ContentPage: React.FC = () => {
       </Grid2>
     </Grid2>
 
-  useEffect(() => {
-    const fetchSections = async () => {
-      try {
-        const response = await fetch("http://localhost:8081/api/sections");
-        const data = await response.json();
-        console.log("Темы из API:", data);
+  // useEffect(() => {
+  //   const fetchSections = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8081/api/sections");
+  //       const data = await response.json();
+  //       console.log("Темы из API:", data);
 
-        if (Array.isArray(data)) {
-          setSections(data); // Убеждаемся, что сохраняем массив
-        } else {
-          console.error("API вернул не массив:", data);
-          setSections([]); // Если данные некорректные, подставляем пустой массив
-        }
-      } catch (error) {
-        console.error("Ошибка при получении данных:", error);
-        setSections([]); // Если ошибка — ставим пустой массив, чтобы избежать `undefined`
-      }
-    };
+  //       if (Array.isArray(data)) {
+  //         setSections(data); // Убеждаемся, что сохраняем массив
+  //       } else {
+  //         console.error("API вернул не массив:", data);
+  //         setSections([]); // Если данные некорректные, подставляем пустой массив
+  //       }
+  //     } catch (error) {
+  //       console.error("Ошибка при получении данных:", error);
+  //       setSections([]); // Если ошибка — ставим пустой массив, чтобы избежать `undefined`
+  //     }
+  //   };
 
-    fetchSections();
-  }, []);
+  //   fetchSections();
+  // }, []);
 
-  return (
-    <div className={styles.content_page}>
-      <Sidebar contents={sections} onSectionSelect={(section) => setActiveSection(section)} />
-      <main className={styles.main}>
-        <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
-        <Tabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab)} />
-      </main>
-    </div>
+  // return (
+  //   <div className={styles.content_page}>
+  //     <Sidebar contents={sections} onSectionSelect={(section) => setActiveSection(section)} />
+  //     <main className={styles.main}>
+  //       <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
+  //       <Tabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab)} />
+  //     </main>
+  //   </div>
   );
 };
 
