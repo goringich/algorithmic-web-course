@@ -12,6 +12,7 @@ declare module "@mui/material/styles" {
   }
   interface TypeBackground {
     card: string;
+    header: string;
   }
   interface Theme {
     shape: {
@@ -25,6 +26,9 @@ declare module "@mui/material/styles" {
       cardRadius?: string;
     };
   }
+  interface TypeText {
+    white: string;
+  }
 }
 
 const getTheme = (mode: "light" | "dark") =>
@@ -34,13 +38,15 @@ const getTheme = (mode: "light" | "dark") =>
       background: {
         default: mode === "dark" ? "#2A2431" : "#F2F0F0",
         paper: mode === "dark" ? "#333333" : "#fff",
-        card: mode === "dark" ? "#4C405F" : "#eaddff", 
+        card: mode === "dark" ? "#4C405F" : "#eaddff",
+        header:  mode === "dark" ? "#2A2431" : "#fff"
       },
       text: {
         primary: mode === "dark" ? "#fff" : "#000",
         secondary: mode === "dark" ? "#000" : "#fff",
+        white: "#fff"
       },
-      error: { main: "#810F0F" }, // red
+      error: { main: "#810F0F" }, 
       grey: { 500: "#b0afaf" }, 
       purple: { 
         light: "#B13EEA",
@@ -50,6 +56,13 @@ const getTheme = (mode: "light" | "dark") =>
     },
     typography: {
       fontFamily: "'Comfortaa', cursive",
+      h1: {
+        fontFamily: "'Archivo Black', sans-serif",
+        fontSize: "70px",
+        lineHeight: "1.2",
+        fontWeight: "bold",
+        letterSpacing: "1px"
+      },
       allVariants: {
         wordBreak: "break-word",
         textTransform: "none",

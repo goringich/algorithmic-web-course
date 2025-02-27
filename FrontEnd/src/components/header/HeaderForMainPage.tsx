@@ -11,7 +11,6 @@ import { ThemeContext } from "../../context/ThemeContext";
 const StyledHeader = styled("header")(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   padding: theme.spacing(4, 15),
-  width: "100%",
   display: "flex",
   justifyContent: "space-between"
 }));
@@ -21,16 +20,30 @@ const StyledNav = styled("nav")({
 });
 
 const StyledLink = styled(Link)(({ theme }) => ({
+  position: "relative", // Обеспечиваем возможность использования псевдоэлемента
   color: theme.palette.text.primary,
   marginRight: "60px",
   fontWeight: 500,
   fontSize: "20px",
   display: "flex",
   alignItems: "center",
+  textDecoration: "none",
 
-  "&:hover": {
-    textDecoration: "underline",
-  }
+  "&::after": {
+    content: '""', 
+    position: "absolute",
+    left: "50%", 
+    bottom: 0, 
+    width: 0, 
+    height: "2px", 
+    background: theme.palette.text.primary, 
+    transition: "width 0.5s ease, left 0.5s ease", 
+    },
+
+  "&:hover::after": {
+    width: "100%", 
+    left: "0", 
+  },
 }));
 
 const ThemeButton = styled(IconButton)(({ theme }) => ({

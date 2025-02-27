@@ -1,51 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-body {
-  font-family: var(--primary-font);
-  background-color: var(--background-color);
+// body {
+//   font-family: var(--primary-font);
+//   background-color: var(--background-color);
 
-  &.theme-initializing {
-    visibility: hidden;
-  }
-}
+//   &.theme-initializing {
+//     visibility: hidden;
+//   }
+// }
 
-.App{
-  margin: 0 auto;
-  max-width: 1450px;
-  width: 100%;
-}
+// .App{
+//   margin: 0 auto;
+//   max-width: 1450px;
+//   width: 100%;
+// }
 
-h1, h2, h3 {
-  font-family: var(--secondary-font);
-}
+// h1, h2, h3 {
+//   font-family: var(--secondary-font);
+// }
 
-a {
-  position: relative;
-  text-decoration: none;
-  color: black;
+// a {
+//   position: relative;
+//   text-decoration: none;
+//   color: black;
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background: var(--black);
-    transition: width 0.5s ease, left 0.5s ease;
-    // transform: translateX(-50%);
-  }
+//   &::after {
+//     content: '';
+//     position: absolute;
+//     left: 50%;
+//     bottom: 0;
+//     width: 0;
+//     height: 2px;
+//     background: var(--black);
+//     transition: width 0.5s ease, left 0.5s ease;
+//     // transform: translateX(-50%);
+//   }
 
-  &:hover{
-    text-decoration: none !important;
+//   &:hover{
+//     text-decoration: none !important;
 
-    &::after {
-      width: 100%;
-      left: 0;
-    }
-  }
-}
+//     &::after {
+//       width: 100%;
+//       left: 0;
+//     }
+//   }
+// }
 
 
 

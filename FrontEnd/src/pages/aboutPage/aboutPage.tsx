@@ -52,7 +52,7 @@ const AboutPageContainer = styled(Grid2)(({ theme }) =>({
 
 const ContactButton = styled(Button)(({ theme }) =>({
   backgroundColor: theme.palette.purple.light,
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.white,
   borderRadius: theme.shape.borderRadius,
   width: "100%",
   marginBottom: theme.spacing(4)
