@@ -22,7 +22,13 @@ interface ContentDisplayProps {
 }
 
 const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
+<<<<<<< HEAD
   const data = [5, 8, 6, 3, 2, 7, 2, 6];
+=======
+  if (!activeSection) {
+    return <h2>Выберите раздел для просмотра</h2>;
+  }
+>>>>>>> 345f9cb (refactor: add tools for node removing)
   return (
     <div>
       {activeTab === "теория" && (
