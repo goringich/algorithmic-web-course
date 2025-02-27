@@ -9,6 +9,7 @@ import AlternateHeader from './components/header/Header';
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
 const CoursePage = lazy(() => import('./pages/coursePage/CoursePage'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
+const FAQPage = lazy(() => import('./pages/FAQPage/FAQPage'));
 const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/components/Sidebar'));
 
 function Layout() {
@@ -24,6 +25,7 @@ function Layout() {
           <Route path="/" element={<HeroSection />} />
           <Route path="/CourseContent" element={<CoursePage />} />
           <Route path="/AboutPage" element={<AboutPage />} />
+          <Route path="/FAQPage" element={<FAQPage/>} />
           <Route path="/algorithmsPage" element={<AlgorithmsPage />} />
         </Routes>
       </Suspense>
