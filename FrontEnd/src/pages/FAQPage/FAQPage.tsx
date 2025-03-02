@@ -1,9 +1,57 @@
 import React, { useState } from "react";
 import { Accordion, AccordionSummary, AccordionDetails, Paper, Fab } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import styles from './FAQPage.module.scss';
 import courseContent from "../../assets/dataBase/TitlesData.json";
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/system';
+import { Theme } from "@mui/material/styles";
+
+const FabButton = styled(Fab)(({ theme }) => ({
+  width: "50px",
+  height: "50px",
+  background: theme.palette.background.card,
+  fontSize: "16px",
+  color: theme.palette.text.primary,
+  marginRight: theme.spacing(4),
+}));
+
+const CustomSubtitle = styled("h2") <{ theme: Theme }> (({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontWeight: 500,
+  color: theme.palette.text.primary,
+  overflowWrap: "break-word",
+  wordBreak: "break-word",
+}));
+
+const AccordionContainer = styled(Paper)<{ theme: Theme }>(({ theme }) => ({
+  width: "100%",
+  background: theme.palette.background.paper,
+  borderRadius: theme.shape.cardRadius,
+  padding: "20px",
+  margin: "20px auto",
+  flexDirection: "column",
+}));
+
+const AccordionStyled = styled(Accordion)(() => ({
+  boxShadow: "none",
+  "&:before": {
+    display: "none",
+  },
+}));
+
+const CourseBox = styled("ul") <{ theme: Theme }> (({ theme }) => ({
+  width: "100%",
+  padding: "15px",
+  background: theme.palette.background.card,
+  borderRadius: theme.shape.cardRadius,
+  listStyle: "none",
+}));
+
+const ListItem = styled("li")(({ theme }) => ({
+  fontSize: "18px",
+  marginBottom: "5px",
+  color: theme.palette.text.primary,
+}));
 
 const FAQPage: React.FC = () => {
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
@@ -13,66 +61,52 @@ const FAQPage: React.FC = () => {
   };
 
   return (
-    <Grid container justifyContent="center" className={styles.faq__content}>
-      <Grid size={{ xs: 12 }}>
-        <h4 className={styles.customTitle}>Вопросы</h4>
-      </Grid>
-
+    <Grid container justifyContent="center">
       <Grid size={{ xs: 12, md: 10, lg: 8 }}>
-        <Paper elevation={3} className={styles.accordionContainer}>
+        <AccordionContainer elevation={3}>
           {courseContent.map((_, index) => (
-            <Accordion
+            <AccordionStyled
               key={index}
               expanded={openQuestion === index}
               onChange={() => toggleQuestion(index)}
-              className={styles.accordion}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} className={styles.accordionSummary}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container alignItems="center" spacing={2} sx={{ flexWrap: "noWrap", minWidth: 0, gap: 1 }}>
                   <Grid sx={{ flexShrink: 0 }}>
-                    <Fab size="small" className={styles.fabButton}>
+                    <FabButton size="small">
                       {index + 1}
-                    </Fab>
+                    </FabButton>
                   </Grid>
                   <Grid sx={{ flexGrow: 1, minWidth: 0 }}>
-                    <h2
-                      className={styles.customSubtitle}
+                    <CustomSubtitle
                       style={{
                         fontSize: "clamp(1rem, 2vw, 1.5rem)",
-                        overflowWrap: "break-word",
-                        wordBreak: "break-word",
                       }}
                     >
                       Вопрос
-                    </h2>
+                    </CustomSubtitle>
                   </Grid>
                 </Grid>
               </AccordionSummary>
 
-              <AccordionDetails className={styles.accordionDetails} sx={{ paddingLeft: 4, paddingRight: 4 }}>
+              <AccordionDetails sx={{ paddingLeft: 4, paddingRight: 4 }}>
                 <Grid container>
                   <Grid size={{ xs: 12 }}>
-                    <ul className={styles.course__box}>
+                    <CourseBox>
                       {courseContent[index].subSections.map((sub, idx) => (
-                        <li
+                        <ListItem
                           key={idx}
-                          className={styles.listItem}
-                          style={{
-                            fontSize: "clamp(0.9rem, 1.8vw, 1.2rem)",
-                            overflowWrap: "break-word",
-                            wordBreak: "break-word",
-                          }}
                         >
                           {sub}
-                        </li>
+                        </ListItem>
                       ))}
-                    </ul>
+                    </CourseBox>
                   </Grid>
                 </Grid>
               </AccordionDetails>
-            </Accordion>
+            </AccordionStyled>
           ))}
-        </Paper>
+        </AccordionContainer>
       </Grid>
     </Grid>
   );
