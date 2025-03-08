@@ -10,6 +10,7 @@ interface TabsProps {
 
 const Tabs: React.FC<TabsProps> = ({ activeTab, onTabChange }) => {
   const tabs: TabType[] = ["теория", "код", "визуализация", "комплексный анализ"];
+
   return (
     <div className={styles.tabs}>
       {tabs.map((tab) => (

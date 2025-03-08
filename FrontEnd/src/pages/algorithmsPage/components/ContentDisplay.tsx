@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../algorithmsPage.module.scss";
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
@@ -16,6 +15,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
   if (!activeSection) {
     return <h2>Выберите раздел для просмотра</h2>;
   }
+
   return (
     <div>
       <h1>{activeSection.title}</h1>
