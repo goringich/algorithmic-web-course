@@ -5,6 +5,8 @@ import Sidebar from "./components/Sidebar";
 import ContentDisplay from "./components/ContentDisplay";
 import Tabs, { TabType } from "./components/Tabs";
 import { Section } from "./components/types/types";
+import { Grid2, Button } from "@mui/material";
+import SidebarMenu from "./components/Sidebar";
 
 const ContentPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("теория");
@@ -15,7 +17,10 @@ const ContentPage: React.FC = () => {
   return (
     <Grid2 container>
       <Grid2 sx={{ flex: 1 }}>
-        {/*основной контент здесь */}
+      <main className={styles.main}>
+        <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
+        <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
+      </main>
       </Grid2>
 
       <Grid2
@@ -56,14 +61,14 @@ const ContentPage: React.FC = () => {
   //   fetchSections();
   // }, []);
 
-  return (
-    <div className={styles.content_page}>
-      <Sidebar />
-      <main className={styles.main}>
-        <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
-        <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
-      </main>
-    </div>
+  // return (
+  //   <div className={styles.content_page}>
+  //     <Sidebar />
+  //     <main className={styles.main}>
+  //       <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
+  //       <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
+  //     </main>
+  //   </div>
   );
 };
 
