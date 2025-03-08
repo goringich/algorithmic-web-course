@@ -20,7 +20,7 @@ const StyledNav = styled("nav")({
 });
 
 const StyledLink = styled(Link)(({ theme }) => ({
-  position: "relative", // Обеспечиваем возможность использования псевдоэлемента
+  position: "relative", 
   color: theme.palette.text.primary,
   marginRight: "60px",
   fontWeight: 500,
@@ -32,8 +32,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
   "&::after": {
     content: '""', 
     position: "absolute",
-    left: "50%", 
-    bottom: 0, 
+    left: "50%",  
+    bottom: "1em", 
     width: 0, 
     height: "2px", 
     background: theme.palette.text.primary, 

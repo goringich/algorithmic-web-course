@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import ErrorBoundary from "./components/errorBoundary/ErrorBoundary";
 import { ThemeProviderWrapper } from "./context/ThemeContext";
 import AlternateHeader from './components/header/Header';
+import {Box} from "@mui/material";
 
 
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
@@ -14,24 +15,33 @@ const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'
 
 function Layout() {
   const location = useLocation();
-
-  // Проверяем путь и выбираем нужный заголовок
   const isSpecialPage = location.pathname === "/";
+
   return (
-    <>
+    <Box sx={{ 
+      display: "flex", 
+      flexDirection: "column", 
+      height: "100vh" 
+    }}>
+      {/* Заголовок */}
       {isSpecialPage ? <Header /> : <AlternateHeader />}
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<HeroSection />} />
-          <Route path="/CourseContent" element={<CoursePage />} />
-          <Route path="/AboutPage" element={<AboutPage />} />
-          <Route path="/FAQPage" element={<FAQPage/>} />
-          <Route path="/algorithmsPage" element={<AlgorithmsPage />} />
-        </Routes>
-      </Suspense>
-    </>
+
+      {/* Основной контент */}
+      <Box sx={{ flexGrow: 1 }}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<HeroSection />} />
+            <Route path="/CourseContent" element={<CoursePage />} />
+            <Route path="/AboutPage" element={<AboutPage />} />
+            <Route path="/FAQPage" element={<FAQPage />} />
+            <Route path="/algorithmsPage" element={<AlgorithmsPage />} />
+          </Routes>
+        </Suspense>
+      </Box>
+    </Box>
   );
 }
+
 
 function App() {
   return (

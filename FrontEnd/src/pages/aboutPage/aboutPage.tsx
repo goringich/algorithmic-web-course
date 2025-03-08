@@ -48,6 +48,7 @@ const teamMembers = [
 
 const AboutPageContainer = styled(Grid2)(({ theme }) =>({
   justifyContent: "center",
+  marginTop: theme.spacing(6)
 }))
 
 const ContactButton = styled(Button)(({ theme }) =>({

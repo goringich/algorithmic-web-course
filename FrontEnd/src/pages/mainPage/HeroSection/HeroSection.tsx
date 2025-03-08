@@ -1,19 +1,23 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Levitate from "../../../components/levitate/Levitate"
 import table from '../../../assets/images/MainPage/anime-person/Group 3490.png';
 import { Grid2, Button } from "@mui/material";
 import { styled } from '@mui/system';
 import { useTheme } from "@mui/material/styles";
 import { Typography, Box } from '@mui/material';
+import { ThemeContext } from "../../../context/ThemeContext";
 
 const ImageContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  position: "relative",
   maxWidth: "650px",
   width: "100%",
-  height: "400px",
+  height: "100%",
   textAlign: "right",
-  position: "relative",
+  alignItems: "center",
   "& img": {
     maxWidth: "100%",
+    width: "100%", 
     height: "auto",
   },
 }));
@@ -28,6 +32,7 @@ const StartButton = styled(Button)(({ theme }) => ({
 
 const HeroSection = () => {
   const theme = useTheme();
+  const { mode } = useContext(ThemeContext);
   return (
     <Grid2 container spacing={20} sx={{padding: theme.spacing(10, 25)}}>
       <Grid2 size={{ xs: 12, md: 6 }}>
@@ -52,7 +57,7 @@ const HeroSection = () => {
       <Grid2 size={{ xs: 12, md: 6 }}>
         <ImageContainer>
           <img style ={{zIndex: 1}} src={table} alt="Table illustration" />
-          <Levitate />
+          <Levitate/>
         </ImageContainer> 
       </Grid2>
     </Grid2>

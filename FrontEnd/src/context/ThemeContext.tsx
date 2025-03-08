@@ -44,7 +44,7 @@ const getTheme = (mode: "light" | "dark") =>
       text: {
         primary: mode === "dark" ? "#fff" : "#000",
         secondary: mode === "dark" ? "#000" : "#fff",
-        white: "#fff"
+        white: "#fff",
       },
       error: { main: "#810F0F" }, 
       grey: { 500: "#b0afaf" }, 

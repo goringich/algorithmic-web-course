@@ -47,7 +47,7 @@ const Content = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
-  height: "100vh",
+  height: "100%",
   "& .MuiDrawer-paper": {
     width: "75vw",
     position: "relative",
@@ -98,11 +98,7 @@ const SidebarMenu: React.FC = () => {
   };
  
   return (
-    <Grid2 container spacing={1}
-    sx={{
-      width: "100vw"
-    }}>
-      {/* Для мобильных устройств - кнопка меню */}
+    <Grid2 container spacing={1} sx={{height: "100%"}}>
       {isMobile && (
         <IconButton
           onClick={() => toggleDrawer(true)}
@@ -112,7 +108,7 @@ const SidebarMenu: React.FC = () => {
         </IconButton>
       )}
 
-      <Grid2 size={{sm: 3}}>
+      <Grid2 size={{sm: 3}} sx={{marginBottom: "0"}}>
         <StyledDrawer
         variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
         open={isMobile ? open : true} // Открыто постоянно для десктопов
