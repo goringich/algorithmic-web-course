@@ -53,27 +53,29 @@ const ListItem = styled("li")(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const CourseContent: React.FC = () => {
-  const [openSection, setOpenSection] = useState<number | null>(null);
+const FAQPage: React.FC = () => {
+  const [openQuestion, setOpenQuestion] = useState<number | null>(null);
 
-  const toggleSection = (index: number) => {
-    setOpenSection(openSection === index ? null : index);
+  const toggleQuestion = (index: number) => {
+    setOpenQuestion(openQuestion === index ? null : index);
   };
 
   return (
     <Grid container justifyContent="center">
-      <Grid size= {{xs: 12, md: 10, lg:8}}>
+      <Grid size={{ xs: 12, md: 10, lg: 8 }}>
         <AccordionContainer elevation={3}>
-          {courseContent.map((section, index) => (
+          {courseContent.map((_, index) => (
             <AccordionStyled
               key={index}
-              expanded={openSection === index}
-              onChange={() => toggleSection(index)}
+              expanded={openQuestion === index}
+              onChange={() => toggleQuestion(index)}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container alignItems="center" spacing={2} sx={{ flexWrap: "noWrap", minWidth: 0, gap: 1 }}>
                   <Grid sx={{ flexShrink: 0 }}>
-                  <FabButton size="small">{index + 1}</FabButton>
+                    <FabButton size="small">
+                      {index + 1}
+                    </FabButton>
                   </Grid>
                   <Grid sx={{ flexGrow: 1, minWidth: 0 }}>
                     <CustomSubtitle
@@ -81,7 +83,7 @@ const CourseContent: React.FC = () => {
                         fontSize: "clamp(1rem, 2vw, 1.5rem)",
                       }}
                     >
-                      {section.title}
+                      Вопрос
                     </CustomSubtitle>
                   </Grid>
                 </Grid>
@@ -89,9 +91,9 @@ const CourseContent: React.FC = () => {
 
               <AccordionDetails sx={{ paddingLeft: 4, paddingRight: 4 }}>
                 <Grid container>
-                  <Grid size ={{ xs: 12 }}>
+                  <Grid size={{ xs: 12 }}>
                     <CourseBox>
-                      {section.subSections.map((sub, idx) => (
+                      {courseContent[index].subSections.map((sub, idx) => (
                         <ListItem
                           key={idx}
                         >
@@ -110,4 +112,4 @@ const CourseContent: React.FC = () => {
   );
 };
 
-export default CourseContent;
+export default FAQPage;

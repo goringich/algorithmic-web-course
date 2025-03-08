@@ -202,6 +202,7 @@ const SidebarMenu: React.FC = () => {
       </StyledDrawer>
     </Grid2>
     </Grid2>
+
   );
 };
 
