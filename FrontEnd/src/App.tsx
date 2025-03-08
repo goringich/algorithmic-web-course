@@ -10,7 +10,7 @@ const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'
 const CoursePage = lazy(() => import('./pages/coursePage/CoursePage'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
 const FAQPage = lazy(() => import('./pages/FAQPage/FAQPage'));
-const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/components/Sidebar'));
+const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'));
 
 function Layout() {
   const location = useLocation();
