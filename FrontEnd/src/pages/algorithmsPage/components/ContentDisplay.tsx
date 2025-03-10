@@ -2,6 +2,7 @@ import React from "react";
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/defaultSegmentTree/SegmentTreeVisualizer";
+import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
 import { TabType } from "./Tabs";
 
@@ -30,9 +31,10 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       {activeTab === "визуализация" && (
         <>
           <ErrorBoundary>
-            <SegmentTreeProvider initialData={data}>
+            {/* <SegmentTreeProvider initialData={data}>
               <SegmentTreeVisualizer />
-            </SegmentTreeProvider>
+            </SegmentTreeProvider> */}
+            < FenwickTreeVisualizer />
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>
         </>
