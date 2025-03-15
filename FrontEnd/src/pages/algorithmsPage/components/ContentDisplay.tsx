@@ -5,6 +5,7 @@ import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer
 import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
 import { TabType } from "./Tabs";
+import { Container } from '@mui/material';
 
 interface ContentDisplayProps {
   activeSection: Section | null;
@@ -34,7 +35,9 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
             {/* <SegmentTreeProvider initialData={data}>
               <SegmentTreeVisualizer />
             </SegmentTreeProvider> */}
+            <Container maxWidth="xl" sx={{ py: 2 }}>
             < FenwickTreeVisualizer />
+            </Container>
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>
         </>

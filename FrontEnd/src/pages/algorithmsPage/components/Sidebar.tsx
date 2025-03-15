@@ -26,9 +26,9 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   "& .MuiDrawer-paper": {
     width: drawerWidth,
     position: "relative",
-    scrollbarWidth: "none", // для Firefox
+    scrollbarWidth: "none", 
     "&::-webkit-scrollbar": {
-      display: "none", // для Chrome, Safari, Edge
+      display: "none", 
     },
   },
 }));
