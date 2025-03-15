@@ -14,13 +14,8 @@ interface ContentDisplayProps {
 
 const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
   const data = [5, 8, 6, 3, 2, 7, 2, 6];
-  if (!activeSection) {
-    return <h2>Выберите раздел для просмотра</h2>;
-  }
-
   return (
     <div>
-      <h1>{activeSection.title}</h1>
       {activeTab === "теория" && (
         <p>{activeSection.content || "Мы не сделали эту часть ещё :("}</p>
       )}
@@ -36,14 +31,11 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
               <SegmentTreeVisualizer />
             </SegmentTreeProvider> */}
             <Container maxWidth="xl" sx={{ py: 2 }}>
-            < FenwickTreeVisualizer />
+            {/* < FenwickTreeVisualizer /> */}
             </Container>
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>
         </>
-      )}
-      {activeTab === "комплексный анализ" && (
-        <div>{activeSection.visualization || "Мы всё итак знаем, зачем анализировать"}</div>
       )}
     </div>
   );

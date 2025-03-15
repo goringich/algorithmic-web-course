@@ -5,14 +5,28 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 declare module "@mui/material/styles" {
   interface Palette {
-    purple: Palette["primary"]; 
+    purple: {
+      light: string;
+      main: string;
+      dark: string;
+      onHover: string;
+      toClick: string;
+    };
   }
   interface PaletteOptions {
-    purple?: PaletteOptions["primary"]; 
+    purple?: {
+      light?: string;
+      main?: string;
+      dark?: string;
+      contrastText?: string;
+      onHover?: string;
+      toClick?: string;
+    };
   }
   interface TypeBackground {
     card: string;
     header: string;
+    cardContent: string;
   }
   interface Theme {
     shape: {
@@ -36,10 +50,11 @@ const getTheme = (mode: "light" | "dark") =>
     palette: {
       mode,
       background: {
-        default: mode === "dark" ? "#2A2431" : "#F2F0F0",
-        paper: mode === "dark" ? "#333333" : "#EEEAF6",
+        default: mode === "dark" ? "#2A2431" : "#F8F8F8",
+        paper: mode === "dark" ? "#333333" : "#fff",
         card: mode === "dark" ? "#4C405F" : "#eaddff",
-        header:  mode === "dark" ? "#2A2431" : "#fff"
+        header:  mode === "dark" ? "#2A2431" : "#fff",
+        cardContent: mode === "dark" ? "322E3B": "EEEAF6"
       },
       text: {
         primary: mode === "dark" ? "#fff" : "#000",
@@ -52,7 +67,8 @@ const getTheme = (mode: "light" | "dark") =>
         light: "#B13EEA",
         main: "#9b59b6",
         dark : "#755088",
-        contrastText: "238, 230, 255"},
+        onHover: "238, 230, 255",
+        toClick: "#D3C5F4"},
     },
     typography: {
       fontFamily: "'Comfortaa', cursive",
@@ -68,7 +84,7 @@ const getTheme = (mode: "light" | "dark") =>
         textTransform: "none",
       },
     },
-    spacing: 4, // 4px
+    spacing: 4,
     shape: {
       borderRadius: "8px", 
       cardRadius: "20px",
