@@ -13,7 +13,7 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, onTabChange }) => {
   const theme = useTheme();
   const tabs: TabType[] = ["теория", "код", "визуализация"];
   return (
-    <div style={{display: "flex", justifyContent: "center"}}>
+    <div style={{display: "flex", justifyContent: "center", marginBottom: theme.spacing(4)}}>
       {tabs.map((tab) => (
         <Button
           key={tab}
