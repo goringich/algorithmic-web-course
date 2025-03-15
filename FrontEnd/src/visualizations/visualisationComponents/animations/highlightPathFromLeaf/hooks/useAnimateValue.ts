@@ -1,30 +1,22 @@
 import { useState, useEffect } from "react";
 
-function useAnimatedValue(targetValue: number, duration: number = 500, delay: number = 0) {
+function useAnimatedValue(targetValue: number, duration: number = 500) {
   const [animatedValue, setAnimatedValue] = useState(targetValue);
   useEffect(() => {
     const startValue = animatedValue;
     const diff = targetValue - startValue;
-    const startTime = performance.now() + delay;
-    let animationFrame: number;
-
-    const step = (currentTime: number) => {
-      if (currentTime < startTime) {
-        animationFrame = requestAnimationFrame(step);
-        return;
-      }
-      const elapsed = currentTime - startTime;
+    const startTime = performance.now();
+    const step = () => {
+      const elapsed = performance.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const currentVal = startValue + diff * progress;
-      setAnimatedValue(currentVal);
+      const currentValue = startValue + diff * progress;
+      setAnimatedValue(currentValue);
       if (progress < 1) {
-        animationFrame = requestAnimationFrame(step);
+        requestAnimationFrame(step);
       }
     };
-
-    animationFrame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [targetValue, delay]);
+    requestAnimationFrame(step);
+  }, [targetValue]);
   return animatedValue;
 }
 

@@ -21,27 +21,21 @@ export const handleRemoveLeaf = async (
   }
   const leafIndex = start;
 
-  try {
-    await animateNodeDisappear(selectedNode.id, shapeRefs.current);
-  } catch (error) {
-    console.error("Ошибка при анимации удаления узла:", error);
-    dispatch(setSnackbar({ message: "Ошибка при анимации удаления узла.", open: true }));
-    return;
-  }
-
+  // try {
+  //   await animateNodeDisappear(selectedNode.id, shapeRefs.current);
+  // } catch (error) {
+  //   console.error("Ошибка при анимации удаления узла:", error);
+  //   dispatch(setSnackbar({ message: "Ошибка при анимации удаления узла.", open: true }));
+  //   return;
+  // }
+  
   const newData = data.filter((_, idx) => idx !== leafIndex);
-
-  const resultAction = await dispatch(
-    updateTreeWithNewData({
-      newData,
-      twoPhase: true
-    })
-  );
+  const resultAction = await dispatch(updateTreeWithNewData(newData));
   if (updateTreeWithNewData.rejected.match(resultAction)) {
     dispatch(setSnackbar({ message: "Ошибка при обновлении дерева.", open: true }));
     return;
   }
-
-  dispatch(setSelectedNode(null));
-  dispatch(setSnackbar({ message: "Узел удален.", open: true }));
+  
+  // dispatch(setSelectedNode(null));
+  // dispatch(setSnackbar({ message: "Узел удален.", open: true }));
 };

@@ -23,8 +23,12 @@ interface ContentDisplayProps {
 
 const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const data = [5, 8, 6, 3, 2, 7, 2, 6];
 =======
+=======
+  const data = [5, 8, 6, 3, 2, 7, 2, 6];
+>>>>>>> 99363d1 (Revert "refactor: add tools for node removing")
   if (!activeSection) {
     return <h2>Выберите раздел для просмотра</h2>;
   }
