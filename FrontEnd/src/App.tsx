@@ -23,10 +23,8 @@ function Layout() {
       flexDirection: "column", 
       height: "100vh" 
     }}>
-      {/* Заголовок */}
       {isSpecialPage ? <Header /> : <AlternateHeader />}
 
-      {/* Основной контент */}
       <Box sx={{ flexGrow: 1 }}>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>

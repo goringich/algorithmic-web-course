@@ -25,7 +25,7 @@ const CustomSubtitle = styled("h2") <{ theme: Theme }> (({ theme }) => ({
 
 const AccordionContainer = styled(Paper)<{ theme: Theme }>(({ theme }) => ({
   width: "100%",
-  background: theme.palette.background.paper,
+  background: theme.palette.background.card,
   borderRadius: theme.shape.cardRadius,
   padding: "20px",
   margin: "20px auto",
