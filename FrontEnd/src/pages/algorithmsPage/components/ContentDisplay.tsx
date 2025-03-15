@@ -1,7 +1,4 @@
 import React from "react";
-import styles from "../algorithmsPage.module.scss";
-import { Provider } from 'react-redux';
-import store from '../../../visualizations/store/store';
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
@@ -14,12 +11,8 @@ interface ContentDisplayProps {
 
 const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
   const data = [5, 8, 6, 3, 2, 7, 2, 6];
-  if (!activeSection) {
-    return <h2>Выберите раздел для просмотра</h2>;
-  }
   return (
     <div>
-      <h1>{activeSection.title}</h1>
       {activeTab === "теория" && (
         <p>{activeSection.content || "Мы не сделали эту часть ещё :("}</p>
       )}
@@ -37,9 +30,6 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>
         </>
-      )}
-      {activeTab === "комплексный анализ" && (
-        <div>{activeSection.visualization || "Мы всё итак знаем, зачем анализировать"}</div>
       )}
     </div>
   );

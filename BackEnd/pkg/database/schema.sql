@@ -13,5 +13,5 @@ CREATE TABLE IF NOT EXISTS Files (
   id SERIAL PRIMARY KEY,
   subsection_id INT NOT NULL REFERENCES SubSections(id) ON DELETE CASCADE,
   file_type VARCHAR(50) NOT NULL,
-  file_path TEXT NOT NULL UNIQUE
+  file_path TEXT NOT NULL
 );
