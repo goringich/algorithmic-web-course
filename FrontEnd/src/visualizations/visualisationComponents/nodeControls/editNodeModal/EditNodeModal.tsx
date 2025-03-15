@@ -65,7 +65,7 @@ export function EditNodeModal({
       padding="20px"
       border="1px solid #ddd"
       borderRadius="10px"
-      zIndex={100}
+      zIndex={2000}
       width="300px"
       boxShadow="0 8px 16px rgba(0,0,0,0.1)"
       style={{ userSelect: "none" }}
