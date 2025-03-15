@@ -14,7 +14,7 @@ export function AddElementForm({ newValue, onChangeValue, onAdd, disabled }: Add
       <TextField
         label="Новый лист"
         value={newValue}
-        onChange={(e) => onChangeValue(Number(e.target.value) || 0)} 
+        onChange={(e) => onChangeValue(Number(e.target.value) || 0)} // ✅ Передаём число в Redux
         type="number"
         variant="outlined"
         sx={{ width: "150px" }}
