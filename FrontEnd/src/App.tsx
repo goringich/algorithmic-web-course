@@ -1,31 +1,28 @@
-import React, {useState, lazy, Suspense} from "react";
+import React, { useState, lazy, Suspense } from "react";
 import Header from './components/header/HeaderForMainPage';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import ErrorBoundary from "./components/errorBoundary/ErrorBoundary";
 import { ThemeProviderWrapper } from "./context/ThemeContext";
 import AlternateHeader from './components/header/Header';
 
-
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
-const CoursePage = lazy(() => import('./pages/coursePage/CoursePage'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
-const FAQPage = lazy(() => import('./pages/FAQPage/FAQPage'));
 const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/components/Sidebar'));
+const ContentPage = lazy(() => import('./pages/ContentPage/ContentPage')); // Оставляем только этот импорт
 
 function Layout() {
   const location = useLocation();
+  const isMainPage = location.pathname === "/";
 
-  // Проверяем путь и выбираем нужный заголовок
-  const isSpecialPage = location.pathname === "/";
   return (
     <>
-      {isSpecialPage ? <Header /> : <AlternateHeader />}
+      {isMainPage ? <Header /> : <AlternateHeader />}
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<HeroSection />} />
-          <Route path="/CourseContent" element={<CoursePage />} />
+          <Route path="/CourseContent" element={<ContentPage fileName="CourseData.json" title="Курс" />} />
           <Route path="/AboutPage" element={<AboutPage />} />
-          <Route path="/FAQPage" element={<FAQPage/>} />
+          <Route path="/FAQPage" element={<ContentPage fileName="TitlesData copy.json" title="FAQ" />} />
           <Route path="/algorithmsPage" element={<AlgorithmsPage />} />
         </Routes>
       </Suspense>

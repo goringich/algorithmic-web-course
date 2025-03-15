@@ -37,7 +37,7 @@ const getTheme = (mode: "light" | "dark") =>
       mode,
       background: {
         default: mode === "dark" ? "#2A2431" : "#F2F0F0",
-        paper: mode === "dark" ? "#333333" : "#EEEAF6",
+        paper: mode === "dark" ? "#333333" : "#fff",
         card: mode === "dark" ? "#4C405F" : "#eaddff",
         header:  mode === "dark" ? "#2A2431" : "#fff"
       },
