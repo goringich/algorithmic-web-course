@@ -26,6 +26,7 @@ declare module "@mui/material/styles" {
   interface TypeBackground {
     card: string;
     header: string;
+    cardContent: string;
   }
   interface Theme {
     shape: {
@@ -52,7 +53,8 @@ const getTheme = (mode: "light" | "dark") =>
         default: mode === "dark" ? "#2A2431" : "#F8F8F8",
         paper: mode === "dark" ? "#333333" : "#fff",
         card: mode === "dark" ? "#4C405F" : "#eaddff",
-        header:  mode === "dark" ? "#2A2431" : "#fff"
+        header:  mode === "dark" ? "#2A2431" : "#fff",
+        cardContent: mode === "dark" ? "322E3B": "EEEAF6"
       },
       text: {
         primary: mode === "dark" ? "#fff" : "#000",
