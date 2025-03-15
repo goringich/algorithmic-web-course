@@ -14,7 +14,6 @@ interface SegmentTreeNodeProps {
   textColor: string;
   fillOverride?: string;
   isHighlighted: boolean;
-  highlightIndex?: number;
 }
 
 const buildNodeMap = (nodes: VisNode[]): Record<number, VisNode> => {
@@ -45,11 +44,10 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
   isHighlighted,
   textColor,
   fillOverride,
-  highlightIndex,
 }) => {
   const nodeMap = buildNodeMap(allNodes);
   const depthComputed = computeDepth(node, nodeMap);
-
+  
   const minColor = [200, 230, 255];
   const maxColor = [50, 80, 150];
   const maxDepth = 6;
@@ -67,9 +65,9 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
       )}, ${interpolateColor(minColor[2], maxColor[2], depthFactor)})`;
 
   const computedFillColor = isHighlighted ? "#e53935" : baseFillColor;
-
+  
   const circleRef = useNodeAppearAnimation(node.id, node.x, node.y, shapeRefs);
-
+  
   const prevPosition = useRef({ x: node.x, y: node.y });
   useEffect(() => {
     if (circleRef.current) {
@@ -84,7 +82,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
       }
     }
   }, [node.x, node.y, circleRef]);
-
+  
   const textRef = useRef<Konva.Text>(null);
   useEffect(() => {
     if (textRef.current) {
@@ -97,8 +95,7 @@ export const SegmentTreeNode: React.FC<SegmentTreeNodeProps> = ({
     }
   }, [node.x, node.y]);
 
-  const delay = (highlightIndex !== undefined && highlightIndex >= 0) ? highlightIndex * 400 : 0;
-  const animatedValue = useAnimatedValue(node.value, 500, delay);
+  const animatedValue = useAnimatedValue(node.value, 500);
 
   return (
     <>

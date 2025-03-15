@@ -30,21 +30,15 @@ const initialState: SegmentTreeState = {
   stageSize: { width: 1200, height: 500 },
 };
 
-// Экземпляр WASM-модуля
 let segmentTreeWasmInstance: SegmentTreeWasm | null = null;
-
-interface UpdateTreeParams {
-  newData: number[];
-  twoPhase?: boolean;
-}
 
 export const updateTreeWithNewData = createAsyncThunk<
   { nodes: VisNode[]; data: number[]; parentMap: Record<number, number | undefined> },
-  UpdateTreeParams,
+  number[],
   { rejectValue: string }
 >(
   "segmentTree/updateTreeWithNewData",
-  async ({ newData, twoPhase = false }, { dispatch, rejectWithValue }) => {
+  async (newData, { rejectWithValue }) => {
     try {
       segmentTreeWasmInstance = new SegmentTreeWasm(newData);
       await segmentTreeWasmInstance.setData(newData);
@@ -55,14 +49,6 @@ export const updateTreeWithNewData = createAsyncThunk<
       }
       const rootId = nodes[0].id;
       const parentMap = buildAndValidateParentMap(nodes, rootId);
-      
-      if (twoPhase) {
-         // Первый этап: отображаем только листья
-         const leaves = nodes.filter((node) => node.range[0] === node.range[1]);
-         dispatch(setTree({ nodes: leaves, data: newData, parentMap }));
-         await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-      
       return { nodes, data: newData, parentMap };
     } catch (error) {
       return rejectWithValue("Ошибка при обновлении дерева через WASM модуль.");
@@ -96,25 +82,14 @@ const segmentTreeSlice = createSlice({
     clearHighlightedNodes(state) {
       state.highlightedNodes = [];
     },
-    // Новый reducer для установки дерева (этап «листьев»)
-    setTree(
-      state,
-      action: PayloadAction<{
-        nodes: VisNode[];
-        data: number[];
-        parentMap: Record<number, number | undefined>;
-      }>
-    ) {
-      state.nodes = action.payload.nodes;
-      state.data = action.payload.data;
-      state.parentMap = action.payload.parentMap;
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateTreeWithNewData.fulfilled, (state, action) => {
       state.data = action.payload.data;
       state.nodes = action.payload.nodes;
       state.parentMap = action.payload.parentMap;
+      // сохраняем подсветку, чтобы она не обнулялась
+      // state.highlightedNodes = [...state.highlightedNodes];
     });
     builder.addCase(updateTreeWithNewData.rejected, (state, action) => {
       state.snackbarMessage = action.payload || "Ошибка обновления.";
@@ -131,7 +106,6 @@ export const {
   setStageSize,
   setHighlightedNodes,
   clearHighlightedNodes,
-  setTree,
 } = segmentTreeSlice.actions;
 
 export default segmentTreeSlice.reducer;

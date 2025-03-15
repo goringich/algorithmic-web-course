@@ -1,3 +1,4 @@
+// SegmentTreeWasm.ts
 import createSegmentTreeModule from "../../assets/JS_complied_algorithms/segment_tree.mjs";
 import { VisNode } from "../types/VisNode";
 

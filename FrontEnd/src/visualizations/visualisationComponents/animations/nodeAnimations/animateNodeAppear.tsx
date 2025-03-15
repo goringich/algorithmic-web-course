@@ -23,7 +23,7 @@ export const useNodeAppearAnimation = (
     if (circleRef.current && !shapeRefs.current[nodeId]) {
       shapeRefs.current[nodeId] = circleRef.current;
     }
-  }, []);
+  }, []); 
 
   return circleRef;
 };
