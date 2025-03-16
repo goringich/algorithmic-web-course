@@ -96,6 +96,15 @@ const SidebarMenu: React.FC = () => {
           : subSections
       ))
   };
+
+  const [activeSubSubSection, setActiveSubSubSection] = useState<{ sectionIndex: number; subIndex: number; subSubIndex: number } | null>(null);
+
+  const toggleSubSubSection = (sectionIndex: number, subIndex: number, subSubIndex: number) => {
+    setActiveSubSubSection({ sectionIndex, subIndex, subSubIndex }); 
+  };
+
+  
+  
  
   return (
     <Grid2 sx={{height: "100%", width: "100%"}}>
@@ -169,8 +178,21 @@ const SidebarMenu: React.FC = () => {
                                 {/* Динамическое создание аккордеонов для подподсекций */}
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
                                   <ListItemButton key={subSubIndex}
-                                   sx ={{borderRadius: theme.shape.borderRadius, 
-                                   "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`}}}>
+                                    onClick={() => toggleSubSubSection(index, subIndex, subSubIndex)}
+                                    sx ={{borderRadius: theme.shape.borderRadius, 
+                                    "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
+                                    backgroundColor: activeSubSubSection &&
+                                    activeSubSubSection.sectionIndex === index &&
+                                    activeSubSubSection.subIndex === subIndex &&
+                                    activeSubSubSection.subSubIndex === subSubIndex
+                                    ? theme.palette.purple.toClick
+                                    : "inherit",
+                                  boxShadow: activeSubSubSection &&
+                                    activeSubSubSection.sectionIndex === index &&
+                                    activeSubSubSection.subIndex === subIndex &&
+                                    activeSubSubSection.subSubIndex === subSubIndex
+                                    ? "2"
+                                    : "inherit"}}>
                                     <Typography> {subSubSection} </Typography>
                                   </ListItemButton>
                                 ))}

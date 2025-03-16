@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { Grid2, Typography, Box } from "@mui/material";
+import { Grid2, Typography } from "@mui/material";
 import { styled } from '@mui/system';
 import { ThemeContext } from "../../context/ThemeContext";
 import { useTheme } from "@mui/material/styles";
