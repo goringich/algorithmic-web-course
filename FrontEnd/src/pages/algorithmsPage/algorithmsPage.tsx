@@ -7,8 +7,7 @@ import { Section } from "./components/types/types";
 import SidebarMenu from "./components/Sidebar";
 import { Grid2} from "@mui/material";
 
-
-const ContentPage: React.FC = () => {
+const ContentPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>("теория");
   const [activeSection, setActiveSection] = useState<Section | null>(
     contents.length > 0 ? contents[0] : null
