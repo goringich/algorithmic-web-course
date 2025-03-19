@@ -5,7 +5,7 @@ import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
 import { useTheme } from "@mui/material/styles";
-
+import { useSection } from "../../../context/SectionContext";
 
 const menuData = [
   {
@@ -33,7 +33,7 @@ const menuData = [
   },
   {
     title: "Алгоритмы обработки координат и анализа пространственных данных",
-    subSections: [],
+    subSections: [ ],
   },
   {
     title: "Декомпозиционные методы",
@@ -69,8 +69,8 @@ const StyledButtonExit = styled(Button)(({ theme }) =>({
     transform: "scale(1.03)"}
 }));
 
-const SidebarMenu: React.FC = () => {
-
+const SidebarMenu = () => {
+  const { setActiveSection } = useSection();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 900px)"); // Условие для мобильных устройств
@@ -97,10 +97,11 @@ const SidebarMenu: React.FC = () => {
       ))
   };
 
-  const [activeSubSubSection, setActiveSubSubSection] = useState<{ sectionIndex: number; subIndex: number; subSubIndex: number } | null>(null);
+  const [openSubSubSection, setOpenSubSubSection] = useState<{ sectionIndex: number; subIndex: number; subSubIndex: number } | null>(null);
 
   const toggleSubSubSection = (sectionIndex: number, subIndex: number, subSubIndex: number) => {
-    setActiveSubSubSection({ sectionIndex, subIndex, subSubIndex }); 
+    setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex }); 
+    const selectedSubSection = menuData[sectionIndex].subSections[subIndex].title;
   };
 
   
@@ -178,19 +179,21 @@ const SidebarMenu: React.FC = () => {
                                 {/* Динамическое создание аккордеонов для подподсекций */}
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
                                   <ListItemButton key={subSubIndex}
-                                    onClick={() => toggleSubSubSection(index, subIndex, subSubIndex)}
+                                    onClick={() => { toggleSubSubSection(index, subIndex, subSubIndex);
+                                      setActiveSection(section.title)
+                                    }}
                                     sx ={{borderRadius: theme.shape.borderRadius, 
                                     "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
-                                    backgroundColor: activeSubSubSection &&
-                                    activeSubSubSection.sectionIndex === index &&
-                                    activeSubSubSection.subIndex === subIndex &&
-                                    activeSubSubSection.subSubIndex === subSubIndex
+                                    backgroundColor: openSubSubSection &&
+                                    openSubSubSection.sectionIndex === index &&
+                                    openSubSubSection.subIndex === subIndex &&
+                                    openSubSubSection.subSubIndex === subSubIndex
                                     ? theme.palette.purple.toClick
                                     : "inherit",
-                                  boxShadow: activeSubSubSection &&
-                                    activeSubSubSection.sectionIndex === index &&
-                                    activeSubSubSection.subIndex === subIndex &&
-                                    activeSubSubSection.subSubIndex === subSubIndex
+                                  boxShadow: openSubSubSection &&
+                                    openSubSubSection.sectionIndex === index && 
+                                    openSubSubSection.subIndex === subIndex &&
+                                    openSubSubSection.subSubIndex === subSubIndex
                                     ? "2"
                                     : "inherit"}}>
                                     <Typography> {subSubSection} </Typography>

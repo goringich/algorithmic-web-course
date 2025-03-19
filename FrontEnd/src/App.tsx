@@ -5,6 +5,7 @@ import ErrorBoundary from "./components/errorBoundary/ErrorBoundary";
 import { ThemeProviderWrapper } from "./context/ThemeContext";
 import AlternateHeader from './components/header/Header';
 import {Box} from "@mui/material";
+import { SectionProvider } from "./context/SectionContext";
 
 
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
@@ -17,13 +18,13 @@ function Layout() {
   const location = useLocation();
   const isSpecialPage = location.pathname === "/";
 
-  return (
+  return (    
     <Box sx={{ 
       display: "flex", 
       flexDirection: "column", 
       height: "100vh" 
     }}>
-      {isSpecialPage ? <Header /> : <AlternateHeader />}
+      {isSpecialPage ? <Header/> : <AlternateHeader/>}
 
       <Box sx={{ flexGrow: 1 }}>
         <Suspense fallback={<div>Loading...</div>}>
@@ -46,7 +47,9 @@ function App() {
     <ThemeProviderWrapper>
       <ErrorBoundary>
         <BrowserRouter>
-          <Layout />
+          <SectionProvider>
+            <Layout />
+          </SectionProvider>
         </BrowserRouter>
       </ErrorBoundary>
     </ThemeProviderWrapper>

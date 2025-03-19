@@ -1,4 +1,5 @@
 import React, {useContext} from 'react';
+import { Link } from "react-router-dom";
 import Levitate from "../../../components/levitate/Levitate"
 import table from '../../../assets/images/MainPage/anime-person/Group 3490.png';
 import { Grid2, Button } from "@mui/material";
@@ -52,7 +53,11 @@ const HeroSection = () => {
           предоставляет теоретические знания, но и активно вовлекает пользователей в процесс
           обучения через интерактивные элементы и визуальные представления.
         </Typography>
-        <StartButton sx={{boxShadow : 3}} >Начать →</StartButton>
+        <StartButton sx={{boxShadow : 3}} >
+          <Link to="/algorithmsPage">
+          Начать →
+          </Link>
+        </StartButton>
       </Grid2>
       <Grid2 size={{ xs: 12, md: 6 }}>
         <ImageContainer>
