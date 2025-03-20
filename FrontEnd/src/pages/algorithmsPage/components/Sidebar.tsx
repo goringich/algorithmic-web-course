@@ -4,6 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
+import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
 
@@ -33,7 +34,14 @@ const menuData = [
   },
   {
     title: "Алгоритмы обработки координат и анализа пространственных данных",
-    subSections: [ ],
+    subSections: [ 
+      {
+        title: "Что-то там",
+        subSubSections: ["1",
+          "2",
+          "3"],
+      },
+    ],
   },
   {
     title: "Декомпозиционные методы",
@@ -73,7 +81,7 @@ const SidebarMenu = () => {
   const { setActiveSection } = useSection();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 900px)"); // Условие для мобильных устройств
+  const isMobile = useMediaQuery("(max-width: 900px)"); 
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open);
@@ -118,8 +126,8 @@ const SidebarMenu = () => {
         </IconButton>
       )}
         <StyledDrawer
-        variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
-        open={isMobile ? open : true} // Открыто постоянно для десктопов
+        variant={isMobile ? "temporary" : "permanent"} 
+        open={isMobile ? open : true}
         onClose={() => toggleDrawer(false)}
         >
           <Content>
@@ -212,11 +220,13 @@ const SidebarMenu = () => {
           </Grid2>
           
           <Grid2>
-            <StyledButtonExit
-            startIcon={<ExitToAppOutlinedIcon />}
-            >
-            Вернуться к содержанию
-            </StyledButtonExit>
+            <Link to="/CourseContent">
+              <StyledButtonExit
+              startIcon={<ExitToAppOutlinedIcon />}
+              >
+              Вернуться к содержанию
+              </StyledButtonExit>
+            </Link>
           </Grid2>
       </StyledDrawer>
     </Grid2>
