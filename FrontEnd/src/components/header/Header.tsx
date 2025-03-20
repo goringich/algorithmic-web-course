@@ -29,6 +29,15 @@ const CenteredTitle = styled(Typography)(({ theme }) => ({
   fontSize: "30px"
 }));
 
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  color: theme.palette.purple.dark,
+  fontSize: "17px",
+  display: "flex",
+  alignItems: "center",
+  transform: "translateY(15%)",
+  paddingLeft: "110px"
+}))
+
 const Header = () => {
   const theme = useTheme();
   const location = useLocation();
@@ -59,17 +68,9 @@ const Header = () => {
       </StyledLink>
 
       {isCentered ? (<CenteredTitle> {pageTitle} </CenteredTitle>) : (
-        <Typography
-          sx={{ color: theme.palette.purple.dark,
-          fontSize: "17px",
-          display: "flex",
-          alignItems: "center",
-          transform: "translateY(15%)",
-          paddingLeft: "110px"
-        }}
-        >
+        <SectionTitle>
           {pageTitle}
-        </Typography>
+        </SectionTitle>
       )}
   </StyledHeader>
   );  
