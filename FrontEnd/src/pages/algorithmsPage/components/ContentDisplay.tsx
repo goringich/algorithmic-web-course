@@ -35,7 +35,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
         <>
           <ErrorBoundary>
             <Provider store={store}>
-              <SegmentTreeVisualizer />
+              <FenwickTreeVisualizer />
             </Provider>
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>

@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import SegmentTreeWasm from "../segmentTreeVisualizer/SegmentTreeWasm";
-import { VisNode } from "../types/VisNode";
-import { normalizeVisNodes } from "../segmentTreeVisualizer/utils/functions/normalizeVisNodes";
-import { buildAndValidateParentMap } from "../segmentTreeVisualizer/utils/functions/buildAndValidateParentMap";
+import SegmentTreeWasm from "../../segmentTreeVisualizer/SegmentTreeWasm";
+import { VisNode } from "../../types/VisNode";
+import { normalizeVisNodes } from "../../segmentTreeVisualizer/utils/functions/normalizeVisNodes";
+import { buildAndValidateParentMap } from "../../segmentTreeVisualizer/utils/functions/buildAndValidateParentMap";
 
 interface SegmentTreeState {
   data: number[];

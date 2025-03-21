@@ -1,10 +1,12 @@
 // store.ts
 import { configureStore } from '@reduxjs/toolkit';
-import segmentTreeReducer from './segmentTreeSlice';
+import segmentTreeReducer from './slices/segmentTreeSlice';
+import fenwickReducer from './slices/fenwickSlice';
 
 const store = configureStore({
   reducer: {
     segmentTree: segmentTreeReducer,
+    fenwick: fenwickReducer,
   },
 });
 
