@@ -81,7 +81,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       {activeTab === "визуализация" && (
           <ErrorBoundary>
             <Provider store={store}>
-              <SegmentTreeVisualizer />
+              <FenwickTreeVisualizer />
             </Provider>
           </ErrorBoundary>
       )}
