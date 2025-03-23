@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import contents from "../../assets/dataBase/TitlesData.json";
 import ContentDisplay from "./components/ContentDisplay";
@@ -6,9 +5,11 @@ import Tabs, { TabType } from "./components/Tabs";
 import { Section } from "./components/types/types";
 import SidebarMenu from "./components/Sidebar";
 import { Grid2} from "@mui/material";
+import { useSubSubSection } from "../../context/subSubSectionContext";
 
 const ContentPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>("теория");
+  const { activeSubSubSection } = useSubSubSection();
   const [activeSection, setActiveSection] = useState<Section | null>(
     contents.length > 0 ? contents[0] : null
   );

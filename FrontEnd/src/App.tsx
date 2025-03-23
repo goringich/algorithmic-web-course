@@ -6,6 +6,7 @@ import { ThemeProviderWrapper } from "./context/ThemeContext";
 import AlternateHeader from './components/header/Header';
 import {Box} from "@mui/material";
 import { SectionProvider } from "./context/SectionContext";
+import { SubSubSectionProvider } from "./context/subSubSectionContext";
 
 
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
@@ -48,7 +49,9 @@ function App() {
       <ErrorBoundary>
         <BrowserRouter>
           <SectionProvider>
-            <Layout />
+            <SubSubSectionProvider>
+              <Layout />
+            </SubSubSectionProvider>
           </SectionProvider>
         </BrowserRouter>
       </ErrorBoundary>

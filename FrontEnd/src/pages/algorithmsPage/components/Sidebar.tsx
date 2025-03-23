@@ -7,27 +7,28 @@ import { styled } from '@mui/system';
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
+import { useSubSubSection } from "../../../context/subSubSectionContext";
 
 const menuData = [
   {
     title: "Структуры данных и алгоритмы обработки диапазонов",
     subSections: [
       {
-        title: ["Дерево отрезков (ДО)", "segmentTree"],
-        subSubSections: ["Дерево отрезков с суммами",
-          "Дерево отрезков с минимальными/максимальными значениями",
-          "Дерево отрезков с добавлением модификаторов (range update)"],
+        title: "Дерево отрезков (ДО)",
+        subSubSections: [["Дерево отрезков с суммами", "segmentTree"],
+          ["Дерево отрезков с минимальными/максимальными значениями", ""],
+          ["Дерево отрезков с добавлением модификаторов (range update)", ""]],
       },
       {
-        title: ["Дерево Фенвика"],
-        subSubSections: ["Подсекция 1", "Подсекция 2"],
+        title: "Дерево Фенвика",
+        subSubSections: [["Подсекция 1"], ["Подсекция 2"]],
       },
       {
-        title: ["Простое дерево отрезков"],
+        title: "Простое дерево отрезков",
         subSubSections: [],
       },
       {
-        title: ["Ленивое дерево отрезков"],
+        title: "Ленивое дерево отрезков",
         subSubSections: [],
       },
     ],
@@ -36,7 +37,7 @@ const menuData = [
     title: "Алгоритмы обработки координат и анализа пространственных данных",
     subSections: [ 
       {
-        title: ["Что-то там"],
+        title: "Что-то там",
         subSubSections: ["1",
           "2",
           "3"],
@@ -79,6 +80,7 @@ const StyledButtonExit = styled(Button)(({ theme }) =>({
 
 const SidebarMenu = () => {
   const { setActiveSection } = useSection();
+  const { setActiveSubSubSection } = useSubSubSection();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 900px)"); 
@@ -179,7 +181,7 @@ const SidebarMenu = () => {
                               aria-controls={`panel${index}-${subIndex}-content`}
                               id={`panel${index}-${subIndex}-header`}
                             >
-                              <Typography sx={{color: openSubSection[index][subIndex] ? theme.palette.purple.light : "inherit"}}> {subSection.title[0]} </Typography>
+                              <Typography sx={{color: openSubSection[index][subIndex] ? theme.palette.purple.light : "inherit"}}> {subSection.title} </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                               <List>
@@ -187,7 +189,8 @@ const SidebarMenu = () => {
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
                                   <ListItemButton key={subSubIndex}
                                     onClick={() => { toggleSubSubSection(index, subIndex, subSubIndex);
-                                      setActiveSection(section.title)
+                                      setActiveSection(section.title);
+                                      setActiveSubSubSection(subSubSection[1])
                                     }}
                                     sx ={{borderRadius: theme.shape.borderRadius, 
                                     "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
@@ -203,7 +206,7 @@ const SidebarMenu = () => {
                                     openSubSubSection.subSubIndex === subSubIndex
                                     ? "2"
                                     : "inherit"}}>
-                                    <Typography> {subSubSection} </Typography>
+                                    <Typography> {subSubSection[0]} </Typography>
                                   </ListItemButton>
                                 ))}
                               </List>
