@@ -13,21 +13,21 @@ const menuData = [
     title: "Структуры данных и алгоритмы обработки диапазонов",
     subSections: [
       {
-        title: "Дерево отрезков (ДО)",
+        title: ["Дерево отрезков (ДО)", "segmentTree"],
         subSubSections: ["Дерево отрезков с суммами",
           "Дерево отрезков с минимальными/максимальными значениями",
           "Дерево отрезков с добавлением модификаторов (range update)"],
       },
       {
-        title: "Дерево Фенвика",
+        title: ["Дерево Фенвика"],
         subSubSections: ["Подсекция 1", "Подсекция 2"],
       },
       {
-        title: "Простое дерево отрезков",
+        title: ["Простое дерево отрезков"],
         subSubSections: [],
       },
       {
-        title: "Ленивое дерево отрезков",
+        title: ["Ленивое дерево отрезков"],
         subSubSections: [],
       },
     ],
@@ -36,7 +36,7 @@ const menuData = [
     title: "Алгоритмы обработки координат и анализа пространственных данных",
     subSections: [ 
       {
-        title: "Что-то там",
+        title: ["Что-то там"],
         subSubSections: ["1",
           "2",
           "3"],
@@ -108,8 +108,7 @@ const SidebarMenu = () => {
   const [openSubSubSection, setOpenSubSubSection] = useState<{ sectionIndex: number; subIndex: number; subSubIndex: number } | null>(null);
 
   const toggleSubSubSection = (sectionIndex: number, subIndex: number, subSubIndex: number) => {
-    setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex }); 
-    const selectedSubSection = menuData[sectionIndex].subSections[subIndex].title;
+    setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex });
   };
 
   
@@ -180,7 +179,7 @@ const SidebarMenu = () => {
                               aria-controls={`panel${index}-${subIndex}-content`}
                               id={`panel${index}-${subIndex}-header`}
                             >
-                              <Typography sx={{color: openSubSection[index][subIndex] ? theme.palette.purple.light : "inherit"}}> {subSection.title} </Typography>
+                              <Typography sx={{color: openSubSection[index][subIndex] ? theme.palette.purple.light : "inherit"}}> {subSection.title[0]} </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                               <List>
