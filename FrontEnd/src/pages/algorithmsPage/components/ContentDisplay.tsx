@@ -8,8 +8,8 @@ import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
 import { TabType } from "./Tabs";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
+import CardForTheory from "./CardForTheory";
 
-import { Container } from '@mui/material';
 
 interface ContentDisplayProps {
   activeSection: Section | null;
@@ -48,7 +48,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
 
   return (
     <div>
-      {activeTab === "теория" && <p>{sectionData?.content || "Нет данных"}</p>}
+      {activeTab === "теория" && <p>{<CardForTheory text = {sectionData?.content}/> || "Нет данных"}</p>}
       {activeTab === "код" && (
       <pre>
         <code>{sectionData?.code || "Код отсутствует"}</code>
