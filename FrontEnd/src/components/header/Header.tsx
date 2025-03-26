@@ -51,7 +51,7 @@ const Header = () => {
   
   let pageTitle = pageTitles[location.pathname] || "";
 
-  if (activeSection && location.pathname === "/algorithmsPage") {
+  if (activeSection && location.pathname.startsWith("/algorithmsPage")) {
     pageTitle = `${activeSection}`;
   }
 

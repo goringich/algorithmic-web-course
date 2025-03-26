@@ -15,7 +15,7 @@ const menuData = [
     subSections: [
       {
         title: "Дерево отрезков (ДО)",
-        subSubSections: [["Дерево отрезков с суммами", "Tree of segments with sums"],
+        subSubSections: [["Дерево отрезков с суммами", "Tree-of-segments-with-sums"],
           ["Дерево отрезков с минимальными/максимальными значениями", ""],
           ["Дерево отрезков с добавлением модификаторов (range update)", ""]],
       },
