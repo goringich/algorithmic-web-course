@@ -2,6 +2,7 @@ import React,  { useEffect, useState } from "react";
 import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
 import { Provider } from 'react-redux';
+import {Typography} from "@mui/material";
 import store from '../../../visualizations/store/store';
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
@@ -18,7 +19,7 @@ interface ContentDisplayProps {
 
 interface subSubSectionContent {
   title: string;
-  content: string;
+  content: string[];
   code: string;
   visualization: string;
 }
@@ -39,7 +40,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
         console.error("Ошибка загрузки данных:", error);
         setSectionData({
           title: activeSubSubSection,
-          content: "Нет данных",
+          content: ["Нет данных"],
           code: "Код отсутствует",
           visualization: "Визуализация недоступна",
         });
@@ -48,7 +49,17 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
 
   return (
     <div>
-      {activeTab === "теория" && <p>{<CardForTheory text = {sectionData?.content}/> || "Нет данных"}</p>}
+      <Typography> dfghj </Typography>
+      {activeTab === "теория" && (
+        sectionData?.content ? (
+          sectionData.content.map((info, index) => (
+            <CardForTheory key={index} text={info} />
+          ))
+        ) : (
+          <p>Нет данных</p>
+        )
+      )}
+
       {activeTab === "код" && (
       <pre>
         <code>{sectionData?.code || "Код отсутствует"}</code>
