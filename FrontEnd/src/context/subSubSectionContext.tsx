@@ -1,13 +1,13 @@
 import React, { createContext, useState, useContext } from "react";
 interface subSubSectionContextType {
-  activeSubSubSection: string | null;
-  setActiveSubSubSection: (Section: string | null) => void;
+  activeSubSubSection: string[] | null;
+  setActiveSubSubSection: (Section: string[] | null) => void;
 }
 
 const SubSubSectionContext = createContext<subSubSectionContextType | undefined>(undefined);
 
 export const SubSubSectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeSubSubSection, setActiveSubSubSection] = useState<string | null>(null);
+  const [activeSubSubSection, setActiveSubSubSection] = useState<string[] | null>(null);
 
   return (
     <SubSubSectionContext.Provider value={{ activeSubSubSection, setActiveSubSubSection }}>

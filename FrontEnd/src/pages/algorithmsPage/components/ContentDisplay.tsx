@@ -10,7 +10,7 @@ import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer
 import { TabType } from "./Tabs";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
 import CardForTheory from "./CardForTheory";
-
+import { styled } from '@mui/system';
 
 interface ContentDisplayProps {
   activeSection: Section | null;
@@ -24,6 +24,13 @@ interface subSubSectionContent {
   visualization: string;
 }
 
+const TypographyForTitle = styled(Typography)(({theme}) => ({
+  fontSize: "1.4rem",
+  textAlign: "center", 
+  padding: theme.spacing(4),
+
+}));
+
 const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
   const { activeSubSubSection } = useSubSubSection();
   const [sectionData, setSectionData] = useState<subSubSectionContent | null>(null);
@@ -34,12 +41,12 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       return;
     }
 
-    import(`../../../assets/dataBase/Sections/${activeSubSubSection}.json`)
+    import(`../../../assets/dataBase/Sections/${activeSubSubSection[1]}.json`)
       .then((data) => setSectionData(data))
       .catch((error) => {
         console.error("Ошибка загрузки данных:", error);
         setSectionData({
-          title: activeSubSubSection,
+          title: activeSubSubSection[0],
           content: ["Нет данных"],
           code: "Код отсутствует",
           visualization: "Визуализация недоступна",
@@ -49,7 +56,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
 
   return (
     <div>
-      <Typography> dfghj </Typography>
+      <TypographyForTitle> {sectionData?.title} </TypographyForTitle>
       {activeTab === "теория" && (
         sectionData?.content ? (
           sectionData.content.map((info, index) => (

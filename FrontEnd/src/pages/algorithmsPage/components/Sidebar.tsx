@@ -38,9 +38,9 @@ const menuData = [
     subSections: [ 
       {
         title: "Что-то там",
-        subSubSections: ["1",
-          "2",
-          "3"],
+        subSubSections: [["1", "1"],
+          ["2", "2"],
+          ["3", "3"]],
       },
     ],
   },
@@ -190,7 +190,7 @@ const SidebarMenu = () => {
                                   <ListItemButton key={subSubIndex}
                                     onClick={() => { toggleSubSubSection(index, subIndex, subSubIndex);
                                       setActiveSection(section.title);
-                                      setActiveSubSubSection(subSubSection[1])
+                                      setActiveSubSubSection(subSubSection)
                                     }}
                                     sx ={{borderRadius: theme.shape.borderRadius, 
                                     "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
