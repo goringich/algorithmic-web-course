@@ -58,6 +58,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
   return (
     <div>
       <TypographyForTitle> {sectionData?.title} </TypographyForTitle>
+      
       {activeTab === "теория" && (
         sectionData?.content ? (
           sectionData.content.map((info, index) => (
