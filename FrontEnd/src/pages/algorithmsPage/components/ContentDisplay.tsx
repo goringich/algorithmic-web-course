@@ -11,6 +11,7 @@ import { TabType } from "./Tabs";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
 import CardForTheory from "./CardForTheory";
 import { styled } from '@mui/system';
+import { useTheme } from "@mui/material/styles";
 
 interface ContentDisplayProps {
   activeSection: Section | null;
