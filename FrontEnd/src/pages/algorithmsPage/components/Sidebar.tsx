@@ -4,7 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
@@ -15,7 +15,7 @@ const menuData = [
     subSections: [
       {
         title: "Дерево отрезков (ДО)",
-        subSubSections: [["Дерево отрезков с суммами", "segmentTree"],
+        subSubSections: [["Дерево отрезков с суммами", "Tree of segments with sums"],
           ["Дерево отрезков с минимальными/максимальными значениями", ""],
           ["Дерево отрезков с добавлением модификаторов (range update)", ""]],
       },
@@ -79,6 +79,8 @@ const StyledButtonExit = styled(Button)(({ theme }) =>({
 }));
 
 const SidebarMenu = () => {
+  const navigate = useNavigate(); 
+
   const { setActiveSection } = useSection();
   const { setActiveSubSubSection } = useSubSubSection();
   const theme = useTheme();
@@ -190,7 +192,8 @@ const SidebarMenu = () => {
                                   <ListItemButton key={subSubIndex}
                                     onClick={() => { toggleSubSubSection(index, subIndex, subSubIndex);
                                       setActiveSection(section.title);
-                                      setActiveSubSubSection(subSubSection)
+                                      setActiveSubSubSection(subSubSection);
+                                      navigate(`/algorithmsPage/${subSubSection[1]}`);
                                     }}
                                     sx ={{borderRadius: theme.shape.borderRadius, 
                                     "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
