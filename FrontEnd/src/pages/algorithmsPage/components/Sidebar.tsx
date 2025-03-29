@@ -9,6 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
 import menuData from "../../../assets/dataBase/menuData";
+import { LucideSquareFunction } from "lucide-react";
 
 
 const Content = styled(Typography)(({ theme }) => ({
@@ -78,27 +79,19 @@ const SidebarMenu = () => {
   };
 
   useEffect(() => {
-    const [sectionTitle, subSectionTitle, subSubSectionId] = urlSubSubSection?.split("/") ?? [];
+    const  subSubSectionId = urlSubSubSection;
 
     menuData.forEach((section, sectionIndex) => {
       section.subSections.forEach((subSection, subIndex) => {
         if (subSection.subSubSections) {
           subSection.subSubSections.forEach((subSubSection, subSubIndex) => {
-            // Сравниваем id подподсекции с тем, что есть в URL
             if (subSubSection[1] === subSubSectionId) {
               setActiveSection(section.title);
               setActiveSubSubSection(subSubSection);
 
-              // Открываем аккордеоны и подподсекции
-              setOpenSection(prev => prev.map((isOpen, i) => (i === sectionIndex ? true : isOpen)));
-              setOpenSubSection(prev =>
-                prev.map((subSections, i) =>
-                  i === sectionIndex
-                    ? subSections.map((isOpen, j) => (j === subIndex ? true : isOpen))
-                    : subSections
-                )
-              );
-              setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex });
+              toggleSection(sectionIndex);
+              toggleSubSection(sectionIndex, subIndex);
+              toggleSubSubSection(sectionIndex, subIndex, subSubIndex);
             }
           });
         }

@@ -54,7 +54,7 @@ const HeroSection = () => {
           обучения через интерактивные элементы и визуальные представления.
         </Typography>
         <StartButton sx={{boxShadow : 3}} >
-          <Link to="/algorithmsPage/Tree-of-segments-with-sums">
+          <Link to="/algorithmsPage/Algorithm-1">
           Начать →
           </Link>
         </StartButton>
