@@ -34,7 +34,7 @@ function Layout() {
             <Route path="/CourseContent" element={<CoursePage />} />
             <Route path="/AboutPage" element={<AboutPage />} />
             <Route path="/FAQPage" element={<FAQPage />} />
-            <Route path="/algorithmsPage/*" element={<AlgorithmsPage />} />
+            <Route path="/algorithmsPage/:subSubSection" element={<AlgorithmsPage />} />
           </Routes>
         </Suspense>
       </Box>

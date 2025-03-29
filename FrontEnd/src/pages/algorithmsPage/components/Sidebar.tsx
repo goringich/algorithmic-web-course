@@ -1,54 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItemButton, Grid2, Button, useMediaQuery, Drawer, IconButton} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
+import menuData from "../../../assets/dataBase/menuData";
 
-const menuData = [
-  {
-    title: "Структуры данных и алгоритмы обработки диапазонов",
-    subSections: [
-      {
-        title: "Дерево отрезков (ДО)",
-        subSubSections: [["Дерево отрезков с суммами", "Tree-of-segments-with-sums"],
-          ["Дерево отрезков с минимальными/максимальными значениями", ""],
-          ["Дерево отрезков с добавлением модификаторов (range update)", ""]],
-      },
-      {
-        title: "Дерево Фенвика",
-        subSubSections: [["Подсекция 1"], ["Подсекция 2"]],
-      },
-      {
-        title: "Простое дерево отрезков",
-        subSubSections: [],
-      },
-      {
-        title: "Ленивое дерево отрезков",
-        subSubSections: [],
-      },
-    ],
-  },
-  {
-    title: "Алгоритмы обработки координат и анализа пространственных данных",
-    subSections: [ 
-      {
-        title: "Что-то там",
-        subSubSections: [["1", "1"],
-          ["2", "2"],
-          ["3", "3"]],
-      },
-    ],
-  },
-  {
-    title: "Декомпозиционные методы",
-    subSections: [ ],
-  },
-];
+
 const Content = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[500],
   paddingLeft: theme.spacing(2),
@@ -80,7 +42,7 @@ const StyledButtonExit = styled(Button)(({ theme }) =>({
 
 const SidebarMenu = () => {
   const navigate = useNavigate(); 
-
+  const { subSubSection: urlSubSubSection } = useParams(); 
   const { setActiveSection } = useSection();
   const { setActiveSubSubSection } = useSubSubSection();
   const theme = useTheme();
@@ -115,8 +77,34 @@ const SidebarMenu = () => {
     setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex });
   };
 
-  
-  
+  useEffect(() => {
+    const [sectionTitle, subSectionTitle, subSubSectionId] = urlSubSubSection?.split("/") ?? [];
+
+    menuData.forEach((section, sectionIndex) => {
+      section.subSections.forEach((subSection, subIndex) => {
+        if (subSection.subSubSections) {
+          subSection.subSubSections.forEach((subSubSection, subSubIndex) => {
+            // Сравниваем id подподсекции с тем, что есть в URL
+            if (subSubSection[1] === subSubSectionId) {
+              setActiveSection(section.title);
+              setActiveSubSubSection(subSubSection);
+
+              // Открываем аккордеоны и подподсекции
+              setOpenSection(prev => prev.map((isOpen, i) => (i === sectionIndex ? true : isOpen)));
+              setOpenSubSection(prev =>
+                prev.map((subSections, i) =>
+                  i === sectionIndex
+                    ? subSections.map((isOpen, j) => (j === subIndex ? true : isOpen))
+                    : subSections
+                )
+              );
+              setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex });
+            }
+          });
+        }
+      });
+    });
+  }, [urlSubSubSection]);
  
   return (
     <Grid2 sx={{height: "100%", width: "100%"}}>

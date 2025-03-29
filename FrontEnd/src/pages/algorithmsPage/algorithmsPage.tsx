@@ -6,12 +6,28 @@ import Tabs, { TabType } from "./components/Tabs";
 import { Section } from "./components/types/types";
 import SidebarMenu from "./components/Sidebar";
 import { Grid2} from "@mui/material";
+import { useSubSubSection } from "../../context/subSubSectionContext";
+import menuData from "../../assets/dataBase/menuData";
 
 const ContentPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>("теория");
   const [activeSection, setActiveSection] = useState<Section | null>(
     contents.length > 0 ? contents[0] : null
   );
+  const { subSubSection: urlSubSubSection } = useParams();
+  const { setActiveSubSubSection } = useSubSubSection();
+  useEffect(() => {
+    if (urlSubSubSection) {
+      const foundSubSubSection = menuData
+        .flatMap(section => section.subSections)
+        .flatMap(subSection => subSection.subSubSections)
+        .find(subSub => subSub[1] === urlSubSubSection);
+  
+      if (foundSubSubSection) {
+        setActiveSubSubSection(foundSubSubSection);
+      }
+    }
+  }, [urlSubSubSection, setActiveSubSubSection]);
 
   return (
     <Grid2 container sx={{ height: "100%", overflow: "hidden" }}>
