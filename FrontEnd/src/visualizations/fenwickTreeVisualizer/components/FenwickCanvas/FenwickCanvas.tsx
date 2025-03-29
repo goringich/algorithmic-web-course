@@ -67,7 +67,7 @@ export default function FenwickCanvas({
     return powers.map((p) => ({ power: p, segments: getSegmentsForPower(p, n) }));
   }, [n]);
 
-  const scaleX = n > 0 ? canvasWidth / n : 0;
+  const scaleX = n > 0 ? canvasWidth / n / 1.1 : 0;
   const rowCount = powerRows.length > 0 ? powerRows.length : 1;
   const rowHeight = canvasHeight / (rowCount + 2);
   const rectHeight = rowHeight * 0.4;
@@ -77,7 +77,7 @@ export default function FenwickCanvas({
   }
 
   return (
-    <Stage width={canvasWidth} height={canvasHeight}>
+    <Stage width={canvasWidth} height={canvasHeight} sx={{ padding: "30px" }}>
       <BackgroundLayer width={canvasWidth} height={canvasHeight} />
       <TitleLayer canvasWidth={canvasWidth} />
       <PowerRowsLayer

@@ -208,8 +208,22 @@ export default function FenwickTreeVisualizer() {
       <Typography variant="h4" align="center" sx={{ mb: 2 }}>
         Fenwick Tree Visualizer
       </Typography>
-      <Box display="flex" gap={2}>
-        <Box flex={1} maxWidth={350}>
+      <Box display="flex" flexDirection={"column"} gap={2}>
+      <Paper
+          ref={containerRef}
+          sx={{  minHeight: 500, maxWidth: "100%", width: "100%", position: "relative" }}
+        >
+          {bit &&
+            Number.isFinite(canvasSize.width) &&
+            Number.isFinite(canvasSize.height) && (
+              <FenwickCanvas
+                canvasWidth={canvasSize.width}
+                canvasHeight={canvasSize.height}
+                isBinaryView={viewMode === "binary"}
+              />
+            )}
+        </Paper>
+        <Box sx={{   maxWidth: "100%", width: "100%" }}>
           <FenwickControls
             array={array}
             onArrayChange={onArrayChange}
@@ -269,20 +283,7 @@ export default function FenwickTreeVisualizer() {
           </Box>
         </Box>
 
-        <Paper
-          ref={containerRef}
-          sx={{ flex: 2, minHeight: 500, position: "relative" }}
-        >
-          {bit &&
-            Number.isFinite(canvasSize.width) &&
-            Number.isFinite(canvasSize.height) && (
-              <FenwickCanvas
-                canvasWidth={canvasSize.width}
-                canvasHeight={canvasSize.height}
-                isBinaryView={viewMode === "binary"}
-              />
-            )}
-        </Paper>
+
       </Box>
 
       <FenwickInfo />
