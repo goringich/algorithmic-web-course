@@ -4,8 +4,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
+import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-
+import { useSection } from "../../../context/SectionContext";
 
 const menuData = [
   {
@@ -33,7 +34,14 @@ const menuData = [
   },
   {
     title: "Алгоритмы обработки координат и анализа пространственных данных",
-    subSections: [],
+    subSections: [ 
+      {
+        title: "Что-то там",
+        subSubSections: ["1",
+          "2",
+          "3"],
+      },
+    ],
   },
   {
     title: "Декомпозиционные методы",
@@ -69,11 +77,11 @@ const StyledButtonExit = styled(Button)(({ theme }) =>({
     transform: "scale(1.03)"}
 }));
 
-const SidebarMenu: React.FC = () => {
-
+const SidebarMenu = () => {
+  const { setActiveSection } = useSection();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 900px)"); // Условие для мобильных устройств
+  const isMobile = useMediaQuery("(max-width: 900px)"); 
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open);
@@ -96,6 +104,16 @@ const SidebarMenu: React.FC = () => {
           : subSections
       ))
   };
+
+  const [openSubSubSection, setOpenSubSubSection] = useState<{ sectionIndex: number; subIndex: number; subSubIndex: number } | null>(null);
+
+  const toggleSubSubSection = (sectionIndex: number, subIndex: number, subSubIndex: number) => {
+    setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex }); 
+    const selectedSubSection = menuData[sectionIndex].subSections[subIndex].title;
+  };
+
+  
+  
  
   return (
     <Grid2 sx={{height: "100%", width: "100%"}}>
@@ -108,8 +126,8 @@ const SidebarMenu: React.FC = () => {
         </IconButton>
       )}
         <StyledDrawer
-        variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
-        open={isMobile ? open : true} // Открыто постоянно для десктопов
+        variant={isMobile ? "temporary" : "permanent"} 
+        open={isMobile ? open : true}
         onClose={() => toggleDrawer(false)}
         >
           <Content>
@@ -169,8 +187,23 @@ const SidebarMenu: React.FC = () => {
                                 {/* Динамическое создание аккордеонов для подподсекций */}
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
                                   <ListItemButton key={subSubIndex}
-                                   sx ={{borderRadius: theme.shape.borderRadius, 
-                                   "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`}}}>
+                                    onClick={() => { toggleSubSubSection(index, subIndex, subSubIndex);
+                                      setActiveSection(section.title)
+                                    }}
+                                    sx ={{borderRadius: theme.shape.borderRadius, 
+                                    "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
+                                    backgroundColor: openSubSubSection &&
+                                    openSubSubSection.sectionIndex === index &&
+                                    openSubSubSection.subIndex === subIndex &&
+                                    openSubSubSection.subSubIndex === subSubIndex
+                                    ? theme.palette.purple.toClick
+                                    : "inherit",
+                                  boxShadow: openSubSubSection &&
+                                    openSubSubSection.sectionIndex === index && 
+                                    openSubSubSection.subIndex === subIndex &&
+                                    openSubSubSection.subSubIndex === subSubIndex
+                                    ? "2"
+                                    : "inherit"}}>
                                     <Typography> {subSubSection} </Typography>
                                   </ListItemButton>
                                 ))}
@@ -187,11 +220,13 @@ const SidebarMenu: React.FC = () => {
           </Grid2>
           
           <Grid2>
-            <StyledButtonExit
-            startIcon={<ExitToAppOutlinedIcon />}
-            >
-            Вернуться к содержанию
-            </StyledButtonExit>
+            <Link to="/CourseContent">
+              <StyledButtonExit
+              startIcon={<ExitToAppOutlinedIcon />}
+              >
+              Вернуться к содержанию
+              </StyledButtonExit>
+            </Link>
           </Grid2>
       </StyledDrawer>
     </Grid2>
