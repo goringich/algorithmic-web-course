@@ -89,8 +89,8 @@ const SidebarMenu = () => {
               setActiveSection(section.title);
               setActiveSubSubSection(subSubSection);
 
-              toggleSection(sectionIndex);
-              toggleSubSection(sectionIndex, subIndex);
+              openSection[sectionIndex] = true;
+              openSubSection[sectionIndex][subIndex] = true;
               toggleSubSubSection(sectionIndex, subIndex, subSubIndex);
             }
           });
