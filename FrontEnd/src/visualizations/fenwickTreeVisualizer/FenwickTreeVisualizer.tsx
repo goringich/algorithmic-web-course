@@ -161,7 +161,7 @@
 //     const { sum, path } = bit.prefixSum(queryRight);
 //     setHighlightedPath(path);
 //     setTimeout(() => {
-//       addLog(`Сумма: ${sum}`);
+//       addLog(`Сумма: ${sum}`);ё
 //       setTimeout(() => {
 //         setHighlightedPath([]);
 //         setIsAnimating(false);
