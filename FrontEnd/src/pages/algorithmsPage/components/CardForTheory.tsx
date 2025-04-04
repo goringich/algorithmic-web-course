@@ -2,7 +2,6 @@ import React from "react";
 import {Grid2, Card, Typography} from "@mui/material";
 import { styled } from '@mui/system';
 import { Theme } from "@mui/material/styles";
-import { ThemeContext } from "@emotion/react";
 import { useTheme } from "@mui/material/styles";
 
 interface TheoryProps {

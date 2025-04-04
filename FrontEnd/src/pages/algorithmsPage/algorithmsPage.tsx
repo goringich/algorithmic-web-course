@@ -32,7 +32,6 @@ const ContentPage = () => {
   return (
     <Grid2 container sx={{ height: "100%", overflow: "hidden" }}>
       <Grid2 size={{md: 3}} sx={{
-        height: "calc(100vh - 65px)", 
         top: "1px", // Начинается сразу под хэдером
         overflowY: "auto",
         boxShadow: 2,

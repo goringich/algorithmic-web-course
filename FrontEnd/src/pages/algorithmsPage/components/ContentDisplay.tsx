@@ -11,6 +11,7 @@ import { TabType } from "./Tabs";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
 import CardForTheory from "./CardForTheory";
 import { styled } from '@mui/system';
+import CodeBlock from "./CodeBlock";
 import { useTheme } from "@mui/material/styles";
 
 interface ContentDisplayProps {
@@ -69,10 +70,8 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
         )
       )}
 
-      {activeTab === "код" && (
-      <pre>
-        <code>{sectionData?.code || "Код отсутствует"}</code>
-      </pre>
+      {activeTab === "код" && ( sectionData?.code ?(
+        <CodeBlock code={sectionData?.code} language="cpp" />) : "Код отсутствует"
     )}
       {activeTab === "визуализация" && (
           <ErrorBoundary>

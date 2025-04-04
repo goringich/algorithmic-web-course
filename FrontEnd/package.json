@@ -22,6 +22,7 @@
     "react-konva": "^18.2.10",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.28.0",
+    "react-syntax-highlighter": "^15.6.1",
     "sass.js": "^0.11.1",
     "swiper": "^11.1.15",
     "typescript": "^5.7.2",
