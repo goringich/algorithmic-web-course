@@ -53,7 +53,7 @@ const getTheme = (mode: "light" | "dark") =>
         default: mode === "dark" ? "#2A2431" : "#F8F8F8",
         paper: mode === "dark" ? "#2A2431" : "#fff",
         card: mode === "dark" ? "#4C405F" : "#eaddff",
-        cardContent: mode === "dark" ? "#322E3B": "#EEEAF6"
+        cardContent: mode === "dark" ? "#322E3B": "#EEEAF6",
         textCard: mode === "dark" ? "#40394B": "#EEEEEE",
       },
       text: {

@@ -10,8 +10,8 @@ import { SubSubSectionProvider } from "./context/subSubSectionContext";
 
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
-const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/components/Sidebar'));
-const ContentPage = lazy(() => import('./pages/ContentPage/ContentPage')); // Оставляем только этот импорт
+const AlgorithmsPage = lazy(() => import('./pages/algorithmsPage/algorithmsPage'));
+const ContentPage = lazy(() => import('./pages/ContentPage/ContentPage')); 
 
 function Layout() {
   const location = useLocation();

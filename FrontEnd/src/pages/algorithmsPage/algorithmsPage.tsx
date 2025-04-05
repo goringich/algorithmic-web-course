@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import contents from "../../assets/dataBase/TitlesData.json";
+import contents from "../../assets/dataBase/CourseData.json";
 import ContentDisplay from "./components/ContentDisplay";
 import Tabs, { TabType } from "./components/Tabs";
 import { Section } from "./components/types/types";
@@ -33,7 +33,7 @@ const ContentPage = () => {
   return (
     <Grid2 container sx={{ height: "100%", overflow: "hidden" }}>
       <Grid2 size={{md: 3}} sx={{
-        top: "1px", // Начинается сразу под хэдером
+        top: "1px", 
         overflowY: "auto",
         boxShadow: 2,
       }}>
@@ -47,7 +47,7 @@ const ContentPage = () => {
             overflowY: "auto",
             height: "calc(100vh - 65px)", 
             '&::-webkit-scrollbar': {
-            display: 'none',  // Скрыть полосу прокрутки
+            display: 'none',  
           },
           }}>
           <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
