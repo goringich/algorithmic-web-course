@@ -61,7 +61,7 @@ const getTheme = (mode: "light" | "dark") =>
         secondary: mode === "dark" ? "#000" : "#fff",
         white: "#fff",
       },
-      error: { main: mode === "light" ? "#810F0F" : "#D84141"}, 
+      error: { main: mode === "light" ? "#810F0F" : "#EA5D5D"}, 
       grey: { 
         500: "#b0afaf",
        }, 
