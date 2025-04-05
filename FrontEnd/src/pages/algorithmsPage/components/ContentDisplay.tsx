@@ -1,45 +1,84 @@
-import React from "react";
+import React,  { useEffect, useState } from "react";
 import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
 import { Provider } from 'react-redux';
+import {Typography} from "@mui/material";
 import store from '../../../visualizations/store/store';
 import { Section } from "./types/types";
 import ErrorBoundary from "../../../components/errorBoundary/ErrorBoundary";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
 import { TabType } from "./Tabs";
-import { Container } from '@mui/material';
+import { useSubSubSection } from "../../../context/subSubSectionContext";
+import CardForTheory from "./CardForTheory";
+import { styled } from '@mui/system';
+import CodeBlock from "./CodeBlock";
+import { useTheme } from "@mui/material/styles";
 
 interface ContentDisplayProps {
   activeSection: Section | null;
   activeTab: TabType;
 }
 
-const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
+interface subSubSectionContent {
+  title: string;
+  content: string[];
+  code: string;
+  visualization: string;
+}
 
-  const data = [5, 8, 6, 3, 2, 7, 2, 6];
-  if (!activeSection) {
-    return <h2>Выберите раздел для просмотра</h2>;
-  }
+const TypographyForTitle = styled(Typography)(({theme}) => ({
+  fontSize: "1.4rem",
+  textAlign: "center", 
+  padding: theme.spacing(4),
+
+}));
+
+const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
+  const { activeSubSubSection } = useSubSubSection();
+  const [sectionData, setSectionData] = useState<subSubSectionContent | null>(null);
+
+  useEffect(() => {
+    if (!activeSubSubSection) {
+      setSectionData(null);
+      return;
+    }
+
+    import(`../../../assets/dataBase/Sections/${activeSubSubSection[1]}.json`)
+      .then((data) => setSectionData(data))
+      .catch((error) => {
+        console.error("Ошибка загрузки данных:", error);
+        setSectionData({
+          title: activeSubSubSection[0],
+          content: ["Нет данных"],
+          code: "Код отсутствует",
+          visualization: "Визуализация недоступна",
+        });
+      });
+  }, [activeSubSubSection]);
 
   return (
     <div>
+      <TypographyForTitle> {sectionData?.title} </TypographyForTitle>
+      
       {activeTab === "теория" && (
-        <p>{activeSection.content || "Мы не сделали эту часть ещё :("}</p>
+        sectionData?.content ? (
+          sectionData.content.map((info, index) => (
+            <CardForTheory key={index} text={info} />
+          ))
+        ) : (
+          <p>Нет данных</p>
+        )
       )}
-      {activeTab === "код" && (
-        <pre>
-          <code>{activeSection.code || "Код не добавлен для этой секции"}</code>
-        </pre>
-      )}
+
+      {activeTab === "код" && ( sectionData?.code ?(
+        <CodeBlock code={sectionData?.code} language="cpp" />) : "Код отсутствует"
+    )}
       {activeTab === "визуализация" && (
-        <>
           <ErrorBoundary>
             <Provider store={store}>
               <SegmentTreeVisualizer />
             </Provider>
           </ErrorBoundary>
-          <div>{activeSection.visualization || "Визуализация не доступна"}</div>
-        </>
       )}
     </div>
   );

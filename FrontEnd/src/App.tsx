@@ -6,6 +6,7 @@ import { ThemeProviderWrapper } from "./context/ThemeContext";
 import AlternateHeader from './components/header/Header';
 import {Box} from "@mui/material";
 import { SectionProvider } from "./context/SectionContext";
+import { SubSubSectionProvider } from "./context/subSubSectionContext";
 
 const HeroSection = lazy(() => import('./pages/mainPage/HeroSection/HeroSection'));
 const AboutPage = lazy(() => import('./pages/aboutPage/aboutPage'));
@@ -31,7 +32,7 @@ function Layout() {
             <Route path="/CourseContent" element={<ContentPage fileName="CourseData.json" title="Курс" />} />
             <Route path="/AboutPage" element={<AboutPage />} />
             <Route path="/FAQPage" element={<ContentPage fileName="TitlesData copy.json" title="FAQ" />} />
-            <Route path="/algorithmsPage" element={<AlgorithmsPage />} />
+            <Route path="/algorithmsPage/:subSubSection" element={<AlgorithmsPage />} />
           </Routes>
         </Suspense>
       </Box>
@@ -46,7 +47,9 @@ function App() {
       <ErrorBoundary>
         <BrowserRouter>
           <SectionProvider>
-            <Layout />
+            <SubSubSectionProvider>
+              <Layout />
+            </SubSubSectionProvider>
           </SectionProvider>
         </BrowserRouter>
       </ErrorBoundary>

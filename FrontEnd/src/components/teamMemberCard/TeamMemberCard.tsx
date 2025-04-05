@@ -1,5 +1,4 @@
 import React from "react";
-
 import {Grid2, Card, CardMedia, CardContent, Typography, Divider, Box, Shadows } from "@mui/material";
 import { styled } from '@mui/system';
 import { Theme } from "@mui/material/styles";
@@ -54,7 +53,6 @@ const TeamMemberCard: React.FC<TeamMemberProps> = ({
 }) => {
   const theme = useTheme();
   return (
-
     <Cards>
       <Grid2 container spacing={2}> 
         <Grid2 size={{ xs: 12, sm: 6 }}

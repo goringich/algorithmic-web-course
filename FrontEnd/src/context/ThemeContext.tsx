@@ -26,6 +26,7 @@ declare module "@mui/material/styles" {
   interface TypeBackground {
     card: string;
     cardContent: string;
+    textCard: string;
   }
   interface Theme {
     shape: {
@@ -52,22 +53,24 @@ const getTheme = (mode: "light" | "dark") =>
         default: mode === "dark" ? "#2A2431" : "#F8F8F8",
         paper: mode === "dark" ? "#2A2431" : "#fff",
         card: mode === "dark" ? "#4C405F" : "#eaddff",
-        header:  mode === "dark" ? "#2A2431" : "#fff",
         cardContent: mode === "dark" ? "#322E3B": "#EEEAF6"
+        textCard: mode === "dark" ? "#40394B": "#EEEEEE",
       },
       text: {
         primary: mode === "dark" ? "#fff" : "#000",
         secondary: mode === "dark" ? "#000" : "#fff",
         white: "#fff",
       },
-      error: { main: "#810F0F" }, 
-      grey: { 500: "#b0afaf" }, 
+      error: { main: mode === "light" ? "#810F0F" : "#EA5D5D"}, 
+      grey: { 
+        500: "#b0afaf",
+       }, 
       purple: { 
         light: "#B13EEA",
         main: "#9b59b6",
-        dark : "#755088",
-        onHover: "238, 230, 255",
-        toClick: "#D3C5F4"},
+        dark : mode === "light" ? "#755088" : "#B294C1",
+        onHover: mode === "light" ? "238, 230, 255" : "88, 77, 104",
+        toClick: mode === "light" ? "#D3C5F4" : "#6B5195"},
     },
     typography: {
       fontFamily: "'Comfortaa', cursive",

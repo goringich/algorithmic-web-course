@@ -1,53 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItemButton, Grid2, Button, useMediaQuery, Drawer, IconButton} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled } from '@mui/system';
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
+import { useSubSubSection } from "../../../context/subSubSectionContext";
+import menuData from "../../../assets/dataBase/menuData";
+import Tabs, { TabType } from "./Tabs";
+import { LucideSquareFunction } from "lucide-react";
 
-const menuData = [
-  {
-    title: "Структуры данных и алгоритмы обработки диапазонов",
-    subSections: [
-      {
-        title: "Дерево отрезков (ДО)",
-        subSubSections: ["Дерево отрезков с суммами",
-          "Дерево отрезков с минимальными/максимальными значениями",
-          "Дерево отрезков с добавлением модификаторов (range update)"],
-      },
-      {
-        title: "Дерево Фенвика",
-        subSubSections: ["Подсекция 1", "Подсекция 2"],
-      },
-      {
-        title: "Простое дерево отрезков",
-        subSubSections: [],
-      },
-      {
-        title: "Ленивое дерево отрезков",
-        subSubSections: [],
-      },
-    ],
-  },
-  {
-    title: "Алгоритмы обработки координат и анализа пространственных данных",
-    subSections: [ 
-      {
-        title: "Что-то там",
-        subSubSections: ["1",
-          "2",
-          "3"],
-      },
-    ],
-  },
-  {
-    title: "Декомпозиционные методы",
-    subSections: [ ],
-  },
-];
+
 const Content = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[500],
   paddingLeft: theme.spacing(2),
@@ -78,7 +43,10 @@ const StyledButtonExit = styled(Button)(({ theme }) =>({
 }));
 
 const SidebarMenu = () => {
+  const navigate = useNavigate(); 
+  const { subSubSection: urlSubSubSection } = useParams(); 
   const { setActiveSection } = useSection();
+  const { setActiveSubSubSection } = useSubSubSection();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 900px)"); 
@@ -108,12 +76,29 @@ const SidebarMenu = () => {
   const [openSubSubSection, setOpenSubSubSection] = useState<{ sectionIndex: number; subIndex: number; subSubIndex: number } | null>(null);
 
   const toggleSubSubSection = (sectionIndex: number, subIndex: number, subSubIndex: number) => {
-    setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex }); 
-    const selectedSubSection = menuData[sectionIndex].subSections[subIndex].title;
+    setOpenSubSubSection({ sectionIndex, subIndex, subSubIndex });
   };
 
-  
-  
+  useEffect(() => {
+    const  subSubSectionId = urlSubSubSection;
+
+    menuData.forEach((section, sectionIndex) => {
+      section.subSections.forEach((subSection, subIndex) => {
+        if (subSection.subSubSections) {
+          subSection.subSubSections.forEach((subSubSection, subSubIndex) => {
+            if (subSubSection[1] === subSubSectionId) {
+              setActiveSection(section.title);
+              setActiveSubSubSection(subSubSection);
+
+              openSection[sectionIndex] = true;
+              openSubSection[sectionIndex][subIndex] = true;
+              toggleSubSubSection(sectionIndex, subIndex, subSubIndex);
+            }
+          });
+        }
+      });
+    });
+  }, [urlSubSubSection]);
  
   return (
     <Grid2 sx={{height: "100%", width: "100%"}}>
@@ -188,7 +173,9 @@ const SidebarMenu = () => {
                                 {subSection.subSubSections.map((subSubSection, subSubIndex) => (
                                   <ListItemButton key={subSubIndex}
                                     onClick={() => { toggleSubSubSection(index, subIndex, subSubIndex);
-                                      setActiveSection(section.title)
+                                      setActiveSection(section.title);
+                                      setActiveSubSubSection(subSubSection);
+                                      navigate(`/algorithmsPage/${subSubSection[1]}`);
                                     }}
                                     sx ={{borderRadius: theme.shape.borderRadius, 
                                     "&:hover" : {backgroundColor: `rgba(${theme.palette.purple.onHover}, 0.85)`},
@@ -204,7 +191,7 @@ const SidebarMenu = () => {
                                     openSubSubSection.subSubIndex === subSubIndex
                                     ? "2"
                                     : "inherit"}}>
-                                    <Typography> {subSubSection} </Typography>
+                                    <Typography> {subSubSection[0]} </Typography>
                                   </ListItemButton>
                                 ))}
                               </List>
