@@ -1,16 +1,21 @@
+import React from 'react';
 import { Layer, Text } from 'react-konva';
 
-export default function TitleLayer({ canvasWidth }: { canvasWidth: number }) {
+interface TitleLayerProps {
+  canvasWidth: number;
+}
+
+export default function TitleLayer({ canvasWidth }: TitleLayerProps) {
   return (
     <Layer>
       <Text
-        x={canvasWidth / 2 - 100}
+        x={0}
         y={10}
-        text="Binary Indexed Tree Ranges"
-        fontSize={18}
-        fill="#555"
-        width={200}
+        width={canvasWidth}
         align="center"
+        text="Binary Indexed Tree Ranges"
+        fontSize={30}
+        fill="#555"
       />
     </Layer>
   );

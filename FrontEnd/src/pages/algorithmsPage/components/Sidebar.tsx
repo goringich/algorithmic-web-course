@@ -108,7 +108,7 @@ const SidebarMenu: React.FC = () => {
         </IconButton>
       )}
         <StyledDrawer
-        variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, permanent для десктопов
+        variant={isMobile ? "temporary" : "permanent"} // temporary для мобильных, pдесктоповermanent для 
         open={isMobile ? open : true} // Открыто постоянно для десктопов
         onClose={() => toggleDrawer(false)}
         >

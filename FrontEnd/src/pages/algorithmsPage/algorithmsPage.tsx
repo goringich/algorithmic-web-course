@@ -33,7 +33,7 @@ const ContentPage: React.FC = () => {
             overflowY: "auto",
             height: "calc(100vh - 65px)", 
             '&::-webkit-scrollbar': {
-            display: 'none',  // Скрыть полосу прокрутки
+            display: 'none', 
           },
           }}>
           <ContentDisplay activeSection={activeSection} activeTab={activeTab} />

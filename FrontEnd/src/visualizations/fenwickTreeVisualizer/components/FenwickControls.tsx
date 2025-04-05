@@ -13,31 +13,43 @@ import {
 interface FenwickControlsProps {
   updateIndex: number;
   setUpdateIndex: React.Dispatch<React.SetStateAction<number>>;
-  updateVal: number;
-  setUpdateVal: React.Dispatch<React.SetStateAction<number>>;
+  updateValue: number;
+  setUpdateValue: React.Dispatch<React.SetStateAction<number>>;
   queryLeft: number;
   setQueryLeft: React.Dispatch<React.SetStateAction<number>>;
   queryRight: number;
   setQueryRight: React.Dispatch<React.SetStateAction<number>>;
   animationSpeed: number;
   setAnimationSpeed: React.Dispatch<React.SetStateAction<number>>;
-  isBinaryView: boolean;
-  toggleView: () => void;
+  isAnimating: boolean;
+  viewMode: string;
+  toggleViewMode: () => void;
+  onApplyArray: () => void;
+  onUpdate: () => void;
+  onRangeSum: () => void;
+  onPrefixSum: () => void;
+  onAnimateBuild: () => void; 
 }
 
 export default function FenwickControls({
   updateIndex,
   setUpdateIndex,
-  updateVal,
-  setUpdateVal,
+  updateValue,
+  setUpdateValue,
   queryLeft,
   setQueryLeft,
   queryRight,
   setQueryRight,
   animationSpeed,
   setAnimationSpeed,
-  isBinaryView,
-  toggleView
+  isAnimating,
+  viewMode,
+  toggleViewMode,
+  onApplyArray,
+  onUpdate,
+  onRangeSum,
+  onPrefixSum,
+  onAnimateBuild
 }: FenwickControlsProps) {
   const [localArrayInput, setLocalArrayInput] = useState('[3,5,7,9,11,13,15]');
   const dispatch = useAppDispatch();
@@ -65,7 +77,7 @@ export default function FenwickControls({
     if (fenwState.isAnimating) return;
     if (updateIndex < 1 || updateIndex > fenwState.array.length) return;
     dispatch(setIsAnimating(true));
-    dispatch(updateValue({ index: updateIndex, newValue: updateVal }));
+    dispatch(updateValue({ index: updateIndex, newValue: updateValue }));
     setTimeout(() => {
       dispatch(setHighlightedPath([]));
       dispatch(setIsAnimating(false));
@@ -156,8 +168,8 @@ export default function FenwickControls({
             fullWidth
             label="Value (Значение)"
             type="number"
-            value={updateVal}
-            onChange={(e) => setUpdateVal(parseInt(e.target.value) || 0)}
+            value={updateValue}
+            onChange={(e) => setUpdateValue(parseInt(e.target.value) || 0)}
             variant="outlined"
             size="small"
           />
@@ -248,11 +260,20 @@ export default function FenwickControls({
         />
       </Box>
 
-      <Button variant="contained" fullWidth onClick={toggleView}>
-        {isBinaryView
-          ? 'Показать стандартный вид (Show Standard View (стандартный вид))'
-          : 'Показать бинарный вид (Show Binary View (двоичный вид))'}
-      </Button>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Button variant="contained" fullWidth onClick={toggleViewMode}>
+            {viewMode === "binary"
+              ? 'Показать стандартный вид (Show Standard View (стандартный вид))'
+              : 'Показать бинарный вид (Show Binary View (двоичный вид))'}
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button variant="contained" fullWidth onClick={onAnimateBuild}>
+            Анимация построения (Build Animation (анимация построения))
+          </Button>
+        </Grid>
+      </Grid>
     </Paper>
   );
 }

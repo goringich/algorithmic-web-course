@@ -1,6 +1,7 @@
 import React from "react";
 import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import { SegmentTreeProvider } from "../../../visualizations/segmentTreeVisualizer/common/context/SegmentTreeProvider";
+import FenwickTreeModule from "../../../visualizations/fenwickTreeVisualizer/fenwickTreeModule";
 import { Provider } from 'react-redux';
 import store from '../../../visualizations/store/store';
 import { Section } from "./types/types";
@@ -35,7 +36,8 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
         <>
           <ErrorBoundary>
             <Provider store={store}>
-              <FenwickTreeVisualizer />
+              {/* <FenwickTreeVisualizer /> */}
+              <FenwickTreeModule/>
             </Provider>
           </ErrorBoundary>
           <div>{activeSection.visualization || "Визуализация не доступна"}</div>

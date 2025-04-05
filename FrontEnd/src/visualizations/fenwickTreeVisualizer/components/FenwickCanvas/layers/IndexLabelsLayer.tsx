@@ -1,3 +1,4 @@
+import React from 'react';
 import { Layer, Group, Text } from 'react-konva';
 
 interface Props {
