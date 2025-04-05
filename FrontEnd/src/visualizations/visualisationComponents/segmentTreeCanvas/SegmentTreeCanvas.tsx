@@ -23,21 +23,21 @@ export const SegmentTreeCanvas: React.FC<SegmentTreeCanvasProps> = ({
   const layerRef = useRef<Konva.Layer | null>(null);
   const prevNodesRef = useRef<Map<number, { x: number; y: number }>>(new Map());
 
-  // useEffect(() => {
-  //   const prevNodeIds = new Set(Array.from(prevNodesRef.current.keys()));
-  //   const currentNodeIds = new Set(nodes.map((node) => node.id));
+  useEffect(() => {
+    const prevNodeIds = new Set(Array.from(prevNodesRef.current.keys()));
+    const currentNodeIds = new Set(nodes.map((node) => node.id));
 
-  //   const removedNodes = [...prevNodeIds].filter((id) => !currentNodeIds.has(id));
+    const removedNodes = [...prevNodeIds].filter((id) => !currentNodeIds.has(id));
 
-  //   if (removedNodes.length > 0) {
-  //     console.log(`[INFO] Обнаружены исчезнувшие узлы: ${removedNodes.join(", ")}`);
-  //     removedNodes.forEach((nodeId) => {
-  //       animateNodeDisappear(nodeId, shapeRefs.current).then(() => {
-  //         console.log(`[INFO] Узел ${nodeId} полностью удалён`);
-  //       });
-  //     });
-  //   }
-  // }, [nodes, shapeRefs]);
+    if (removedNodes.length > 0) {
+      console.log(`[INFO] Обнаружены исчезнувшие узлы: ${removedNodes.join(", ")}`);
+      removedNodes.forEach((nodeId) => {
+        animateNodeDisappear(nodeId, shapeRefs.current).then(() => {
+          console.log(`[INFO] Узел ${nodeId} полностью удалён`);
+        });
+      });
+    }
+  }, [nodes, shapeRefs]);
 
   // useEffect(() => {
   //   nodes.forEach((node) => {

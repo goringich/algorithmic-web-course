@@ -42,26 +42,27 @@ export const animateNodeDisappear = (
     );
 
     shape.to({
-      opacity: 0,
+      opacity: 0, // Прозрачность становится 0
       duration: 0.5,
       easing: Konva.Easings.EaseInOut,
       onFinish: () => {
         console.log(
-          `[INFO] animateNodeDisappear: Анимация завершена, удаляем фигуру с key ${nodeKey}`
+          `[INFO] animateNodeDisappear: Анимация завершена, фигура с key ${nodeKey} исчезла`
         );
-        shape.remove();
-        if (
-          shapeOrMapping &&
-          typeof shapeOrMapping === "object" &&
-          !("to" in shapeOrMapping)
-        ) {
-          delete (shapeOrMapping as Record<number, Konva.Circle>)[nodeKey];
-        }
+        // Не удаляем фигуру, просто делаем её невидимой
+        // Убедитесь, что референс не удаляется
         console.log(
-          `[DEBUG] animateNodeDisappear: Фигура с key ${nodeKey} удалена.`
+          `[DEBUG] animateNodeDisappear: Фигура с key ${nodeKey} исчезла, референс остался в shapeRefs.`
         );
+        // В случае необходимости, можно обновить слой
+        const layer = shape.getLayer();
+        if (layer) {
+          layer.batchDraw(); // Или layer.draw() для обновления
+        }
         resolve();
       }
     });
+    
+    
   });
 };
