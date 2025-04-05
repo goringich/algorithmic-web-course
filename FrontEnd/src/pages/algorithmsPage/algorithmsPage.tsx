@@ -25,6 +25,7 @@ const ContentPage = () => {
   
       if (foundSubSubSection) {
         setActiveSubSubSection(foundSubSubSection);
+        setActiveTab("теория");
       }
     }
   }, [urlSubSubSection, setActiveSubSubSection]);

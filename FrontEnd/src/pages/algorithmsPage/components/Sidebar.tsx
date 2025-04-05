@@ -9,6 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
 import menuData from "../../../assets/dataBase/menuData";
+import Tabs, { TabType } from "./Tabs";
 import { LucideSquareFunction } from "lucide-react";
 
 
