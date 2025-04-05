@@ -5,8 +5,8 @@ import FenwickCanvas from "./components/FenwickCanvas/FenwickCanvas";
 import FenwickInfo from "./components/FenwickInfo";
 import { createFenwickTree } from "./utils/fenwickTree";
 
-function calculateNodePositions(size) {
-  const positions = {};
+function calculateNodePositions(size: number) {
+  const positions: Record<number, any> = {};
   const levels = Math.floor(Math.log2(size)) + 1;
   for (let level = 0; level < levels; level++) {
     const intervalSize = 2 ** level;
@@ -25,37 +25,38 @@ function calculateNodePositions(size) {
   return positions;
 }
 
-function calculateAbsolutePositions(relativePositions, width, height) {
-  const absolutePositions = {};
-  const levelsArr = Object.values(relativePositions).map((p) => p.level);
+function calculateAbsolutePositions(relativePositions: any, width: number, height: number) {
+  const absolutePositions: Record<number, any> = {};
+  const levelsArr = Object.values(relativePositions).map((p: any) => p.level);
   if (levelsArr.length === 0) return absolutePositions;
   const levels = Math.max(...levelsArr) + 1;
   const levelHeight = height / (levels + 1);
-  for (let idx in relativePositions) {
-    const pos = relativePositions[idx];
+  for (let key in relativePositions) {
+    const pos = relativePositions[key];
     const { level, indexInLevel, totalInLevel } = pos;
     const sectionWidth = width / (totalInLevel + 1);
     const x = (indexInLevel + 1) * sectionWidth;
     const y = (level + 1) * levelHeight;
-    absolutePositions[idx] = { ...pos, x: Number(x), y: Number(y) };
+    absolutePositions[key] = { ...pos, x: Number(x), y: Number(y) };
   }
   return absolutePositions;
 }
 
 export default function FenwickTreeVisualizer() {
   const [array, setArray] = useState([3, 5, 7, 9, 11, 13, 15]);
-  const [bit, setBit] = useState(null);
-  const [nodePositions, setNodePositions] = useState({});
-  const [highlightedPath, setHighlightedPath] = useState([]);
+  const [bit, setBit] = useState<any>(null);
+  const [nodePositions, setNodePositions] = useState<any>({});
+  const [highlightedPath, setHighlightedPath] = useState<number[]>([]);
   const [updateIndex, setUpdateIndex] = useState(1);
   const [updateValue, setUpdateValue] = useState(1);
   const [queryLeft, setQueryLeft] = useState(1);
   const [queryRight, setQueryRight] = useState(array.length);
   const [animationSpeed, setAnimationSpeed] = useState(1);
-  const [operationLogs, setOperationLogs] = useState([]);
+  const [operationLogs, setOperationLogs] = useState<string[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [viewMode, setViewMode] = useState("standard");
-  const containerRef = useRef(null);
+  const [animateBuild, setAnimateBuild] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 600, height: 400 });
 
   useEffect(() => {
@@ -80,11 +81,10 @@ export default function FenwickTreeVisualizer() {
     // eslint-disable-next-line
   }, [array.length]);
 
-  function updatePositions(w, h) {
+  function updatePositions(w: number, h: number) {
     if (!Number.isFinite(w) || !Number.isFinite(h)) return;
     const relPositions = calculateNodePositions(array.length);
     const absPositions = calculateAbsolutePositions(relPositions, w, h);
-    // Проверка, что все координаты валидны
     for (let key in absPositions) {
       if (
         !Number.isFinite(absPositions[key].x) ||
@@ -106,18 +106,14 @@ export default function FenwickTreeVisualizer() {
     addLog(`Создан BIT из массива [${array.join(", ")}]`);
   }
 
-  function addLog(msg) {
+  function addLog(msg: string) {
     setOperationLogs((prev) => [...prev, msg]);
-  }
-
-  function onArrayChange(val) {
-    // просто устанавливаем локальное значение, применяем позже
   }
 
   function onApplyArray() {
     try {
       const parsed = JSON.parse(
-        document.querySelector('input[label="Array Input (Ввод массива)"]')
+        (document.querySelector('input[label="Array Input (Ввод массива)"]') as HTMLInputElement)
           .value
       );
       if (!Array.isArray(parsed)) throw new Error("Не массив");
@@ -126,7 +122,7 @@ export default function FenwickTreeVisualizer() {
       setArray(newArr);
       setQueryRight(newArr.length);
       addLog(`Массив обновлён: [${newArr.join(", ")}]`);
-    } catch (e) {
+    } catch (e: any) {
       addLog(`Ошибка: ${e.message}`);
     }
   }
@@ -203,15 +199,26 @@ export default function FenwickTreeVisualizer() {
     setViewMode(viewMode === "standard" ? "binary" : "standard");
   }
 
+  function handleAnimateBuild() {
+    // Запускаем анимацию построения дерева (build animation)
+    setAnimateBuild(true);
+    addLog("Запущена анимация построения дерева Фенвика");
+    // По окончании анимации (примерно 3 сек), сбрасываем флаг
+    setTimeout(() => {
+      setAnimateBuild(false);
+      addLog("Анимация построения завершена");
+    }, 3000);
+  }
+
   return (
     <Box>
       <Typography variant="h4" align="center" sx={{ mb: 2 }}>
         Fenwick Tree Visualizer
       </Typography>
       <Box display="flex" flexDirection={"column"} gap={2}>
-      <Paper
+        <Paper
           ref={containerRef}
-          sx={{  minHeight: 500, maxWidth: "100%", width: "100%", position: "relative" }}
+          sx={{ minHeight: 500, maxWidth: "100%", width: "100%", position: "relative" }}
         >
           {bit &&
             Number.isFinite(canvasSize.width) &&
@@ -220,13 +227,14 @@ export default function FenwickTreeVisualizer() {
                 canvasWidth={canvasSize.width}
                 canvasHeight={canvasSize.height}
                 isBinaryView={viewMode === "binary"}
+                animateBuild={animateBuild} // передаём флаг анимации построения
               />
             )}
         </Paper>
-        <Box sx={{   maxWidth: "100%", width: "100%" }}>
+        <Box sx={{ maxWidth: "100%", width: "100%" }}>
           <FenwickControls
             array={array}
-            onArrayChange={onArrayChange}
+            onArrayChange={() => {}}
             onApplyArray={onApplyArray}
             onUpdate={handleUpdate}
             onRangeSum={handleRangeSum}
@@ -242,8 +250,9 @@ export default function FenwickTreeVisualizer() {
             animationSpeed={animationSpeed}
             setAnimationSpeed={setAnimationSpeed}
             isAnimating={isAnimating}
-            toggleViewMode={toggleViewMode}
             viewMode={viewMode}
+            toggleViewMode={toggleViewMode}
+            onAnimateBuild={handleAnimateBuild} // новая функция для запуска анимации построения
           />
 
           <Paper sx={{ p: 2, mt: 2, maxHeight: 200, overflowY: "auto" }}>
@@ -282,10 +291,7 @@ export default function FenwickTreeVisualizer() {
             </Box>
           </Box>
         </Box>
-
-
       </Box>
-
       <FenwickInfo />
     </Box>
   );

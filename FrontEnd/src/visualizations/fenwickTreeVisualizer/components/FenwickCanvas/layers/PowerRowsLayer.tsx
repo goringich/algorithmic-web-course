@@ -1,50 +1,67 @@
 import React from 'react';
-import { Layer, Rect, Text, Group } from 'react-konva';
-
-export interface Segment {
-  start: number;
-  end: number;
-}
-
-export interface PowerRow {
-  power: number;
-  segments: Segment[];
-}
+import { Layer, Rect, Text, Group, Arrow } from 'react-konva';
 
 interface Props {
-  powerRows: PowerRow[];
-  rowHeight: number;
-  rectHeight: number;
+  totalElements: number;
   scaleX: number;
   canvasWidth: number;
   canvasHeight: number;
   highlightedPath: number[];
   isBinaryView: boolean;
-  totalElements: number;
 }
 
 export default function PowerRowsLayer({
-  powerRows,
-  rowHeight,
-  rectHeight,
+  totalElements,
   scaleX,
   canvasWidth,
   canvasHeight,
   highlightedPath,
   isBinaryView,
-  totalElements
 }: Props) {
+  // Group BIT -CHICHING TO THE LEASE OF RASE (I & -I)
+  const groups: { [block: number]: number[] } = {};
+  for (let i = 1; i <= totalElements; i++) {
+    const block = i & -i;
+    if (!groups[block]) groups[block] = [];
+    groups[block].push(i);
+  }
+  const uniqueBlocks = Object.keys(groups).map(Number).sort((a, b) => a - b);
+  const rowCount = uniqueBlocks.length;
+  const rowHeight = canvasHeight / (rowCount + 2);
+  const rectHeight = rowHeight * 0.4;
+
+  // Calculation of the range for the BIT-YAN with index I
+  const getRangeForIndex = (i: number) => {
+    const block = i & -i;
+    return { start: i - block + 1, end: i };
+  };
+
+  // Calculation of the X-coordinates of the index label (the middle point of the label)
+  const getLabelX = (i: number) => (i - 1) * scaleX + 30 + scaleX / 2;
+
+  const cells: {
+    i: number;
+    block: number;
+    x: number;
+    width: number;
+    y: number;
+    range: { start: number; end: number };
+  }[] = [];
+  uniqueBlocks.forEach((block, rowIndex) => {
+    const indices = groups[block];
+    indices.forEach((i) => {
+      const x = (i - 1) * scaleX;
+      const width = scaleX * (i & -i);
+      const y = (rowIndex + 1) * rowHeight + 60;
+      cells.push({ i, block, x, width, y, range: getRangeForIndex(i) });
+    });
+  });
+
   return (
     <>
-      {/* 1. Слой фона и заголовка */}
+      {/* Фон и заголовок */}
       <Layer>
-        <Rect
-          x={0}
-          y={0}
-          width={canvasWidth}
-          height={canvasHeight}
-          fill="#f9f2d6"
-        />
+        <Rect x={0} y={0} width={canvasWidth} height={canvasHeight} fill="#f9f2d6" />
         <Text
           x={0}
           y={10}
@@ -56,99 +73,88 @@ export default function PowerRowsLayer({
         />
       </Layer>
 
-      {/* 2. Слой с рядами (прямоугольники) */}
+      {/* Отрисовка BIT-ячейки */}
       <Layer>
-        {powerRows.map((row, rowIndex) => {
-          // Смещение ряда по вертикали
-          const yPos = (rowIndex + 1) * rowHeight + 60;
-
+        {cells.map((cell) => {
+          const isHighlighted = highlightedPath.includes(cell.i);
+          let fillColor = '#ffffff';
+          if (isHighlighted) {
+            fillColor = '#ff9999';
+          } else if (cell.block === 1) {
+            fillColor = '#ff0000';
+          } else if (isBinaryView) {
+            fillColor = '#fff8e1';
+          }
           return (
-            <Group key={`row-${row.power}`}>
-              {/* Подпись слева (число power) */}
-              <Text
-                x={10}
-                y={yPos - rectHeight - 20}
-                text={`${row.power}`}
-                fontSize={16}
-                fill="#555"
+            <Group key={`cell-${cell.i}`}>
+              <Rect
+                x={cell.x}
+                y={cell.y - rectHeight}
+                width={cell.width}
+                height={rectHeight}
+                fill={fillColor}
+                stroke="#cc9999"
+                strokeWidth={1}
+                cornerRadius={4}
               />
-
-              {/* Прямоугольники (segments) */}
-              {row.segments.map((seg, segIdx) => {
-                const length = seg.end - seg.start + 1;
-                const segWidth = length * scaleX;
-                const segX = (seg.start - 1) * scaleX;
-
-                // Проверка: входит ли в highlightedPath
-                const isHighlighted = highlightedPath.some(
-                  (idx) => idx >= seg.start && idx <= seg.end
-                );
-
-                // Логика выбора цвета заливки
-                let fillColor = '#ffffff';
-                if (isHighlighted) {
-                  fillColor = '#ff9999';
-                } else if (length === 1) {
-                  // Если ровно 1 элемент, делаем полностью красный
-                  fillColor = '#ff0000';
-                } else if (isBinaryView) {
-                  fillColor = '#fff8e1';
-                }
-
-                return (
-                  <Group key={`seg-${row.power}-${segIdx}`}>
-                    <Rect
-                      x={segX}
-                      y={yPos - rectHeight}
-                      width={segWidth}
-                      height={rectHeight}
-                      fill={fillColor}
-                      stroke="#cc9999"
-                      strokeWidth={1}
-                      cornerRadius={4}
-                    />
-                    <Text
-                      x={segX + 5}
-                      y={yPos - rectHeight + 5}
-                      text={`${seg.start}..${seg.end}`}
-                      fontSize={12}
-                      fill="#333"
-                    />
-                  </Group>
-                );
-              })}
+              <Text
+                x={cell.x + 5}
+                y={cell.y - rectHeight + 5}
+                text={`${cell.range.start}..${cell.range.end}`}
+                fontSize={12}
+                fill="#333"
+              />
             </Group>
           );
         })}
       </Layer>
 
-      {/* 3. Слой с подписями len, i и индексами внизу */}
+      {/* Arrows from cells to indexes */}
       <Layer>
-        <Text
-          x={5}
-          y={canvasHeight - 60}
-          text="len"
-          fontSize={16}
-          fill="#555"
-        />
-        <Text
-          x={5}
-          y={canvasHeight - 40}
-          text="i"
-          fontSize={16}
-          fill="#555"
-        />
+        {cells.map((cell) => {
+          const centerX = cell.x + cell.width / 2;
+          const centerY = cell.y - rectHeight / 2;
+          const labelX = getLabelX(cell.i);
+          const labelY = canvasHeight - 40;
+          return (
+            <Arrow
+              key={`arrow-${cell.i}`}
+              points={[centerX, centerY, labelX, labelY]}
+              pointerLength={10}
+              pointerWidth={10}
+              fill="#00aaff"
+              stroke="#00aaff"
+              strokeWidth={2}
+            />
+          );
+        })}
+        {highlightedPath.length > 0 && (
+          <Text
+            x={10}
+            y={canvasHeight - 100}
+            text="Operation Animation"
+            fontSize={16}
+            fill="#aa0000"
+          />
+        )}
+      </Layer>
+
+      {/* Signatures "Len", "I" and index numbers */}
+      <Layer>
+        <Text x={5} y={canvasHeight - 60} text="len" fontSize={16} fill="#555" />
+        <Text x={5} y={canvasHeight - 40} text="i" fontSize={16} fill="#555" />
         {Array.from({ length: totalElements }, (_, i) => i + 1).map((i) => {
-          // Смещаем x, чтобы было место слева
           const xPos = (i - 1) * scaleX + 30;
           return (
             <Text
               key={`index-${i}`}
-              x={xPos + 2}
+              x={xPos}
               y={canvasHeight - 40}
               text={`${i}`}
               fontSize={14}
               fill="#333"
+              width={scaleX}
+              align="center"
             />
           );
         })}

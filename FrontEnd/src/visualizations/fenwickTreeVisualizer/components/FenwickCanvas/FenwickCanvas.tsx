@@ -1,11 +1,10 @@
-// src/components/fenwick-canvas/FenwickCanvas.tsx
 import React, { useMemo } from 'react';
 import { Stage } from 'react-konva';
-import { useAppSelector } from '../../hooks/reduxHooks';
 import BackgroundLayer from './layers/BackgroundLayer';
 import TitleLayer from './layers/TitleLayer';
 import PowerRowsLayer from './layers/PowerRowsLayer';
 import IndexLabelsLayer from './layers/IndexLabelsLayer';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 export interface RangeSegment {
   start: number;
@@ -26,7 +25,7 @@ interface FenwickCanvasProps {
 export default function FenwickCanvas({
   canvasWidth,
   canvasHeight,
-  isBinaryView
+  isBinaryView,
 }: FenwickCanvasProps) {
   const { array, highlightedPath } = useAppSelector((state) => state.fenwick);
   const n = array.length;
@@ -77,7 +76,7 @@ export default function FenwickCanvas({
   }
 
   return (
-    <Stage width={canvasWidth} height={canvasHeight} sx={{ padding: "30px" }}>
+    <Stage width={canvasWidth} height={canvasHeight}>
       <BackgroundLayer width={canvasWidth} height={canvasHeight} />
       <TitleLayer canvasWidth={canvasWidth} />
       <PowerRowsLayer
@@ -85,9 +84,11 @@ export default function FenwickCanvas({
         rowHeight={rowHeight}
         rectHeight={rectHeight}
         scaleX={scaleX}
+        canvasWidth={canvasWidth}
         canvasHeight={canvasHeight}
         highlightedPath={highlightedPath}
         isBinaryView={isBinaryView}
+        totalElements={n}
       />
       <IndexLabelsLayer n={n} scaleX={scaleX} canvasHeight={canvasHeight} />
     </Stage>

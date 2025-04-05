@@ -48,7 +48,7 @@ const ContentPage = () => {
             overflowY: "auto",
             height: "calc(100vh - 65px)", 
             '&::-webkit-scrollbar': {
-            display: 'none',  
+            display: 'none', 
           },
           }}>
           <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
