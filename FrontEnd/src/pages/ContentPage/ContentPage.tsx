@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Paper, Fab } from "@mui/material";
+import React, { useState } from "react";
+import { Accordion, AccordionSummary, AccordionDetails, Paper, Fab, Divider } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { styled } from "@mui/system";
 import { Theme } from "@mui/material/styles";
-import CourseData from '../../assets/dataBase/CourseData.json';
-import FAQData from '../../assets/dataBase/TitlesData copy.json';
+import { Link } from "react-router-dom";
+import MenuBookIcon from "@mui/icons-material/MenuBook"; // Добавляем иконку
+import menuData from "../../assets/dataBase/menuData"; 
 
 const FabButton = styled(Fab)(({ theme }) => ({
   width: "50px",
@@ -51,63 +52,84 @@ const CourseBox = styled("ul")<{ theme: Theme }>(({ theme }) => ({
 
 const ListItem = styled("li")(({ theme }) => ({
   fontSize: "18px",
-  marginBottom: "5px",
+  marginBottom: "8px",
   color: theme.palette.text.primary,
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+  transition: "color 0.3s",
+  "&:hover": {
+    color: theme.palette.primary.main,
+  },
 }));
 
-interface ContentPageProps {
-  fileName: string;
-  title: string;
-}
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "inherit",
+  transition: "color 0.3s",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
-const ContentPage: React.FC<ContentPageProps> = ({ fileName, title }) => {
-  const [content, setContent] = useState<any[] | null>(null);
+const ContentPage: React.FC = () => {
   const [openSection, setOpenSection] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (fileName === "CourseData.json") {
-      setContent(CourseData);
-    } else if (fileName === "TitlesData copy.json") {
-      setContent(FAQData);
-    }
-  }, [fileName]);
+  const [openSubSection, setOpenSubSection] = useState<number | null>(null);
 
   const toggleSection = (index: number) => {
     setOpenSection(openSection === index ? null : index);
   };
 
-  if (!content) return <div>Загрузка...</div>;
+  const toggleSubSection = (index: number) => {
+    setOpenSubSection(openSubSection === index ? null : index);
+  };
 
   return (
     <Grid container justifyContent="center">
-      <Grid size={{ xs: 12, md: 10, lg: 8 }}>
+      <Grid item xs={12} md={10} lg={8}>
         <AccordionContainer elevation={3}>
-          {content.map((section, index) => (
+          {menuData.map((section, index) => (
             <AccordionStyled key={index} expanded={openSection === index} onChange={() => toggleSection(index)}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Grid container alignItems="center" spacing={2} sx={{ flexWrap: "noWrap", minWidth: 0, gap: 1 }}>
-                  <Grid sx={{ flexShrink: 0 }}>
+                <Grid container alignItems="center" spacing={2} sx={{ flexWrap: "nowrap", minWidth: 0, gap: 1 }}>
+                  <Grid item sx={{ flexShrink: 0 }}>
                     <FabButton size="small">{index + 1}</FabButton>
                   </Grid>
-                  <Grid sx={{ flexGrow: 1, minWidth: 0 }}>
+                  <Grid item sx={{ flexGrow: 1, minWidth: 0 }}>
                     <CustomSubtitle style={{ fontSize: "clamp(1rem, 2vw, 1.5rem)" }}>
                       {section.title}
                     </CustomSubtitle>
                   </Grid>
                 </Grid>
               </AccordionSummary>
-
               {section.subSections.length > 0 && (
                 <AccordionDetails sx={{ paddingLeft: 4, paddingRight: 4 }}>
-                  <Grid container>
-                    <Grid size={{ xs: 12 }}>
-                      <CourseBox>
-                        {section.subSections.map((sub: string, idx: number) => (
-                          <ListItem key={idx}>{sub}</ListItem>
-                        ))}
-                      </CourseBox>
-                    </Grid>
-                  </Grid>
+                  {section.subSections.map((subSection, subIndex) => (
+                    <AccordionStyled
+                      key={subIndex}
+                      expanded={openSubSection === subIndex}
+                      onChange={() => toggleSubSection(subIndex)}
+                    >
+                      <AccordionSummary >
+                        <CustomSubtitle style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}>
+                          {subSection.title}
+                        </CustomSubtitle>
+                      </AccordionSummary>
+
+                      <AccordionDetails>
+                        <CourseBox>
+                          {subSection.subSubSections.map(([name, path], idx) => (
+                            <React.Fragment key={idx}>
+                              <ListItem>
+                                <StyledLink to={`/algorithmsPage/${path}`}>{name}</StyledLink>
+                              </ListItem>
+                              {idx < subSection.subSubSections.length - 1 && <Divider />} {/* Разделитель между пунктами */}
+                            </React.Fragment>
+                          ))}
+                        </CourseBox>
+                      </AccordionDetails>
+                    </AccordionStyled>
+                  ))}
                 </AccordionDetails>
               )}
             </AccordionStyled>
