@@ -35,6 +35,7 @@ const ContentPage = () => {
       <Grid2 size={{md: 3}} sx={{
         top: "1px", 
         overflowY: "auto",
+        height: "calc(100vh - 65px)",
         boxShadow: 2,
       }}>
         <SidebarMenu />

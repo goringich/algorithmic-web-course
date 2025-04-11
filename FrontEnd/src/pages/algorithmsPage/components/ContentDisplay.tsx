@@ -12,6 +12,7 @@ import { useSubSubSection } from "../../../context/subSubSectionContext";
 import CardForTheory from "./CardForTheory";
 import { styled } from '@mui/system';
 import CodeBlock from "./CodeBlock";
+import TheoryList from './TheoryList';
 import { useTheme } from "@mui/material/styles";
 
 interface ContentDisplayProps {
@@ -62,14 +63,17 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       
       {activeTab === "теория" && (
         sectionData?.content ? (
-          sectionData.content.map((info, index) => (
-            <CardForTheory key={index} text={info} />
-          ))
+          <TheoryList
+            content={sectionData.content.map((item) =>
+              typeof item === "string" || (typeof item === "object" && item.type === "table")
+                ? { text: item }
+                : item
+            )}
+          />
         ) : (
           <p>Нет данных</p>
         )
       )}
-
       {activeTab === "код" && ( sectionData?.code ?(
         <CodeBlock code={sectionData?.code} language="cpp" />) : "Код отсутствует"
     )}
