@@ -57,15 +57,25 @@ const CardForTheory: React.FC<TheoryProps> = ({ text, onTableLinkClick, visible 
   if (typeof text === "object" && text.type === "table") {
     if (!visible) return null;
     return (
+      <Cards>
         <Table headers={text.headers} rows={text.rows} />
+      </Cards>
     );
   }
 
   const isMath = typeof text === "string" && text.includes('$') && text.match(/\$(.*?)\$/);
 
   const highlightText = (rawText: string) => {
-    return rawText.split(/(\*\*(.*?)\*\*|__(.*?)__)/).map((part, index) => {
-      if (!part || part.startsWith("**") || part.startsWith("__")) return null;
+    return rawText.split(/(\*\*(.*?)\*\*|__(.*?)__|\^\^(.*?)\^\^)/).map((part, index) => {
+      if (!part || part.startsWith("**") || part.startsWith("^^")|| part.startsWith("__")) return null;
+
+      if (rawText.includes(`^^${part}^^`)) {
+        return (
+          <span key={index} style={{ color: theme.palette.text.black }}>
+            {part}
+          </span>
+        );
+      }
 
       if (rawText.includes(`**${part}**`)) {
         return (
