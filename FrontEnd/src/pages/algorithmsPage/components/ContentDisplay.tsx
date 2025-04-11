@@ -64,7 +64,8 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTa
       {activeTab === "теория" && (
         sectionData?.content ? (
           <TheoryList
-            content={sectionData.content.map((item) =>
+          content={(sectionData.content as (string | { type: "table"; headers: string[]; rows: string[][] })[])
+            .map((item) =>
               typeof item === "string" || (typeof item === "object" && item.type === "table")
                 ? { text: item }
                 : item

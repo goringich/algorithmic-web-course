@@ -42,6 +42,7 @@ declare module "@mui/material/styles" {
   }
   interface TypeText {
     white: string;
+    black: string;
   }
 }
 
@@ -60,6 +61,7 @@ const getTheme = (mode: "light" | "dark") =>
         primary: mode === "dark" ? "#fff" : "#000",
         secondary: mode === "dark" ? "#000" : "#fff",
         white: "#fff",
+        black: "#000"
       },
       error: { main: mode === "light" ? "#810F0F" : "#EA5D5D"}, 
       grey: { 
