@@ -13,8 +13,8 @@ const menuData = [
     {
         title: "Дерево Фенвика",
         subSubSections: [
-        ["Подсекция 1", "Fenwick-Tree-Subsection-1"],
-        ["Подсекция 2", "Fenwick-Tree-Subsection-2"],
+        ["Дерево Фенвика в одномерном пространстве", "Fenwick-Tree-In-One-dementional-Space"],
+        ["Дерево Фенвика в многомерном пространстве", "Fenwick-Tree-In-Multidimensional-Space"],
         ],
     },
     {
