@@ -7,7 +7,9 @@ interface TheoryItem {
 
 const TheoryList: React.FC<{ content: TheoryItem[] }> = ({ content }) => {
   const [openedIndex, setOpenedIndex] = useState<number | null>(null);
-
+  const toggleTable = (index: number) => {
+    setOpenedIndex((prev) => (prev === index ? null : index));
+  };
   return (
     <>
       {content.map((item, index) => {
@@ -18,7 +20,7 @@ const TheoryList: React.FC<{ content: TheoryItem[] }> = ({ content }) => {
             key={index}
             text={item.text}
             visible={!isTable || index === openedIndex}
-            onTableLinkClick={() => setOpenedIndex(index + 1)}
+            onTableLinkClick={() => toggleTable(index + 1)}
           />
         );
       })}
