@@ -5,7 +5,7 @@ import { styled, keyframes } from "@mui/system";
 import { ThemeContext } from "../../context/ThemeContext";
 const levitate = keyframes`
   0% { transform: translateY(-10px); }
-  50% { transform: translateY(-30px); }
+  50% { transform: translateY(-20px); }
   100% { transform: translateY(-10px); }
 `;
 
@@ -15,13 +15,7 @@ const AnimatedImage = styled("img")(({ theme }) => ({
   width: "60% !important", 
   zIndex: 2,
   transition: "transform 0.5s linear",
-  animation: "none",
-  "&.hover": {
-    transform: "translateY(-10px)",
-  },
-  "&.animating": {
-    animation: `${levitate} 3s ease-in-out infinite`,
-  },
+  animation: `${levitate} 3s ease-in-out infinite`,
 }));
 
 const Levitate = () => {

@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { Grid2, Typography } from "@mui/material";
+import { Grid2, Typography, Box } from "@mui/material";
 import { styled } from '@mui/system';
 import { useSection } from "../../context/SectionContext";
 import { useTheme } from "@mui/material/styles";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const StyledHeader = styled("header")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -17,16 +18,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.palette.purple.light,
     fontWeight: "bold",
     fontSize: "20px",
-    textDecoration: "none"
+    textDecoration: "none",
 }));  
 
 const CenteredTitle = styled(Typography)(({ theme }) => ({
-  position: "absolute",
-  left: "50%",
-  transform: "translateX(-50%)",
   color: theme.palette.text.primary,
   fontWeight: "bold",
-  fontSize: "30px"
+  fontSize: "30px",
 }));
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
@@ -35,11 +33,20 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   transform: "translateY(15%)",
-  paddingLeft: "110px"
+  paddingLeft: "10%"
+}))
+
+const BoxForTitle = styled(Box)(({ theme }) => ({
+  flex: "1 1 auto",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  transform: "translateX(-10%)"
 }))
 
 const Header = () => {
   const theme = useTheme();
+  const isLargeScreen = useMediaQuery("(min-width: 900px)");
   const location = useLocation();
   const { activeSection } = useSection();
 
@@ -58,22 +65,47 @@ const Header = () => {
   const isCentered = ["/CourseContent", "/AboutPage", "/FAQPage"].includes(location.pathname);
 
   return (
-  <StyledHeader sx={{boxShadow : "2"}}>
-      <StyledLink to="/">
-      <Typography variant="h1" 
-        style={{ color: theme.palette.purple.light, 
-          fontSize: "40px"}}>
-          AlgoHack
-      </Typography>
-      </StyledLink>
+    <StyledHeader sx={{ boxShadow: 2 }}>
+      <Grid2
+        container
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ flex: "0 0 auto" }}>
+          <StyledLink to="/">
+            <Typography
+              variant="h1"
+              style={{
+                color: theme.palette.purple.light,
+                fontSize: "40px",
+              }}
+            >
+              AlgoHack
+            </Typography>
+          </StyledLink>
+        </Box>
 
-      {isCentered ? (<CenteredTitle> {pageTitle} </CenteredTitle>) : (
-        <SectionTitle>
-          {pageTitle}
-        </SectionTitle>
-      )}
-  </StyledHeader>
-  );  
+
+        {isLargeScreen && (
+            isCentered ? (
+              <BoxForTitle>
+                <CenteredTitle>{pageTitle}</CenteredTitle>
+              </BoxForTitle>
+            ) : (
+              <Box sx={{
+                flex: "1 1 auto"}}>
+              <SectionTitle>{pageTitle}</SectionTitle>
+              </Box>
+            )
+          )}
+  
+      </Grid2>
+    </StyledHeader>
+  );
 };
 
 export default Header;
