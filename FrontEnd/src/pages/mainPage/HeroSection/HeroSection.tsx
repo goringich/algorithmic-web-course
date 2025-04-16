@@ -23,6 +23,12 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
+const StyledLink = styled(Link)(({ theme }) => ({
+    fontSize: "15px",
+    textDecoration: "none",
+    color: theme.palette.text.white
+}));
+
 const StartButton = styled(Button)(({ theme }) => ({
   display: "inline-block",
   marginTop: "20px",
@@ -53,11 +59,11 @@ const HeroSection = () => {
           предоставляет теоретические знания, но и активно вовлекает пользователей в процесс
           обучения через интерактивные элементы и визуальные представления.
         </Typography>
-        <StartButton sx={{boxShadow : 3}} >
-          <Link to="/algorithmsPage/Tree-of-segments-with-sums">
+        <StyledLink to="/CourseContent">
+          <StartButton sx={{boxShadow : 3}} >
           Начать →
-          </Link>
-        </StartButton>
+          </StartButton>
+        </StyledLink>
       </Grid2>
       <Grid2 size={{ xs: 12, md: 6 }}>
         <ImageContainer>
