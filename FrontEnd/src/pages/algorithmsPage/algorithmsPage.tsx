@@ -5,11 +5,12 @@ import ContentDisplay from "./components/ContentDisplay";
 import Tabs, { TabType } from "./components/Tabs";
 import { Section } from "./components/types/types";
 import SidebarMenu from "./components/Sidebar";
-import { Grid2} from "@mui/material";
+import { Grid2, useMediaQuery } from "@mui/material";
 import { useSubSubSection } from "../../context/subSubSectionContext";
 import menuData from "../../assets/dataBase/menuData";
 
 const ContentPage = () => {
+  const isMobile = useMediaQuery("(max-width: 900px)");
   const [activeTab, setActiveTab] = useState<TabType>("теория");
   const [activeSection, setActiveSection] = useState<Section | null>(
     contents.length > 0 ? contents[0] : null
@@ -35,7 +36,7 @@ const ContentPage = () => {
       <Grid2 size={{md: 3}} sx={{
         top: "1px", 
         overflowY: "auto",
-        height: "calc(100vh - 65px)",
+        ...(!isMobile && { height: "calc(100vh - 65px)" }),
         boxShadow: 2,
       }}>
         <SidebarMenu />
