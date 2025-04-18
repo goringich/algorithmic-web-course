@@ -1,4 +1,4 @@
-import { setSelectedNode, setSnackbar, updateTreeWithNewData } from "../../../store/segmentTreeSlice";
+import { setSelectedNode, setSnackbar, updateTreeWithNewData } from "../../../store/slices/segmentTreeSlice";
 import { AppDispatch } from "../../../store/store";
 import Konva from "konva";
 import { animateNodeDisappear } from "../../../visualisationComponents/animations/nodeAnimations/animateNodeDisappear";

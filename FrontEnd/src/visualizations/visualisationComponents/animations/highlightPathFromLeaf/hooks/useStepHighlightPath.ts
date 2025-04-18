@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../../store/store";
 import { buildPathFromLeaf } from "../buildPathFromLeaf";
-import { setHighlightedNodes } from "../../../../store/segmentTreeSlice";
+import { setHighlightedNodes } from "../../../../store/slices/segmentTreeSlice";
 
 export default function useStepHighlightPath() {
   const dispatch = useDispatch<AppDispatch>();

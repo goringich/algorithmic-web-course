@@ -1,4 +1,4 @@
-import { setSnackbar } from "../../../store/segmentTreeSlice";
+import { setSnackbar } from "../../../store/slices/segmentTreeSlice";
 import { AppDispatch } from "../../../store/store";
 
 export const handleCloseSnackbar = (dispatch: AppDispatch) => {

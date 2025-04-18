@@ -1,4 +1,4 @@
-import { setSelectedNode, setDelta } from "../../../store/segmentTreeSlice";
+import { setSelectedNode, setDelta } from "../../../store/slices/segmentTreeSlice";
 import { AppDispatch } from "../../../store/store";
 import { VisNode } from "../../../types/VisNode";
 

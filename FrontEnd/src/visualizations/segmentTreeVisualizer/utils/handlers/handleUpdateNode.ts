@@ -1,6 +1,6 @@
 import { AppDispatch } from "../../../store/store";
 import { VisNode } from "../../../types/VisNode";
-import { setSnackbar, setSelectedNode, setDelta, updateTreeWithNewData } from "../../../store/segmentTreeSlice";
+import { setSnackbar, setSelectedNode, setDelta, updateTreeWithNewData } from "../../../store/slices/segmentTreeSlice";
 
 export const handleUpdateNode = async (
   selectedNode: VisNode | null,
