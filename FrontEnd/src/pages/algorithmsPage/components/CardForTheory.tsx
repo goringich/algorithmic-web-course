@@ -71,7 +71,7 @@ const CardForTheory: React.FC<TheoryProps> = ({ text, onTableLinkClick, visible 
 
       if (rawText.includes(`^^${part}^^`)) {
         return (
-          <span key={index} style={{ color: theme.palette.text.black }}>
+          <span key={index} style={{ color: theme.palette.text.primary }}>
             {part}
           </span>
         );
@@ -117,6 +117,7 @@ const CardForTheory: React.FC<TheoryProps> = ({ text, onTableLinkClick, visible 
     <Cards>
       <Grid2>
         <TypographyForDescription>
+        {/* {highlightText(text as string)} */}
           {isMath
             ? text.split(/\$(.*?)\$/).map((part, i) =>
                 i % 2 === 1 ? (
