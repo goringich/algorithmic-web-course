@@ -8,7 +8,7 @@ import {
   setDelta,
   updateTreeWithNewData,
   setSnackbar
-} from "../store/segmentTreeSlice";
+} from "../store/slices/segmentTreeSlice";
 import { NotificationSnackbar } from "../../components/notificationSnackbar/NotificationSnackbar";
 import { EditNodeModal } from "../visualisationComponents/nodeControls/editNodeModal/EditNodeModal";
 import Header from "../components/Header";

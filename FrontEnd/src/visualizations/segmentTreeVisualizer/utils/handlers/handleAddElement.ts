@@ -1,4 +1,4 @@
-import { setNewValue, setSnackbar, updateTreeWithNewData } from "../../../store/segmentTreeSlice";
+import { setNewValue, setSnackbar, updateTreeWithNewData } from "../../../store/slices/segmentTreeSlice";
 import { AppDispatch } from "../../../store/store";
 
 export const handleAddElement = async (
