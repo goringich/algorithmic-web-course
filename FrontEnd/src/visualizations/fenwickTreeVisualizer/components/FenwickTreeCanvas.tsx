@@ -74,9 +74,11 @@ const FenwickTreeCanvas: React.FC = () => {
         }
       }
       
+      const { key, ...rest } = cellProps;
       cells.push(
         <Rect
-          {...cellProps}
+          key={key}
+          {...rest}
           onMouseEnter={(e) => {
             const stage = e.target.getStage();
             const pointer = stage.getPointerPosition();
