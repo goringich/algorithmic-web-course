@@ -15,8 +15,10 @@ const ContentPage = () => {
   const [activeSection, setActiveSection] = useState<Section | null>(
     contents.length > 0 ? contents[0] : null
   );
+  const [buttons, setButtons] = useState<TabType[]>(["теория"]);
   const { subSubSection: urlSubSubSection } = useParams();
-  const { setActiveSubSubSection } = useSubSubSection();
+  const { activeSubSubSection, setActiveSubSubSection } = useSubSubSection();
+  const [sectionData, setSectionData] = useState<any>(null);
   useEffect(() => {
     if (urlSubSubSection) {
       const foundSubSubSection = menuData
@@ -30,6 +32,35 @@ const ContentPage = () => {
       }
     }
   }, [urlSubSubSection, setActiveSubSubSection]);
+
+  useEffect(() => {
+    if (!activeSubSubSection) {
+      setSectionData(null);
+      setButtons([]);
+      return;
+    }
+
+    import(`../../assets/dataBase/Sections/${activeSubSubSection[1]}.json`)
+      .then((data) => {
+        setSectionData(data);
+
+        const newButtons: TabType[] = ["теория"];
+        if (data.code && data.code.trim() !== "") newButtons.push("код");
+        if (data.visualization && data.visualization.trim() !== "") newButtons.push("визуализация");
+
+        setButtons(newButtons);
+      })
+      .catch((error) => {
+        console.error("Ошибка загрузки данных:", error);
+        setSectionData({
+          title: activeSubSubSection[0],
+          content: ["Нет данных"],
+          code: "",
+          visualization: "",
+        });
+        setButtons(["теория"]);
+      });
+  }, [activeSubSubSection]);
 
   return (
     <Grid2 container sx={{ height: "100%", overflow: "hidden" }}>
@@ -53,7 +84,7 @@ const ContentPage = () => {
           },
           }}>
           <ContentDisplay activeSection={activeSection} activeTab={activeTab} />
-          <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <Tabs activeTab={activeTab} onTabChange={setActiveTab} tabs={buttons}/>
       </Grid2>
     </Grid2>
   );
