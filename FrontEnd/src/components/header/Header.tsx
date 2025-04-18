@@ -75,7 +75,7 @@ const Header = () => {
           alignItems: "center",
         }}
       >
-        <Box sx={{ flex: "0 0 auto" }}>
+        <Box sx={{ flex: "0 0 auto", zIndex: "2" }}>
           <StyledLink to="/">
             <Typography
               variant="h1"
