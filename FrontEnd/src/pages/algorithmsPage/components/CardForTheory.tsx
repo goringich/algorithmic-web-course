@@ -63,11 +63,10 @@ const CardForTheory: React.FC<TheoryProps> = ({ text, onTableLinkClick, visible 
     );
   }
 
-  const isMath = typeof text === "string" && text.includes('$') && text.match(/\$(.*?)\$/);
 
   const highlightText = (rawText: string) => {
-    return rawText.split(/(\*\*(.*?)\*\*|__(.*?)__|\^\^(.*?)\^\^)/).map((part, index) => {
-      if (!part || part.startsWith("**") || part.startsWith("^^")|| part.startsWith("__")) return null;
+    return rawText.split(/(\*\*(.*?)\*\*|__(.*?)__|\^\^(.*?)\^\^|\$\$(.*?)\$)/).map((part, index) => {
+      if (!part || part.startsWith("**") || part.startsWith("^^")|| part.startsWith("__")||part.startsWith("$$")) return null;
 
       if (rawText.includes(`^^${part}^^`)) {
         return (
@@ -89,6 +88,15 @@ const CardForTheory: React.FC<TheoryProps> = ({ text, onTableLinkClick, visible 
         return (
           <span key={index} style={{ color: theme.palette.purple.dark, fontWeight: "bold" }}>
             {part}
+          </span>
+        );
+      }
+
+      if (rawText.includes(`$$${part}$`)) {
+        console.log(part)
+        return (
+          <span key={index} style={{ margin: 0, padding: 0, lineHeight: 1 }}>
+            <InlineMath math={part} />
           </span>
         );
       }
@@ -117,16 +125,7 @@ const CardForTheory: React.FC<TheoryProps> = ({ text, onTableLinkClick, visible 
     <Cards>
       <Grid2>
         <TypographyForDescription>
-        {/* {highlightText(text as string)} */}
-          {isMath
-            ? text.split(/\$(.*?)\$/).map((part, i) =>
-                i % 2 === 1 ? (
-                  <InlineMath key={i} math={part} />
-                ) : (
-                  <span key={i}>{highlightText(part)}</span>
-                )
-              )
-            : highlightText(text as string)}
+          {highlightText(text as string)}
         </TypographyForDescription>
       </Grid2>
     </Cards>
