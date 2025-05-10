@@ -12,7 +12,7 @@ interface TeamMemberProps {
 }
 
 const Cards = styled(Card)<{ theme: Theme }>(({ theme }) => ({
-  width: "80vw",
+  width: "60vw",
   maxWidth: "987px",
   backgroundColor: theme.palette.background.card,
   borderRadius: theme.shape.cardRadius,

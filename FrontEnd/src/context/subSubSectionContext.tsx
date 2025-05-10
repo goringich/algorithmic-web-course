@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import menuData from "../assets/dataBase/menuData";
+import menuData from "../assets/dataBase/menuData.json";
 import { useParams } from "react-router-dom";
 
 interface subSubSectionContextType {

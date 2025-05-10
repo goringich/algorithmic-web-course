@@ -19,13 +19,11 @@ const CodeBlock = ({ code, language = "cpp" }) => {
         style={oneDark}
         wrapLongLines={true}
         customStyle={{
-          whiteSpace: "pre-wrap",
           wordBreak: "break-word",
           overflowX: "hidden",
         }}
         codeTagProps={{
           style: {
-            whiteSpace: "pre-wrap",
             wordBreak: "break-word",
           },
         }}

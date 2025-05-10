@@ -20,7 +20,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSection } from "../../../context/SectionContext";
 import { useSubSubSection } from "../../../context/subSubSectionContext";
-import menuData from "../../../assets/dataBase/menuData";
+import menuData from "../../../assets/dataBase/menuData.json";
 
 const Content = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[500],

@@ -7,7 +7,7 @@ import { Section } from "./components/types/types";
 import SidebarMenu from "./components/Sidebar";
 import { Grid2, useMediaQuery } from "@mui/material";
 import { useSubSubSection } from "../../context/subSubSectionContext";
-import menuData from "../../assets/dataBase/menuData";
+import menuData from "../../assets/dataBase/menuData.json";
 
 const ContentPage = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
@@ -16,9 +16,9 @@ const ContentPage = () => {
     contents.length > 0 ? contents[0] : null
   );
   const [buttons, setButtons] = useState<TabType[]>(["теория"]);
+  const [sectionData, setSectionData] = useState<any>(null);
   const { subSubSection: urlSubSubSection } = useParams();
   const { activeSubSubSection, setActiveSubSubSection } = useSubSubSection();
-  const [sectionData, setSectionData] = useState<any>(null);
   useEffect(() => {
     if (urlSubSubSection) {
       const foundSubSubSection = menuData

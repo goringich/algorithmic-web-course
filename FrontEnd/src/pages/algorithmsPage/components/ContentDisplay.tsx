@@ -30,10 +30,9 @@ const TypographyForTitle = styled(Typography)(({ theme }) => ({
   padding: theme.spacing(4),
 }));
 
-const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeSection, activeTab }) => {
-  const { activeSubSubSection } = useSubSubSection();
+const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeTab }) => {
   const [sectionData, setSectionData] = useState<SubSubSectionContent | null>(null);
-
+  const { activeSubSubSection } = useSubSubSection();
   useEffect(() => {
     console.log("useEffect: activeSubSubSection =", activeSubSubSection);
     if (!activeSubSubSection) {

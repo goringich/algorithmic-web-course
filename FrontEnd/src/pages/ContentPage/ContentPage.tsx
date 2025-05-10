@@ -11,8 +11,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
 import { Theme } from "@mui/material/styles";
-import menuData from "../../assets/dataBase/menuData";
-import FAQData from "../../assets/dataBase/TitlesData copy.json";
+import menuData from "../../assets/dataBase/menuData.json"; // Используем menuData
+import FAQData from "../../assets/dataBase/TitlesData copy.json"; // Вопросы остаются без изменений
 
 const FabButton = styled(Fab)(({ theme }) => ({
   width: "50px",
