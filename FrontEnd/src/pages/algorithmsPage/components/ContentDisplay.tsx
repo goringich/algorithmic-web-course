@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FenwickTreeVisualizer from "../../../visualizations/fenwickTreeVisualizer/FenwickTreeVisualizer";
 import SegmentTreeVisualizer from "../../../visualizations/segmentTreeVisualizer/SegmentTreeVisualizer";
+import ScanningLineVisualizer from "../../../visualizations/scanningLineVisualizer/ScanningLineVisualizer";
 import { Provider } from "react-redux";
 import store from "../../../visualizations/store/store";
 import { Typography } from "@mui/material";
@@ -72,6 +73,9 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ activeTab }) => {
     }
     if (key.includes("segment")) {
       return <SegmentTreeVisualizer />;
+    }
+    if (key.includes("scan") || key.includes("sweep")) {
+      return <ScanningLineVisualizer />;
     }
 
     console.log("Не найдена подходящая визуализация");

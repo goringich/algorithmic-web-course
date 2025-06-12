@@ -1,0 +1,12 @@
+{
+  "title": "Бинарный поиск",
+  "content": [
+    "Бинарный поиск — это алгоритм для нахождения элемента в отсортированном массиве за O(log n).",
+    "Он последовательно делит рассматриваемый диапазон пополам, пока не найдет искомое значение или не убедится в его отсутствии.",
+    {
+      "type": "code",
+      "language": "cpp",
+      "source": "#include <vector>\nint binary_search(const std::vector<int>& arr, int target) {\n    int left = 0, right = arr.size() - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (arr[mid] == target) return mid;\n        else if (arr[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}"
+    }
+  ]
+}

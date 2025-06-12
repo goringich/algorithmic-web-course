@@ -1,0 +1,9 @@
+{
+  "title": "Сканирующая прямая",
+  "content": [
+    "Сканирующая прямая (sweep line) — базовый приём в вычислительной геометрии. Представим вертикальную линию, движущуюся слева направо. Когда прямая проходит через событие (начало или конец отрезка), структура данных обновляется. Так можно отслеживать активные объекты и находить пересечения.",
+    "На интерактивной визуализации ниже можно добавлять отрезки и запускать анимацию. При движении прямой активные отрезки подсвечиваются."
+  ],
+  "code": "// Поиск количества пересечений отрезков на прямой x\nstruct Event {int x; int type; int id;};\nvector<Event> events;\nfor (int i=0;i<n;i++){events.push_back({l[i],0,i});events.push_back({r[i],1,i});}\nsort(events.begin(), events.end(), [](const Event&a,const Event&b){return a.x<b.x || (a.x==b.x && a.type<b.type);});\nset<int> active;\nfor(auto &e:events){if(e.type==0) active.insert(e.id); else active.erase(e.id);}",
+  "visualization": "done"
+}
