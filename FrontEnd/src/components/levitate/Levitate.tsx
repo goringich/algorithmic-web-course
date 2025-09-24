@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
-import person1 from '../../assets/images/MainPage/anime-person/Character&deviceForLight.png';
-import person2 from '../../assets/images/MainPage/anime-person/Caracter&deviceForDark.png';
+import person1 from '../../assets/images/MainPage/anime-person/ch-light.png';
+import person2 from '../../assets/images/MainPage/anime-person/ch-dark.png';
+import d from "../../assets/images/MainPage/anime-person/caracter-device-dark.png"
 import { styled, keyframes } from "@mui/system";
 import { ThemeContext } from "../../context/ThemeContext";
 const levitate = keyframes`
