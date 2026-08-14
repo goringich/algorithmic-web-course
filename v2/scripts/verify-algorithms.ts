@@ -34,6 +34,12 @@ function validateStep(slug: string, step: AlgorithmStep, index: number) {
   Object.entries(step.metrics ?? {}).forEach(([key, value]) => assertFinite(value, `${slug} step ${index} metric ${key}`));
 }
 
+function requireAlgorithm(slug: string) {
+  const algorithm = algorithms.find((item) => item.slug === slug);
+  assert(algorithm, `missing required algorithm ${slug}`);
+  return algorithm;
+}
+
 assert(algorithms.length >= 20, `expected at least 20 algorithms, got ${algorithms.length}`);
 assert(freeAlgorithms.length >= 5, `free playground is too small: ${freeAlgorithms.length}`);
 
@@ -72,8 +78,7 @@ for (const algorithm of algorithms) {
 
 const sortSlugs = ["bubble-sort", "selection-sort", "insertion-sort", "merge-sort", "quick-sort", "heap-sort"];
 for (const slug of sortSlugs) {
-  const algorithm = algorithms.find((item) => item.slug === slug);
-  assert(algorithm, `missing required sort ${slug}`);
+  const algorithm = requireAlgorithm(slug);
   const source = [8, 3, 6, 1, 7, 2, 5, 4];
   const final = algorithm.buildSteps(source).at(-1);
   assert(final, `${slug} produced no final step`);
@@ -81,4 +86,30 @@ for (const slug of sortSlugs) {
   assert.deepEqual(values, [...source].sort((a, b) => a - b), `${slug} final state is not sorted`);
 }
 
-console.log(`AlgoHar verification passed: ${algorithms.length} algorithms, ${curriculum.length} modules, ${freeAlgorithms.length} free simulations, ${Object.keys(practiceBySlug).length} concept checkpoints.`);
+const dijkstraFinal = requireAlgorithm("dijkstra").buildSteps().at(-1);
+assert.equal(dijkstraFinal?.metrics?.distance, 13, "dijkstra must find A->F distance 13 in the canonical graph");
+assert.equal(dijkstraFinal?.items.find((item) => item.id === "F")?.state, "success", "dijkstra must finish by fixing F");
+
+const bfsFinal = requireAlgorithm("bfs").buildSteps().at(-1);
+assert.equal(bfsFinal?.items.length, 6, "bfs canonical graph must keep all six vertices");
+assert(bfsFinal?.items.every((item) => item.state === "visited" || item.state === "active"), "bfs must visit every canonical vertex");
+
+const fenwickFinal = requireAlgorithm("fenwick-tree").buildSteps().at(-1);
+assert.equal(fenwickFinal?.metrics?.sum, 23, "fenwick canonical prefix(7) must equal 23");
+
+const unionFindFinal = requireAlgorithm("union-find").buildSteps().at(-1);
+assert.equal(unionFindFinal?.metrics?.components, 2, "union-find canonical sequence must end with two components");
+
+const kruskalFinal = requireAlgorithm("kruskal").buildSteps().at(-1);
+assert.equal(kruskalFinal?.metrics?.selected, 5, "kruskal MST over six vertices must select five edges");
+
+const aStarFinal = requireAlgorithm("a-star").buildSteps().at(-1);
+assert.equal(aStarFinal?.items.find((item) => item.id === "F")?.state, "success", "A* must reach canonical target F");
+
+const kmpFinal = requireAlgorithm("kmp").buildSteps().at(-1);
+assert.equal(kmpFinal?.metrics?.start, 0, "KMP canonical pattern must match at index 0");
+
+const segmentFinal = requireAlgorithm("segment-tree").buildSteps().at(-1);
+assert.equal(segmentFinal?.items.filter((item) => item.state === "active").length, 3, "segment-tree canonical query must decompose into three active segments");
+
+console.log(`AlgoHar verification passed: ${algorithms.length} algorithms, ${curriculum.length} modules, ${freeAlgorithms.length} free simulations, ${Object.keys(practiceBySlug).length} concept checkpoints, advanced semantic checks.`);
