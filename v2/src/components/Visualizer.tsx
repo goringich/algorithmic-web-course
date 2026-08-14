@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { markCompleted, setLastLesson } from "@/lib/progress";
+import { useEffect, useRef, useState } from "react";
+import { markCompleted } from "@/lib/progress";
 import { track } from "@/lib/analytics";
-import type { AccessTier, AlgorithmStep, VisualKind } from "@/lib/types";
+import type { AlgorithmStep, VisualKind } from "@/lib/types";
 import { VisualStage } from "./VisualStage";
 
 const speeds = [1200, 700, 350] as const;
+const speedLabels = [0.6, 1, 2] as const;
 
 function parseInput(value: string, fallback: number[] | undefined) {
   const parsed = value
@@ -20,14 +21,12 @@ function parseInput(value: string, fallback: number[] | undefined) {
 export function Visualizer({
   slug,
   kind,
-  tier,
   acceptsArrayInput,
   defaultInput,
   initialSteps,
 }: {
   slug: string;
   kind: VisualKind;
-  tier: AccessTier;
   acceptsArrayInput?: boolean;
   defaultInput?: number[];
   initialSteps: AlgorithmStep[];
@@ -39,28 +38,40 @@ export function Visualizer({
   const [speedIndex, setSpeedIndex] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const completionTracked = useRef(false);
   const step = steps[Math.min(stepIndex, Math.max(steps.length - 1, 0))];
+  const atEnd = stepIndex >= steps.length - 1;
 
   useEffect(() => {
-    setLastLesson(slug);
-    track("algorithm_open", { slug, tier });
-  }, [slug, tier]);
+    completionTracked.current = false;
+  }, [slug, steps]);
 
   useEffect(() => {
-    if (!playing || steps.length < 2) return;
-    const timer = window.setInterval(() => {
-      setStepIndex((current) => {
-        if (current >= steps.length - 1) {
-          setPlaying(false);
-          markCompleted(slug);
-          track("visualization_complete", { slug, steps: steps.length });
-          return current;
-        }
-        return current + 1;
-      });
+    if (steps.length < 2 || stepIndex !== steps.length - 1 || completionTracked.current) return;
+    completionTracked.current = true;
+    markCompleted(slug);
+    track("visualization_complete", { slug, steps: steps.length });
+  }, [slug, stepIndex, steps.length]);
+
+  useEffect(() => {
+    if (!playing || steps.length < 2 || atEnd) return;
+    const nextIndex = Math.min(steps.length - 1, stepIndex + 1);
+    const timer = window.setTimeout(() => {
+      setStepIndex(nextIndex);
+      if (nextIndex >= steps.length - 1) setPlaying(false);
     }, speeds[speedIndex]);
-    return () => window.clearInterval(timer);
-  }, [playing, steps.length, speedIndex, slug]);
+    return () => window.clearTimeout(timer);
+  }, [atEnd, playing, speedIndex, stepIndex, steps.length]);
+
+  function togglePlayback() {
+    if (atEnd) {
+      completionTracked.current = false;
+      setStepIndex(0);
+      setPlaying(true);
+      return;
+    }
+    setPlaying((value) => !value);
+  }
 
   async function applyInput() {
     setPlaying(false);
@@ -87,6 +98,7 @@ export function Visualizer({
       setLoading(false);
       return;
     }
+    completionTracked.current = false;
     setSteps(result.steps);
     setStepIndex(0);
     setLoading(false);
@@ -97,28 +109,30 @@ export function Visualizer({
 
   return (
     <section className="visualizer-shell">
-      <div className="visualizer-toolbar">
+      <div className="visualizer-toolbar" aria-live="polite">
         <div>
           <span className="eyebrow">ИНТЕРАКТИВНЫЙ РАЗБОР</span>
           <h2>{step.title}</h2>
           <p>{step.description}</p>
         </div>
-        <div className="step-counter">{stepIndex + 1} / {steps.length}</div>
+        <div className="step-counter" aria-label={`Шаг ${stepIndex + 1} из ${steps.length}`}>{stepIndex + 1} / {steps.length}</div>
       </div>
-      <div className="progress-track" aria-label={`Прогресс ${progress}%`}><span style={{ width: `${progress}%` }} /></div>
+      <div className="progress-track" role="progressbar" aria-label="Прогресс визуализации" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
+        <span style={{ width: `${progress}%` }} />
+      </div>
       <div className="visualizer-stage-panel"><VisualStage step={step} kind={kind} /></div>
       {step.metrics && Object.keys(step.metrics).length ? (
         <div className="metrics-row">
           {Object.entries(step.metrics).map(([key, value]) => <div className="metric-pill" key={key}><span>{key}</span><strong>{String(value)}</strong></div>)}
         </div>
       ) : null}
-      {error ? <div className="visualizer-error">{error}</div> : null}
+      {error ? <div className="visualizer-error" role="alert">{error}</div> : null}
       <div className="visualizer-controls">
         <button className="button button-ghost" type="button" onClick={() => { setPlaying(false); setStepIndex(0); }}>Сначала</button>
         <button className="button button-ghost" type="button" disabled={stepIndex === 0} onClick={() => { setPlaying(false); setStepIndex((i) => Math.max(0, i - 1)); }}>← Шаг</button>
-        <button className="button button-primary" type="button" onClick={() => setPlaying((value) => !value)}>{playing ? "Пауза" : "Запустить"}</button>
-        <button className="button button-ghost" type="button" disabled={stepIndex >= steps.length - 1} onClick={() => { setPlaying(false); setStepIndex((i) => Math.min(steps.length - 1, i + 1)); }}>Шаг →</button>
-        <button className="button button-ghost" type="button" onClick={() => setSpeedIndex((i) => (i + 1) % speeds.length)}>Скорость ×{[0.6, 1, 2][speedIndex]}</button>
+        <button className="button button-primary" type="button" aria-pressed={playing} onClick={togglePlayback}>{playing ? "Пауза" : atEnd ? "Снова" : "Запустить"}</button>
+        <button className="button button-ghost" type="button" disabled={atEnd} onClick={() => { setPlaying(false); setStepIndex((i) => Math.min(steps.length - 1, i + 1)); }}>Шаг →</button>
+        <button className="button button-ghost" type="button" aria-label={`Скорость воспроизведения ${speedLabels[speedIndex]}x`} onClick={() => setSpeedIndex((i) => (i + 1) % speeds.length)}>Скорость ×{speedLabels[speedIndex]}</button>
       </div>
       {acceptsArrayInput ? (
         <div className="custom-input-row">

@@ -1,18 +1,29 @@
 const KEY = "algohar-v2-progress";
+const CHANGE_EVENT = "algohar-progress-change";
 
 export type ProgressState = {
   completed: string[];
+  opened: string[];
   lastLesson?: string;
 };
 
-const empty = (): ProgressState => ({ completed: [] });
+const empty = (): ProgressState => ({ completed: [], opened: [] });
 
-export function readProgress(): ProgressState {
-  if (typeof window === "undefined") return empty();
+function strings(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+export function parseProgressSnapshot(raw: string): ProgressState {
+  if (!raw) return empty();
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as Partial<ProgressState>;
+    const parsed = JSON.parse(raw) as Partial<ProgressState>;
+    const completed = strings(parsed.completed);
+    const opened = Array.from(new Set([...completed, ...strings(parsed.opened)]));
     return {
-      completed: Array.isArray(parsed.completed) ? parsed.completed.filter((item): item is string => typeof item === "string") : [],
+      completed,
+      opened,
       lastLesson: typeof parsed.lastLesson === "string" ? parsed.lastLesson : undefined,
     };
   } catch {
@@ -20,15 +31,52 @@ export function readProgress(): ProgressState {
   }
 }
 
-export function markCompleted(slug: string): ProgressState {
-  const current = readProgress();
-  const completed = Array.from(new Set([...current.completed, slug]));
-  const next = { completed, lastLesson: slug };
-  window.localStorage.setItem(KEY, JSON.stringify(next));
-  return next;
+export function readProgressSnapshot() {
+  if (typeof window === "undefined") return "";
+  return window.localStorage.getItem(KEY) ?? "";
 }
 
-export function setLastLesson(slug: string) {
+export function subscribeProgress(listener: () => void) {
+  if (typeof window === "undefined") return () => undefined;
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === KEY) listener();
+  };
+  const onLocalChange = () => listener();
+
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(CHANGE_EVENT, onLocalChange);
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(CHANGE_EVENT, onLocalChange);
+  };
+}
+
+export function readProgress(): ProgressState {
+  return parseProgressSnapshot(readProgressSnapshot());
+}
+
+function writeProgress(progress: ProgressState) {
+  window.localStorage.setItem(KEY, JSON.stringify(progress));
+  window.dispatchEvent(new Event(CHANGE_EVENT));
+  return progress;
+}
+
+export function markOpened(slug: string): ProgressState {
   const current = readProgress();
-  window.localStorage.setItem(KEY, JSON.stringify({ ...current, lastLesson: slug }));
+  return writeProgress({
+    ...current,
+    opened: Array.from(new Set([...current.opened, slug])),
+    lastLesson: slug,
+  });
+}
+
+export function markCompleted(slug: string): ProgressState {
+  const current = readProgress();
+  return writeProgress({
+    ...current,
+    completed: Array.from(new Set([...current.completed, slug])),
+    opened: Array.from(new Set([...current.opened, slug])),
+    lastLesson: slug,
+  });
 }

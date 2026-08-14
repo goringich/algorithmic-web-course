@@ -39,4 +39,14 @@ export const curriculum: CourseModule[] = [
   },
 ];
 
-export const totalLessons = curriculum.reduce((sum, module) => sum + module.slugs.length, 0);
+export const courseOrder = curriculum.flatMap((module) => module.slugs);
+export const totalLessons = courseOrder.length;
+
+export function lessonNeighbors(slug: string) {
+  const index = courseOrder.indexOf(slug);
+  if (index < 0) return { previous: undefined, next: undefined };
+  return {
+    previous: index > 0 ? courseOrder[index - 1] : undefined,
+    next: index < courseOrder.length - 1 ? courseOrder[index + 1] : undefined,
+  };
+}
