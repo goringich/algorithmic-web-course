@@ -48,7 +48,7 @@ export default async function CourseLesson({ params }: { params: Promise<{ slug:
           <h3>Сложность</h3><p>{algorithm.complexity.note}</p>
         </aside>
         {entitled ? (
-          <Visualizer slug={algorithm.slug} kind={algorithm.kind} tier={algorithm.tier} acceptsArrayInput={algorithm.acceptsArrayInput} defaultInput={algorithm.defaultInput} initialSteps={initialSteps} />
+          <Visualizer slug={algorithm.slug} kind={algorithm.kind} acceptsArrayInput={algorithm.acceptsArrayInput} defaultInput={algorithm.defaultInput} initialSteps={initialSteps} />
         ) : (
           <section className="locked-lesson panel">
             <span className="eyebrow">ALGOHAR FULL</span>
