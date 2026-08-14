@@ -4,6 +4,7 @@ import { algorithms, algorithmBySlug } from "@/lib/algorithms";
 import { hasFullEntitlement } from "@/lib/entitlement";
 import { lessonNeighbors } from "@/lib/curriculum";
 import { LessonAnalytics } from "@/components/LessonAnalytics";
+import { LessonPractice } from "@/components/LessonPractice";
 import { Visualizer } from "@/components/Visualizer";
 
 export function generateStaticParams() {
@@ -58,6 +59,7 @@ export default async function CourseLesson({ params }: { params: Promise<{ slug:
           </section>
         )}
       </div>
+      <LessonPractice slug={algorithm.slug} timeComplexity={algorithm.complexity.time} />
       <nav className="lesson-nav" aria-label="Навигация по урокам">
         {previous ? <Link className="lesson-nav-card" href={`/course/${previous.slug}`}><small>← Предыдущий</small><strong>{previous.title}</strong></Link> : <span />}
         {next ? <Link className="lesson-nav-card lesson-nav-next" href={`/course/${next.slug}`}><small>Следующий →</small><strong>{next.title}</strong></Link> : <Link className="lesson-nav-card lesson-nav-next" href="/learn"><small>Курс завершён</small><strong>Вернуться к программе</strong></Link>}

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { algorithms, freeAlgorithms } from "../src/lib/algorithms";
 import { curriculum } from "../src/lib/curriculum";
+import { practiceBySlug } from "../src/lib/practice";
 import type { AlgorithmStep } from "../src/lib/types";
 
 function assertFinite(value: unknown, context: string) {
@@ -42,6 +43,7 @@ assert.equal(new Set(slugs).size, slugs.length, "algorithm slugs must be unique"
 const curriculumSlugs = curriculum.flatMap((module) => module.slugs);
 assert.equal(new Set(curriculumSlugs).size, curriculumSlugs.length, "curriculum contains duplicate lessons");
 assert.deepEqual([...curriculumSlugs].sort(), [...slugs].sort(), "curriculum must cover every algorithm exactly once");
+assert.deepEqual(Object.keys(practiceBySlug).sort(), [...slugs].sort(), "every algorithm must have a concept checkpoint");
 
 for (const algorithm of algorithms) {
   assert(algorithm.summary.trim().length >= 20, `${algorithm.slug} summary is too shallow`);
@@ -50,6 +52,12 @@ for (const algorithm of algorithms) {
   assert(algorithm.pseudocode.length >= 3, `${algorithm.slug} pseudocode is too short`);
   assert(algorithm.complexity.time.trim().length > 0, `${algorithm.slug} has no time complexity`);
   assert(algorithm.complexity.space.trim().length > 0, `${algorithm.slug} has no space complexity`);
+
+  const practice = practiceBySlug[algorithm.slug];
+  assert(practice.prompt.trim().length >= 20, `${algorithm.slug} practice prompt is too shallow`);
+  assert.equal(practice.options.length, 4, `${algorithm.slug} practice must have four options`);
+  assert(practice.correctIndex >= 0 && practice.correctIndex < practice.options.length, `${algorithm.slug} practice answer is invalid`);
+  assert(practice.explanation.trim().length >= 20, `${algorithm.slug} practice explanation is too shallow`);
 
   const steps = algorithm.buildSteps(algorithm.defaultInput);
   assert(steps.length >= 2, `${algorithm.slug} must produce multiple visual states`);
@@ -73,4 +81,4 @@ for (const slug of sortSlugs) {
   assert.deepEqual(values, [...source].sort((a, b) => a - b), `${slug} final state is not sorted`);
 }
 
-console.log(`AlgoHar verification passed: ${algorithms.length} algorithms, ${curriculum.length} modules, ${freeAlgorithms.length} free simulations.`);
+console.log(`AlgoHar verification passed: ${algorithms.length} algorithms, ${curriculum.length} modules, ${freeAlgorithms.length} free simulations, ${Object.keys(practiceBySlug).length} concept checkpoints.`);

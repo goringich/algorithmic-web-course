@@ -3,6 +3,8 @@ export type AnalyticsEvent =
   | "algorithm_open"
   | "second_lesson_open"
   | "visualization_complete"
+  | "practice_attempt"
+  | "practice_correct"
   | "pricing_view"
   | "checkout_click"
   | "lead_submit";
