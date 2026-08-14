@@ -7,10 +7,9 @@
 - [x] Lesson pages include intuition, pseudocode and complexity.
 - [x] Visual engine supports arrays, linear structures, graphs and trees.
 - [x] Responsive visual system exists.
-- [x] Automated catalog verification, typecheck, lint and production build passed for the merged V2 foundation.
-- [ ] Post-merge hardening CI remains green on the final master head.
+- [x] Automated catalog/practice verification, semantic checks, typecheck, lint and production build pass on the current master CI path.
 - [ ] Browser QA on representative desktop and mobile viewports.
-- [ ] Correctness review for every advanced algorithm trace.
+- [ ] Human/independent correctness review for every advanced algorithm trace.
 
 ## Commercial gate
 
