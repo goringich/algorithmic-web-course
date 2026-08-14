@@ -7,7 +7,8 @@
 - [x] Lesson pages include intuition, pseudocode and complexity.
 - [x] Visual engine supports arrays, linear structures, graphs and trees.
 - [x] Responsive visual system exists.
-- [ ] CI typecheck/lint/build green on the V2 branch.
+- [x] Automated catalog verification, typecheck, lint and production build passed for the merged V2 foundation.
+- [ ] Post-merge hardening CI remains green on the final master head.
 - [ ] Browser QA on representative desktop and mobile viewports.
 - [ ] Correctness review for every advanced algorithm trace.
 
@@ -17,7 +18,8 @@
 - [ ] Public offer/refund terms reviewed for the actual seller/payment model.
 - [ ] Privacy page lists real processors and retention periods.
 - [ ] Approved Russian payment/receipt path provisioned.
-- [ ] Server-side paid entitlement protects paid lessons.
+- [x] Server-side signed entitlement protects paid lesson traces.
+- [ ] Verified provider payment is connected to entitlement issuance/account lifecycle.
 - [ ] Payment success is verified from provider truth, never a browser redirect alone.
 - [ ] Lead and analytics sinks are durable and monitored.
 - [ ] Owned domain + HTTPS + production deployment verified.
