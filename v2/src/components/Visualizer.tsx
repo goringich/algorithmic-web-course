@@ -40,6 +40,7 @@ export function Visualizer({
   const [error, setError] = useState<string | null>(null);
   const completionTracked = useRef(false);
   const step = steps[Math.min(stepIndex, Math.max(steps.length - 1, 0))];
+  const atEnd = stepIndex >= steps.length - 1;
 
   useEffect(() => {
     completionTracked.current = false;
@@ -53,16 +54,24 @@ export function Visualizer({
   }, [slug, stepIndex, steps.length]);
 
   useEffect(() => {
-    if (!playing || steps.length < 2) return;
-    if (stepIndex >= steps.length - 1) {
-      setPlaying(false);
-      return;
-    }
+    if (!playing || steps.length < 2 || atEnd) return;
+    const nextIndex = Math.min(steps.length - 1, stepIndex + 1);
     const timer = window.setTimeout(() => {
-      setStepIndex((current) => Math.min(steps.length - 1, current + 1));
+      setStepIndex(nextIndex);
+      if (nextIndex >= steps.length - 1) setPlaying(false);
     }, speeds[speedIndex]);
     return () => window.clearTimeout(timer);
-  }, [playing, speedIndex, stepIndex, steps.length]);
+  }, [atEnd, playing, speedIndex, stepIndex, steps.length]);
+
+  function togglePlayback() {
+    if (atEnd) {
+      completionTracked.current = false;
+      setStepIndex(0);
+      setPlaying(true);
+      return;
+    }
+    setPlaying((value) => !value);
+  }
 
   async function applyInput() {
     setPlaying(false);
@@ -121,8 +130,8 @@ export function Visualizer({
       <div className="visualizer-controls">
         <button className="button button-ghost" type="button" onClick={() => { setPlaying(false); setStepIndex(0); }}>Сначала</button>
         <button className="button button-ghost" type="button" disabled={stepIndex === 0} onClick={() => { setPlaying(false); setStepIndex((i) => Math.max(0, i - 1)); }}>← Шаг</button>
-        <button className="button button-primary" type="button" aria-pressed={playing} onClick={() => setPlaying((value) => !value)}>{playing ? "Пауза" : "Запустить"}</button>
-        <button className="button button-ghost" type="button" disabled={stepIndex >= steps.length - 1} onClick={() => { setPlaying(false); setStepIndex((i) => Math.min(steps.length - 1, i + 1)); }}>Шаг →</button>
+        <button className="button button-primary" type="button" aria-pressed={playing} onClick={togglePlayback}>{playing ? "Пауза" : atEnd ? "Снова" : "Запустить"}</button>
+        <button className="button button-ghost" type="button" disabled={atEnd} onClick={() => { setPlaying(false); setStepIndex((i) => Math.min(steps.length - 1, i + 1)); }}>Шаг →</button>
         <button className="button button-ghost" type="button" aria-label={`Скорость воспроизведения ${speedLabels[speedIndex]}x`} onClick={() => setSpeedIndex((i) => (i + 1) % speeds.length)}>Скорость ×{speedLabels[speedIndex]}</button>
       </div>
       {acceptsArrayInput ? (
