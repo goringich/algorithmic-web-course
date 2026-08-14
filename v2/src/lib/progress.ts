@@ -1,4 +1,5 @@
 const KEY = "algohar-v2-progress";
+const CHANGE_EVENT = "algohar-progress-change";
 
 export type ProgressState = {
   completed: string[];
@@ -14,10 +15,10 @@ function strings(value: unknown) {
     : [];
 }
 
-export function readProgress(): ProgressState {
-  if (typeof window === "undefined") return empty();
+export function parseProgressSnapshot(raw: string): ProgressState {
+  if (!raw) return empty();
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as Partial<ProgressState>;
+    const parsed = JSON.parse(raw) as Partial<ProgressState>;
     const completed = strings(parsed.completed);
     const opened = Array.from(new Set([...completed, ...strings(parsed.opened)]));
     return {
@@ -30,8 +31,34 @@ export function readProgress(): ProgressState {
   }
 }
 
+export function readProgressSnapshot() {
+  if (typeof window === "undefined") return "";
+  return window.localStorage.getItem(KEY) ?? "";
+}
+
+export function subscribeProgress(listener: () => void) {
+  if (typeof window === "undefined") return () => undefined;
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === KEY) listener();
+  };
+  const onLocalChange = () => listener();
+
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(CHANGE_EVENT, onLocalChange);
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(CHANGE_EVENT, onLocalChange);
+  };
+}
+
+export function readProgress(): ProgressState {
+  return parseProgressSnapshot(readProgressSnapshot());
+}
+
 function writeProgress(progress: ProgressState) {
   window.localStorage.setItem(KEY, JSON.stringify(progress));
+  window.dispatchEvent(new Event(CHANGE_EVENT));
   return progress;
 }
 
