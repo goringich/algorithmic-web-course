@@ -1,17 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { readProgress, type ProgressState } from "@/lib/progress";
+import { useMemo, useSyncExternalStore } from "react";
+import {
+  parseProgressSnapshot,
+  readProgressSnapshot,
+  subscribeProgress,
+} from "@/lib/progress";
+
+const serverSnapshot = () => "";
 
 export function CourseProgress({ allowedSlugs }: { allowedSlugs: string[] }) {
-  const [progress, setProgress] = useState<ProgressState>({ completed: [], opened: [] });
+  const rawProgress = useSyncExternalStore(
+    subscribeProgress,
+    readProgressSnapshot,
+    serverSnapshot,
+  );
+  const progress = useMemo(() => parseProgressSnapshot(rawProgress), [rawProgress]);
   const allowed = useMemo(() => new Set(allowedSlugs), [allowedSlugs]);
-
-  useEffect(() => {
-    setProgress(readProgress());
-  }, []);
-
   const completed = progress.completed.filter((slug) => allowed.has(slug));
   const percent = allowedSlugs.length ? Math.round((completed.length / allowedSlugs.length) * 100) : 0;
   const canContinue = Boolean(progress.lastLesson && allowed.has(progress.lastLesson));
