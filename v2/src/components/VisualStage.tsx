@@ -2,12 +2,16 @@ import type { AlgorithmStep, VisualItem, VisualKind } from "@/lib/types";
 
 const classFor = (state: VisualItem["state"]) => `visual-state visual-${state ?? "idle"}`;
 
+function numericValue(item: VisualItem) {
+  return (item.value ?? Number(item.label)) || 0;
+}
+
 function ArrayStage({ step }: { step: AlgorithmStep }) {
-  const max = Math.max(1, ...step.items.map((item) => Math.abs(item.value ?? Number(item.label) || 0)));
+  const max = Math.max(1, ...step.items.map((item) => Math.abs(numericValue(item))));
   return (
     <div className="array-stage" aria-label="Визуализация массива">
       {step.items.map((item) => {
-        const value = item.value ?? Number(item.label) || 0;
+        const value = numericValue(item);
         const height = Math.max(18, (Math.abs(value) / max) * 150);
         return (
           <div className="array-column" key={item.id}>
