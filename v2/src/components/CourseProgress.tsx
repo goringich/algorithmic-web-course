@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { readProgress, type ProgressState } from "@/lib/progress";
 
 export function CourseProgress({ allowedSlugs }: { allowedSlugs: string[] }) {
-  const [progress, setProgress] = useState<ProgressState>({ completed: [] });
+  const [progress, setProgress] = useState<ProgressState>({ completed: [], opened: [] });
   const allowed = useMemo(() => new Set(allowedSlugs), [allowedSlugs]);
 
   useEffect(() => {
