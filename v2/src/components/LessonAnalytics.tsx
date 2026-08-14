@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { track } from "@/lib/analytics";
-import { readProgress, setLastLesson } from "@/lib/progress";
+import { markOpened, readProgress } from "@/lib/progress";
 import type { AccessTier } from "@/lib/types";
 
 export function LessonAnalytics({ slug, tier }: { slug: string; tier: AccessTier }) {
@@ -11,11 +11,18 @@ export function LessonAnalytics({ slug, tier }: { slug: string; tier: AccessTier
   useEffect(() => {
     if (sent.current) return;
     sent.current = true;
-    const previousLesson = readProgress().lastLesson;
-    if (previousLesson && previousLesson !== slug) {
-      track("second_lesson_open", { slug, previousLesson, tier });
+
+    const before = readProgress();
+    const isNewLesson = !before.opened.includes(slug);
+    if (isNewLesson && before.opened.length === 1) {
+      track("second_lesson_open", {
+        slug,
+        previousLesson: before.lastLesson ?? before.opened[0],
+        tier,
+      });
     }
-    setLastLesson(slug);
+
+    markOpened(slug);
     track("algorithm_open", { slug, tier });
   }, [slug, tier]);
 
