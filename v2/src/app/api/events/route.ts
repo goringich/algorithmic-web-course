@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const allowed = new Set(["landing_view", "algorithm_open", "visualization_complete", "pricing_view", "checkout_click", "lead_submit"]);
+const allowed = new Set([
+  "landing_view",
+  "algorithm_open",
+  "second_lesson_open",
+  "visualization_complete",
+  "pricing_view",
+  "checkout_click",
+  "lead_submit",
+]);
 
 export async function POST(request: NextRequest) {
   const payload = await request.json().catch(() => null) as null | { event?: string; properties?: unknown; path?: string; occurredAt?: string };

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { algorithms, freeAlgorithms } from "@/lib/algorithms";
 import { curriculum } from "@/lib/curriculum";
 import { AlgorithmCard } from "@/components/AlgorithmCard";
+import { AnalyticsPing } from "@/components/AnalyticsPing";
 
 export default function HomePage() {
   const featured = ["binary-search", "quick-sort", "segment-tree", "dijkstra", "a-star", "kmp"]
@@ -10,6 +11,7 @@ export default function HomePage() {
 
   return (
     <>
+      <AnalyticsPing event="landing_view" />
       <section className="hero shell">
         <div className="hero-copy">
           <span className="eyebrow">ИНТЕРАКТИВНЫЙ КУРС ПО АЛГОРИТМАМ</span>
@@ -19,7 +21,7 @@ export default function HomePage() {
             <Link className="button button-primary button-large" href="/learn">Открыть курс</Link>
             <Link className="button button-ghost button-large" href="/playground">Попробовать бесплатно</Link>
           </div>
-          <div className="trust-line">Без установки · прогресс сохраняется локально · {freeAlgorithms.length} бесплатных визуализаций</div>
+          <div className="trust-line">Без установки · аккаунт не нужен для free-уроков · прогресс сохраняется локально</div>
         </div>
         <div className="hero-demo panel">
           <div className="demo-window-top"><span /><span /><span /><strong>binary-search.algohar</strong></div>
@@ -35,8 +37,8 @@ export default function HomePage() {
         <div className="shell stats-grid">
           <div><strong>{algorithms.length}</strong><span>реальных симуляций</span></div>
           <div><strong>{curriculum.length}</strong><span>последовательных модулей</span></div>
+          <div><strong>{freeAlgorithms.length}</strong><span>полных free-уроков</span></div>
           <div><strong>1</strong><span>единый visual engine</span></div>
-          <div><strong>0</strong><span>выдуманных отзывов</span></div>
         </div>
       </section>
 

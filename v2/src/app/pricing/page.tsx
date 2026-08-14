@@ -1,4 +1,6 @@
 import { LeadForm } from "@/components/LeadForm";
+import { AnalyticsPing } from "@/components/AnalyticsPing";
+import { TrackedCheckoutLink } from "@/components/TrackedCheckoutLink";
 import { algorithms, freeAlgorithms } from "@/lib/algorithms";
 
 export const metadata = { title: "Тарифы" };
@@ -7,6 +9,7 @@ export default function PricingPage() {
   const coreUrl = process.env.NEXT_PUBLIC_CHECKOUT_CORE_URL;
   return (
     <div className="shell page-shell">
+      <AnalyticsPing event="pricing_view" properties={{ offer: "full_early_access" }} />
       <div className="page-heading centered-heading">
         <span className="eyebrow">ПРОСТАЯ МОНЕТИЗАЦИЯ</span>
         <h1>Сначала проверь формат бесплатно</h1>
@@ -26,8 +29,12 @@ export default function PricingPage() {
           <h2>AlgoHar Full</h2>
           <div className="price">2 990 ₽ <small>ранний запуск</small></div>
           <p>Гипотеза цены: после подтверждения спроса — 4 990 ₽ за lifetime-доступ.</p>
-          <ul><li>Все {algorithms.length} визуализаций</li><li>6 последовательных модулей</li><li>Продвинутые графы и range structures</li><li>Все будущие алгоритмы V2 в рамках lifetime</li></ul>
-          {coreUrl ? <a className="button button-primary" href={coreUrl}>Купить ранний доступ</a> : <a className="button button-primary" href="#waitlist">Записаться в ранний доступ</a>}
+          <ul><li>Все {algorithms.length} визуализаций</li><li>6 последовательных модулей</li><li>Продвинутые графы и range structures</li><li>Будущие алгоритмы V2 в границах early-access программы</li></ul>
+          {coreUrl ? (
+            <TrackedCheckoutLink className="button button-primary" href={coreUrl} offer="full_early_access">Купить ранний доступ</TrackedCheckoutLink>
+          ) : (
+            <a className="button button-primary" href="#waitlist">Записаться в ранний доступ</a>
+          )}
         </article>
       </div>
       <section className="waitlist panel" id="waitlist">

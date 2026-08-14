@@ -1,6 +1,7 @@
 export type AnalyticsEvent =
   | "landing_view"
   | "algorithm_open"
+  | "second_lesson_open"
   | "visualization_complete"
   | "pricing_view"
   | "checkout_click"

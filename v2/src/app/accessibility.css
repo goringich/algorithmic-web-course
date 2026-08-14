@@ -1,0 +1,18 @@
+:where(a, button, input):focus-visible {
+  outline: 3px solid #44ded7;
+  outline-offset: 3px;
+}
+
+:where(button, a)[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  .button,
+  .algorithm-card,
+  .panel,
+  .linear-node,
+  .array-bar {
+    border: 1px solid CanvasText;
+  }
+}
