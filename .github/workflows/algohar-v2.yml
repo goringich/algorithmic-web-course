@@ -1,0 +1,40 @@
+name: AlgoHar V2
+
+on:
+  pull_request:
+    paths:
+      - "v2/**"
+      - "docs/product-manifest.json"
+      - "docs/algohar-v2-product-spec.md"
+      - ".github/workflows/algohar-v2.yml"
+  push:
+    branches:
+      - "agent/algohar-v2-commercial-product"
+    paths:
+      - "v2/**"
+      - ".github/workflows/algohar-v2.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: v2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Verify algorithm catalog
+        run: npm run verify:algorithms
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Production build
+        run: npm run build
