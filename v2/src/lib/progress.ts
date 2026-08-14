@@ -2,17 +2,27 @@ const KEY = "algohar-v2-progress";
 
 export type ProgressState = {
   completed: string[];
+  opened: string[];
   lastLesson?: string;
 };
 
-const empty = (): ProgressState => ({ completed: [] });
+const empty = (): ProgressState => ({ completed: [], opened: [] });
+
+function strings(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
 
 export function readProgress(): ProgressState {
   if (typeof window === "undefined") return empty();
   try {
     const parsed = JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as Partial<ProgressState>;
+    const completed = strings(parsed.completed);
+    const opened = Array.from(new Set([...completed, ...strings(parsed.opened)]));
     return {
-      completed: Array.isArray(parsed.completed) ? parsed.completed.filter((item): item is string => typeof item === "string") : [],
+      completed,
+      opened,
       lastLesson: typeof parsed.lastLesson === "string" ? parsed.lastLesson : undefined,
     };
   } catch {
@@ -20,15 +30,26 @@ export function readProgress(): ProgressState {
   }
 }
 
-export function markCompleted(slug: string): ProgressState {
-  const current = readProgress();
-  const completed = Array.from(new Set([...current.completed, slug]));
-  const next = { completed, lastLesson: slug };
-  window.localStorage.setItem(KEY, JSON.stringify(next));
-  return next;
+function writeProgress(progress: ProgressState) {
+  window.localStorage.setItem(KEY, JSON.stringify(progress));
+  return progress;
 }
 
-export function setLastLesson(slug: string) {
+export function markOpened(slug: string): ProgressState {
   const current = readProgress();
-  window.localStorage.setItem(KEY, JSON.stringify({ ...current, lastLesson: slug }));
+  return writeProgress({
+    ...current,
+    opened: Array.from(new Set([...current.opened, slug])),
+    lastLesson: slug,
+  });
+}
+
+export function markCompleted(slug: string): ProgressState {
+  const current = readProgress();
+  return writeProgress({
+    ...current,
+    completed: Array.from(new Set([...current.completed, slug])),
+    opened: Array.from(new Set([...current.opened, slug])),
+    lastLesson: slug,
+  });
 }
