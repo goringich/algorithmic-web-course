@@ -10,14 +10,15 @@
     "docs/algohar-v2-product-spec.md",
     "docs/growth-playbook.md",
     "docs/ip-clean-room.md",
+    "docs/launch-readiness.md",
     "v2/README.md"
   ],
   "target_user": {
     "icp": "Russian-speaking CS student or junior developer who understands syntax but struggles to build a mental model of algorithms, prepare for university algorithm courses, competitive programming, or technical interviews."
   },
   "problem": "Static text and code often hide the changing state of an algorithm, so learners memorize recipes without understanding the invariant that makes the solution correct.",
-  "outcome": "A learner can inspect an algorithm step by step, explain its invariant and complexity, experiment with input data, and follow a structured progression from fundamentals to advanced graph and range-query algorithms.",
-  "primary_wedge": "A Russian-first visual algorithms course where every core lesson combines an interactive execution trace, intuition, pseudocode and complexity on one screen.",
+  "outcome": "A learner can inspect an algorithm step by step, explain its invariant and complexity, experiment with input data, answer concept checkpoints, and follow a structured progression from fundamentals to advanced graph and range-query algorithms.",
+  "primary_wedge": "A Russian-first visual algorithms course where every core lesson combines an interactive execution trace, intuition, pseudocode, complexity and practice checkpoints on one learning path.",
   "time_to_first_value": {
     "result": "The learner opens a free visualization, controls it manually and can explain one state transition using the lesson text.",
     "target": "Within the first learning session."
@@ -27,21 +28,21 @@
     "delivery": "Browser-based self-serve lessons with a free playground and a paid full curriculum after commercial activation is provisioned."
   },
   "proof": {
-    "schema": "Attributed visit -> free algorithm opened -> visualization completed -> next lesson or lead -> verified payment -> entitlement activated -> retained learning session",
+    "schema": "Attributed visit -> free algorithm opened -> visualization completed -> second unique lesson/practice -> pricing -> verified payment -> entitlement activated -> retained learning session",
     "contract": "docs/business-model.md"
   },
   "distribution_loop": {
-    "loop": "One algorithm implementation -> indexable explanation page + shareable visual clip + free playground entry -> attributed learner -> lesson completion -> referral/share -> next learner."
+    "loop": "One verified algorithm lesson -> indexable explanation page + shareable visual clip + free playground entry -> attributed learner -> lesson/practice completion -> referral/share -> next learner."
   },
   "founder_content_loop": {
     "format": "Founder-led short visual explanations and build-in-public posts from real AlgoHar simulations; no fake testimonials, scraped audiences, bought engagement or mass unsolicited DMs."
   },
   "conversion_event": {
     "event": "Verified paid Full-course purchase with entitlement activation",
-    "route": "/pricing -> approved checkout -> payment confirmation -> server-side entitlement"
+    "route": "/pricing -> approved checkout -> verified provider payment -> server-side entitlement issuance"
   },
   "metrics": {
-    "activation": {"truth_source": "Server-visible algorithm_open and visualization_complete aggregate events", "signal": "first_visualization_complete"},
+    "activation": {"truth_source": "Server-visible algorithm_open, visualization_complete, practice_attempt and practice_correct aggregate events", "signal": "first_visualization_complete"},
     "retention": {"truth_source": "Authenticated learning-session aggregate after server-side progress is implemented", "signal": "learner_returns_within_7_days"},
     "referral": {"truth_source": "Attributed referral/share link aggregate", "signal": "referred_activated_session"},
     "revenue": {"truth_source": "Approved payment provider order/receipt records", "signal": "verified_paid_entitlement"}
@@ -60,18 +61,19 @@
   "architecture_documentation": {
     "requirements": [
       "Commercial V2 lives under v2/ and does not silently republish legacy contributors' implementation.",
-      "Algorithm simulations use a shared typed step model so new lessons remain consistent and testable."
+      "Algorithm simulations use a shared typed step model so new lessons remain consistent and testable.",
+      "Every catalog algorithm must have a practice checkpoint and pass automated catalog/curriculum verification before merge."
     ]
   },
   "security_privacy": {
     "public_private_boundary": "No production credentials, raw payment data or private learner data in Git. Browser progress is local by default; server collection is limited to explicitly defined aggregate events and user-submitted lead data.",
-    "secret_scan": "Tracked-file secret scan plus environment-only checkout, webhook and analytics credentials before deployment."
+    "secret_scan": "Tracked-file secret scan plus environment-only checkout, entitlement, webhook and analytics credentials before deployment."
   },
   "delivery": {
-    "model": "Self-serve browser product. Free lessons work without account; paid delivery requires an approved checkout and server-side entitlement before sale."
+    "model": "Self-serve browser product. Free lessons work without account; paid lesson traces are protected by signed server-side entitlement, while actual sale remains disabled until verified provider payment is connected to entitlement issuance."
   },
   "acceptance": {
-    "criteria": "V2 typecheck, lint and production build pass; at least 20 real interactive simulations exist; free funnel works on mobile and desktop; payment cannot claim success without provider evidence; paid content is protected by server-side entitlement before commercial launch."
+    "criteria": "Current master quality gate passes catalog/practice verification, advanced semantic checks, typecheck, lint and production build; at least 20 real interactive simulations exist; free funnel works on mobile and desktop after browser QA; payment cannot claim success without provider evidence; paid traces stay protected by server-side entitlement."
   },
   "operations": {
     "rollback": "Disable checkout links and paid acquisition immediately if entitlement, payment, privacy or deployment verification regresses.",
@@ -79,20 +81,23 @@
   },
   "evidence": [
     {"source": "v2/src/lib/algorithms.ts", "status": "verified"},
+    {"source": "v2/src/lib/practice.ts", "status": "verified"},
+    {"source": "v2/scripts/verify-algorithms.ts", "status": "verified"},
     {"source": "v2/src/app/page.tsx", "status": "verified"},
-    {"source": "v2/src/components/Visualizer.tsx", "status": "verified"}
+    {"source": "v2/src/components/Visualizer.tsx", "status": "verified"},
+    {"source": ".github/workflows/algohar-v2.yml", "status": "verified"}
   ],
   "owner_blockers": [
     "Resolve and document the canonical local checkout path before registering AlgoHar in the local product-registry path resolver.",
     "Complete IP provenance review of any legacy assets or code before they are copied into V2; keep the commercial deployment V2-only meanwhile.",
     "Provision a real domain with HTTPS and verify the production build visually on mobile and desktop.",
     "Publish real seller/support identity, public offer, refund terms, privacy details and receipt handling for the chosen Russian payment path.",
-    "Provision an approved checkout/payment provider and implement server-side paid entitlement before accepting money.",
+    "Provision an approved checkout/payment provider and connect verified provider payment truth to the existing server-side entitlement issuance/account lifecycle before accepting money.",
     "Provision durable analytics/lead sinks and verify the attributed visit-to-payment funnel."
   ],
   "paid_acquisition": {
     "status": "forbidden",
-    "reason": "No verified paid entitlement, seller/legal surface, production domain, or first organic conversion evidence yet."
+    "reason": "No verified provider-payment-to-entitlement path, seller/legal surface, production domain/browser QA, durable funnel evidence or first organic conversion evidence yet."
   },
   "unavailable_claims": [
     {"claim": "Paid customers, conversion rate, retention, learning-speed improvement and revenue are unverified until external evidence exists.", "status": "unverified"}
