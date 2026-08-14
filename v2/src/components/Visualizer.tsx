@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { markCompleted } from "@/lib/progress";
 import { track } from "@/lib/analytics";
-import type { AccessTier, AlgorithmStep, VisualKind } from "@/lib/types";
+import type { AlgorithmStep, VisualKind } from "@/lib/types";
 import { VisualStage } from "./VisualStage";
 
 const speeds = [1200, 700, 350] as const;
@@ -21,14 +21,12 @@ function parseInput(value: string, fallback: number[] | undefined) {
 export function Visualizer({
   slug,
   kind,
-  tier: _tier,
   acceptsArrayInput,
   defaultInput,
   initialSteps,
 }: {
   slug: string;
   kind: VisualKind;
-  tier: AccessTier;
   acceptsArrayInput?: boolean;
   defaultInput?: number[];
   initialSteps: AlgorithmStep[];
