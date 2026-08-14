@@ -1,6 +1,7 @@
 import { AlgorithmCard } from "@/components/AlgorithmCard";
+import { CourseProgress } from "@/components/CourseProgress";
 import { algorithmBySlug } from "@/lib/algorithms";
-import { curriculum, totalLessons } from "@/lib/curriculum";
+import { courseOrder, curriculum, totalLessons } from "@/lib/curriculum";
 
 export const metadata = { title: "Курс" };
 
@@ -12,6 +13,7 @@ export default function LearnPage() {
         <h1>Алгоритмы как система, а не набор рецептов</h1>
         <p>Маршрут построен от инвариантов и базовых контейнеров к диапазонам, графам и строковым алгоритмам.</p>
       </div>
+      <CourseProgress allowedSlugs={courseOrder} />
       <div className="module-list">
         {curriculum.map((module) => (
           <section className="module-section" key={module.id}>

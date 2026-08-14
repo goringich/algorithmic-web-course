@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { markCompleted, readProgress, setLastLesson } from "@/lib/progress";
+import { markCompleted } from "@/lib/progress";
 import { track } from "@/lib/analytics";
 import type { AccessTier, AlgorithmStep, VisualKind } from "@/lib/types";
 import { VisualStage } from "./VisualStage";
@@ -21,7 +21,7 @@ function parseInput(value: string, fallback: number[] | undefined) {
 export function Visualizer({
   slug,
   kind,
-  tier,
+  tier: _tier,
   acceptsArrayInput,
   defaultInput,
   initialSteps,
@@ -42,15 +42,6 @@ export function Visualizer({
   const [error, setError] = useState<string | null>(null);
   const completionTracked = useRef(false);
   const step = steps[Math.min(stepIndex, Math.max(steps.length - 1, 0))];
-
-  useEffect(() => {
-    const previousLesson = readProgress().lastLesson;
-    if (previousLesson && previousLesson !== slug) {
-      track("second_lesson_open", { slug, previousLesson, tier });
-    }
-    setLastLesson(slug);
-    track("algorithm_open", { slug, tier });
-  }, [slug, tier]);
 
   useEffect(() => {
     completionTracked.current = false;
@@ -119,14 +110,7 @@ export function Visualizer({
         </div>
         <div className="step-counter" aria-label={`Шаг ${stepIndex + 1} из ${steps.length}`}>{stepIndex + 1} / {steps.length}</div>
       </div>
-      <div
-        className="progress-track"
-        role="progressbar"
-        aria-label="Прогресс визуализации"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={progress}
-      >
+      <div className="progress-track" role="progressbar" aria-label="Прогресс визуализации" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
         <span style={{ width: `${progress}%` }} />
       </div>
       <div className="visualizer-stage-panel"><VisualStage step={step} kind={kind} /></div>

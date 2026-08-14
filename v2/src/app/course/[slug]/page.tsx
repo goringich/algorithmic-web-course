@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { algorithms, algorithmBySlug } from "@/lib/algorithms";
 import { hasFullEntitlement } from "@/lib/entitlement";
+import { lessonNeighbors } from "@/lib/curriculum";
+import { LessonAnalytics } from "@/components/LessonAnalytics";
 import { Visualizer } from "@/components/Visualizer";
 
 export function generateStaticParams() {
@@ -21,9 +23,13 @@ export default async function CourseLesson({ params }: { params: Promise<{ slug:
   if (!algorithm) notFound();
   const entitled = algorithm.tier === "free" || await hasFullEntitlement();
   const initialSteps = entitled ? algorithm.buildSteps(algorithm.defaultInput) : [];
+  const neighbors = lessonNeighbors(algorithm.slug);
+  const previous = neighbors.previous ? algorithmBySlug.get(neighbors.previous) : undefined;
+  const next = neighbors.next ? algorithmBySlug.get(neighbors.next) : undefined;
 
   return (
     <div className="shell lesson-shell">
+      <LessonAnalytics slug={algorithm.slug} tier={algorithm.tier} />
       <Link className="back-link" href="/learn">← Ко всем урокам</Link>
       <div className="lesson-heading">
         <div>
@@ -52,6 +58,10 @@ export default async function CourseLesson({ params }: { params: Promise<{ slug:
           </section>
         )}
       </div>
+      <nav className="lesson-nav" aria-label="Навигация по урокам">
+        {previous ? <Link className="lesson-nav-card" href={`/course/${previous.slug}`}><small>← Предыдущий</small><strong>{previous.title}</strong></Link> : <span />}
+        {next ? <Link className="lesson-nav-card lesson-nav-next" href={`/course/${next.slug}`}><small>Следующий →</small><strong>{next.title}</strong></Link> : <Link className="lesson-nav-card lesson-nav-next" href="/learn"><small>Курс завершён</small><strong>Вернуться к программе</strong></Link>}
+      </nav>
     </div>
   );
 }
