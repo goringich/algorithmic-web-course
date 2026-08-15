@@ -42,6 +42,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Verify algorithm catalog
         run: npm run verify:algorithms
+      - name: Verify algorithm semantics
+        run: npm run verify:semantics
       - name: Typecheck
         run: npm run typecheck
       - name: Lint
