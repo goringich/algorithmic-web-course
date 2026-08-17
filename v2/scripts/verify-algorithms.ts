@@ -106,8 +106,10 @@ assert.equal(kruskalFinal?.metrics?.selected, 5, "kruskal MST over six vertices 
 const aStarFinal = requireAlgorithm("a-star").buildSteps().at(-1);
 assert.equal(aStarFinal?.items.find((item) => item.id === "F")?.state, "success", "A* must reach canonical target F");
 
-const kmpFinal = requireAlgorithm("kmp").buildSteps().at(-1);
-assert.equal(kmpFinal?.metrics?.start, 0, "KMP canonical pattern must match at index 0");
+const kmpSteps = requireAlgorithm("kmp").buildSteps();
+const kmpFinal = kmpSteps.at(-1);
+assert(kmpSteps.some((step) => step.title === "Несовпадение"), "KMP canonical trace must exercise prefix-function fallback");
+assert.equal(kmpFinal?.metrics?.start, 4, "KMP canonical pattern must match at index 4 after fallback");
 
 const segmentFinal = requireAlgorithm("segment-tree").buildSteps().at(-1);
 assert.equal(segmentFinal?.items.filter((item) => item.state === "active").length, 3, "segment-tree canonical query must decompose into three active segments");
