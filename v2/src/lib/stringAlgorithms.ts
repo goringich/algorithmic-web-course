@@ -18,7 +18,7 @@ const kmp: AlgorithmDefinition = {
   tags: ["string", "pattern-matching", "prefix-function"],
   lessonGoal: "Увидеть, как информация о самом шаблоне устраняет повторные сравнения текста.",
   buildSteps() {
-    const text = "ABABACABABAC";
+    const text = "ABABABABAC";
     const pattern = "ABABAC";
     const pi = Array(pattern.length).fill(0) as number[];
     const steps: AlgorithmStep[] = [];
