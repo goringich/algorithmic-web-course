@@ -32,23 +32,36 @@ function insideV2(target) {
   return resolved === v2Root || resolved.startsWith(v2Boundary)
 }
 
+async function readDirOptional(target) {
+  try {
+    return await readdir(target, { withFileTypes: true })
+  } catch (error) {
+    if (error && typeof error === 'object' && error.code === 'ENOENT') return null
+    throw error
+  }
+}
+
 async function walk(relativeRoot) {
   const root = path.join(v2Root, relativeRoot)
+  const rootEntries = await readDirOptional(root)
+  if (rootEntries === null) return []
+
   const files = []
-  const stack = [root]
+  const stack = [{ path: root, entries: rootEntries }]
 
   while (stack.length > 0) {
     const current = stack.pop()
-    const entries = await readdir(current, { withFileTypes: true })
 
-    for (const entry of entries) {
-      const target = path.join(current, entry.name)
+    for (const entry of current.entries) {
+      const target = path.join(current.path, entry.name)
       const metadata = await lstat(target)
 
       assert(!metadata.isSymbolicLink(), `V2 clean-room forbids symlinks: ${path.relative(v2Root, target)}`)
 
       if (entry.isDirectory()) {
-        stack.push(target)
+        const entries = await readDirOptional(target)
+        assert(entries !== null, `V2 clean-room directory disappeared during scan: ${path.relative(v2Root, target)}`)
+        stack.push({ path: target, entries })
         continue
       }
 
