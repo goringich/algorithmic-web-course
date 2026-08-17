@@ -7,12 +7,14 @@ on:
       - "v2/**"
       - "docs/product-manifest.json"
       - "docs/algohar-v2-product-spec.md"
+      - "docs/ip-clean-room.md"
       - ".github/workflows/algohar-v2.yml"
   push:
     branches:
       - "master"
     paths:
       - "v2/**"
+      - "docs/ip-clean-room.md"
       - ".github/workflows/algohar-v2.yml"
 
 concurrency:
@@ -40,6 +42,8 @@ jobs:
           package-manager-cache: false
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Verify commercial clean-room boundary
+        run: npm run verify:clean-room
       - name: Verify algorithm catalog
         run: npm run verify:algorithms
       - name: Verify algorithm semantics
