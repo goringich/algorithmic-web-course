@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "verify:algorithms": "tsx scripts/verify-algorithms.ts",
     "verify:semantics": "tsx scripts/verify-semantic-coverage.ts",
-    "check": "npm run verify:algorithms && npm run verify:semantics && npm run typecheck && npm run lint && npm run build"
+    "verify:clean-room": "node scripts/verify-clean-room.mjs",
+    "check": "npm run verify:clean-room && npm run verify:algorithms && npm run verify:semantics && npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
     "next": "^16.0.0",
