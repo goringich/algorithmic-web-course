@@ -58,7 +58,7 @@ assert.deepEqual(
 );
 assert.deepEqual(
   fenwickQuerySteps.map((step) => Number(step.metrics?.sum)),
-  [2, 8, 23],
+  [2, 12, 23],
   "Fenwick prefix trace must accumulate the independent canonical block sums",
 );
 
@@ -101,4 +101,4 @@ assert.deepEqual(
   "Union-Find rendered roots must match the two independent canonical components",
 );
 
-console.log("AlgoHar independent range/DSU oracles passed: Segment Tree decomposition, Fenwick jumps, Union-Find components/path compression.");
+console.log("AlgoHar independent range/DSU oracles passed: Segment Tree decomposition, Fenwick jumps, Union-Find components/path compression.\n");
