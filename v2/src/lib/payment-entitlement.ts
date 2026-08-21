@@ -39,8 +39,18 @@ export type PaymentTransition = {
   command: EntitlementCommand;
 };
 
+const AUTHORITATIVE_SOURCES = new Set<PaymentTruthSource>([
+  "provider_webhook",
+  "provider_reconciliation",
+]);
+const PAYMENT_STATUSES = new Set<PaymentStatus>(["succeeded", "refunded", "canceled"]);
 const TERMINAL = new Set<PaymentStatus>(["refunded", "canceled"]);
 
+/**
+ * Pure transition state used by contract verification. Production persistence
+ * must enforce unique provider event/payment keys durably before executing the
+ * returned entitlement command.
+ */
 export function emptyPaymentEntitlementState(): PaymentEntitlementState {
   return { processedEventIds: [], orders: {} };
 }
@@ -75,6 +85,13 @@ export function applyAuthoritativePaymentEvent(
   current: PaymentEntitlementState,
   input: AuthoritativePaymentEvent,
 ): PaymentTransition {
+  if (!AUTHORITATIVE_SOURCES.has(input.source)) {
+    throw new Error("source must be authoritative provider webhook or reconciliation truth");
+  }
+  if (!PAYMENT_STATUSES.has(input.status)) {
+    throw new Error("unsupported authoritative payment status");
+  }
+
   const event: AuthoritativePaymentEvent = {
     source: input.source,
     provider: normalized(input.provider, "provider"),
@@ -116,9 +133,7 @@ export function applyAuthoritativePaymentEvent(
   }
 
   const entitlementWasGranted = previous?.entitlementGranted ?? false;
-  const entitlementGranted = event.status === "succeeded"
-    ? true
-    : false;
+  const entitlementGranted = event.status === "succeeded";
 
   next.orders[orderKey] = {
     provider: event.provider,
