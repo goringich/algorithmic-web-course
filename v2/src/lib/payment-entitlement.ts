@@ -25,7 +25,7 @@ export type PaymentOrderState = {
 };
 
 export type PaymentEntitlementState = {
-  processedEventIds: string[];
+  processedEventKeys: string[];
   orders: Record<string, PaymentOrderState>;
 };
 
@@ -52,7 +52,7 @@ const TERMINAL = new Set<PaymentStatus>(["refunded", "canceled"]);
  * returned entitlement command.
  */
 export function emptyPaymentEntitlementState(): PaymentEntitlementState {
-  return { processedEventIds: [], orders: {} };
+  return { processedEventKeys: [], orders: {} };
 }
 
 function normalized(value: string, field: string) {
@@ -68,13 +68,17 @@ function eventTime(value: string) {
   return timestamp;
 }
 
-function keyFor(provider: string, paymentId: string) {
+function paymentKey(provider: string, paymentId: string) {
   return `${provider}:${paymentId}`;
+}
+
+function eventKey(provider: string, eventId: string) {
+  return `${provider}:${eventId}`;
 }
 
 function cloneState(state: PaymentEntitlementState): PaymentEntitlementState {
   return {
-    processedEventIds: [...state.processedEventIds],
+    processedEventKeys: [...state.processedEventKeys],
     orders: Object.fromEntries(
       Object.entries(state.orders).map(([key, order]) => [key, { ...order }]),
     ),
@@ -104,14 +108,15 @@ export function applyAuthoritativePaymentEvent(
     occurredAt: input.occurredAt,
   };
   const occurredAt = eventTime(event.occurredAt);
+  const providerEventKey = eventKey(event.provider, event.eventId);
 
-  if (current.processedEventIds.includes(event.eventId)) {
+  if (current.processedEventKeys.includes(providerEventKey)) {
     return { state: current, command: { type: "none", reason: "duplicate_event" } };
   }
 
   const next = cloneState(current);
-  next.processedEventIds.push(event.eventId);
-  const orderKey = keyFor(event.provider, event.paymentId);
+  next.processedEventKeys.push(providerEventKey);
+  const orderKey = paymentKey(event.provider, event.paymentId);
   const previous = next.orders[orderKey];
 
   if (previous) {
