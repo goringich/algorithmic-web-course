@@ -8,6 +8,7 @@ on:
       - "docs/product-manifest.json"
       - "docs/algohar-v2-product-spec.md"
       - "docs/ip-clean-room.md"
+      - "docs/launch-readiness.md"
       - ".github/workflows/algohar-v2.yml"
   push:
     branches:
@@ -15,6 +16,7 @@ on:
     paths:
       - "v2/**"
       - "docs/ip-clean-room.md"
+      - "docs/launch-readiness.md"
       - ".github/workflows/algohar-v2.yml"
 
 concurrency:
@@ -48,6 +50,8 @@ jobs:
         run: npm run verify:algorithms
       - name: Verify algorithm semantics
         run: npm run verify:semantics
+      - name: Verify payment entitlement contract
+        run: npm run verify:payments
       - name: Typecheck
         run: npm run typecheck
       - name: Lint
