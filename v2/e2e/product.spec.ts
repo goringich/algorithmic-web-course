@@ -42,3 +42,53 @@ test("pricing fails closed to waitlist when checkout is not provisioned", async 
   await expect(page.getByRole("button", { name: "В ранний доступ" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
+
+test("mastery UI distinguishes trace completion from learned material", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("algohar-v2-progress", JSON.stringify({
+      opened: ["binary-search"],
+      visualized: ["binary-search"],
+      practicePassed: ["binary-search"],
+      mastered: ["binary-search"],
+      review: {
+        "binary-search": {
+          streak: 1,
+          lastPassedAt: "2026-08-20T00:00:00.000Z",
+          dueAt: "2026-08-21T00:00:00.000Z",
+        },
+      },
+      lastLesson: "binary-search",
+    }));
+  });
+  await page.goto("/learn");
+  await expect(page.getByText(/1 \/ \d+ освоено/)).toBeVisible();
+  await expect(page.getByText("Trace пройден: 1. К повторению: 1.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Повторить · 1" })).toHaveAttribute("href", "/course/binary-search");
+  await expectNoHorizontalOverflow(page);
+});
+
+test("analytics accepts mastery events but rejects cross-origin and oversized intake", async ({ request }) => {
+  const mastery = await request.post("/api/events", {
+    data: { event: "lesson_mastered", properties: { slug: "binary-search" }, occurredAt: "2026-08-21T12:00:00.000Z" },
+  });
+  expect(mastery.ok()).toBe(true);
+
+  const crossOrigin = await request.post("/api/events", {
+    headers: { origin: "https://evil.example" },
+    data: { event: "landing_view" },
+  });
+  expect(crossOrigin.status()).toBe(403);
+
+  const oversized = await request.post("/api/events", {
+    data: { event: "landing_view", properties: { value: "x".repeat(14_000) } },
+  });
+  expect(oversized.status()).toBe(413);
+});
+
+test("unprovisioned lead intake never pretends delivery succeeded", async ({ request }) => {
+  const response = await request.post("/api/lead", {
+    data: { contact: "@learner", goal: "Алгоритмы", source: "qa" },
+  });
+  expect(response.status()).toBe(202);
+  expect(await response.json()).toEqual({ ok: true, configured: false });
+});
