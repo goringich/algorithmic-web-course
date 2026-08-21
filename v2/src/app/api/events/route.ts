@@ -8,11 +8,15 @@ const allowed = new Set([
   "visualization_complete",
   "practice_attempt",
   "practice_correct",
+  "practice_set_passed",
+  "lesson_mastered",
+  "review_completed",
   "pricing_view",
   "checkout_click",
   "lead_submit",
 ]);
 
+const MAX_BODY_BYTES = 12_288;
 const MAX_PROPERTIES_BYTES = 8_192;
 
 type AnalyticsPayload = {
@@ -39,8 +43,36 @@ function normalizeProperties(value: unknown) {
   }
 }
 
+function sameOrigin(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  return !origin || origin === request.nextUrl.origin;
+}
+
+async function boundedJson(request: NextRequest) {
+  const contentLength = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) return { error: "payload_too_large" as const };
+  const raw = await request.text();
+  if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) return { error: "payload_too_large" as const };
+  try {
+    return { value: JSON.parse(raw) as AnalyticsPayload };
+  } catch {
+    return { error: "invalid_json" as const };
+  }
+}
+
 export async function POST(request: NextRequest) {
-  const payload = await request.json().catch(() => null) as AnalyticsPayload | null;
+  if (!sameOrigin(request)) {
+    return NextResponse.json({ error: "cross_origin_request" }, { status: 403 });
+  }
+
+  const parsed = await boundedJson(request);
+  if ("error" in parsed) {
+    return NextResponse.json(
+      { error: parsed.error },
+      { status: parsed.error === "payload_too_large" ? 413 : 400 },
+    );
+  }
+  const payload = parsed.value;
   if (!payload?.event || !allowed.has(payload.event)) {
     return NextResponse.json({ error: "invalid_event" }, { status: 400 });
   }
@@ -58,7 +90,7 @@ export async function POST(request: NextRequest) {
     path: typeof payload.path === "string" ? payload.path.slice(0, 240) : undefined,
     occurredAt,
     receivedAt: new Date().toISOString(),
-    schemaVersion: 1,
+    schemaVersion: 2,
   };
 
   const webhook = process.env.ANALYTICS_WEBHOOK_URL;
