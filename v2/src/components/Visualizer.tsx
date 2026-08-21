@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { markCompleted } from "@/lib/progress";
+import { markVisualized } from "@/lib/progress";
 import { track } from "@/lib/analytics";
 import type { AlgorithmStep, VisualKind } from "@/lib/types";
 import { VisualStage } from "./VisualStage";
@@ -49,7 +49,7 @@ export function Visualizer({
   useEffect(() => {
     if (steps.length < 2 || stepIndex !== steps.length - 1 || completionTracked.current) return;
     completionTracked.current = true;
-    markCompleted(slug);
+    markVisualized(slug);
     track("visualization_complete", { slug, steps: steps.length });
   }, [slug, stepIndex, steps.length]);
 
