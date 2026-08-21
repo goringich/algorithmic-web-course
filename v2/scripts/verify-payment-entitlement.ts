@@ -105,6 +105,17 @@ assert.throws(
 );
 
 assert.throws(
+  () => applyAuthoritativePaymentEvent(afterGrant, {
+    ...base,
+    eventId: "evt-second-payment-same-order",
+    paymentId: "pay-2",
+    occurredAt: "2026-08-21T05:10:00.000Z",
+  }),
+  /orderId is already bound/,
+  "one internal order id must not be paid twice through distinct payment identities",
+);
+
+assert.throws(
   () => applyAuthoritativePaymentEvent(emptyPaymentEntitlementState(), {
     ...base,
     source: "browser_return" as AuthoritativePaymentEvent["source"],
