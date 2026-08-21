@@ -79,6 +79,20 @@ assert.deepEqual(
 );
 assert.equal(transition.state.orders["test-provider:pay-1"].entitlementGranted, true);
 
+const crossProvider = applyAuthoritativePaymentEvent(afterGrant, {
+  ...base,
+  provider: "second-provider",
+  paymentId: "pay-2",
+  orderId: "order-2",
+  subject: "learner-2",
+});
+assert.equal(
+  crossProvider.command.type,
+  "grant",
+  "the same event id from another provider must not collide with provider-scoped dedupe",
+);
+assert.equal(crossProvider.state.processedEventKeys.includes("second-provider:evt-success-1"), true);
+
 assert.throws(
   () => applyAuthoritativePaymentEvent(afterGrant, {
     ...base,
