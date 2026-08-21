@@ -48,8 +48,8 @@ const TERMINAL = new Set<PaymentStatus>(["refunded", "canceled"]);
 
 /**
  * Pure transition state used by contract verification. Production persistence
- * must enforce unique provider event/payment keys durably before executing the
- * returned entitlement command.
+ * must enforce unique provider event/payment/order keys durably before executing
+ * the returned entitlement command.
  */
 export function emptyPaymentEntitlementState(): PaymentEntitlementState {
   return { processedEventKeys: [], orders: {} };
@@ -68,27 +68,15 @@ function eventTime(value: string) {
   return timestamp;
 }
 
-function paymentKey(provider: string, paymentId: string) {
+export function paymentIdentityKey(provider: string, paymentId: string) {
   return `${provider}:${paymentId}`;
 }
 
-function eventKey(provider: string, eventId: string) {
+export function providerEventIdentityKey(provider: string, eventId: string) {
   return `${provider}:${eventId}`;
 }
 
-function cloneState(state: PaymentEntitlementState): PaymentEntitlementState {
-  return {
-    processedEventKeys: [...state.processedEventKeys],
-    orders: Object.fromEntries(
-      Object.entries(state.orders).map(([key, order]) => [key, { ...order }]),
-    ),
-  };
-}
-
-export function applyAuthoritativePaymentEvent(
-  current: PaymentEntitlementState,
-  input: AuthoritativePaymentEvent,
-): PaymentTransition {
+export function normalizeAuthoritativePaymentEvent(input: AuthoritativePaymentEvent): AuthoritativePaymentEvent {
   if (!AUTHORITATIVE_SOURCES.has(input.source)) {
     throw new Error("source must be authoritative provider webhook or reconciliation truth");
   }
@@ -107,16 +95,43 @@ export function applyAuthoritativePaymentEvent(
     status: input.status,
     occurredAt: input.occurredAt,
   };
+  eventTime(event.occurredAt);
+  return event;
+}
+
+function cloneState(state: PaymentEntitlementState): PaymentEntitlementState {
+  return {
+    processedEventKeys: [...state.processedEventKeys],
+    orders: Object.fromEntries(
+      Object.entries(state.orders).map(([key, order]) => [key, { ...order }]),
+    ),
+  };
+}
+
+export function applyAuthoritativePaymentEvent(
+  current: PaymentEntitlementState,
+  input: AuthoritativePaymentEvent,
+): PaymentTransition {
+  const event = normalizeAuthoritativePaymentEvent(input);
   const occurredAt = eventTime(event.occurredAt);
-  const providerEventKey = eventKey(event.provider, event.eventId);
+  const providerEventKey = providerEventIdentityKey(event.provider, event.eventId);
 
   if (current.processedEventKeys.includes(providerEventKey)) {
     return { state: current, command: { type: "none", reason: "duplicate_event" } };
   }
 
+  const orderConflict = Object.values(current.orders).find((order) =>
+    order.provider === event.provider &&
+    order.orderId === event.orderId &&
+    order.paymentId !== event.paymentId,
+  );
+  if (orderConflict) {
+    throw new Error("orderId is already bound to a different paymentId");
+  }
+
   const next = cloneState(current);
   next.processedEventKeys.push(providerEventKey);
-  const orderKey = paymentKey(event.provider, event.paymentId);
+  const orderKey = paymentIdentityKey(event.provider, event.paymentId);
   const previous = next.orders[orderKey];
 
   if (previous) {
