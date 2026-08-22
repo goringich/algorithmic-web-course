@@ -9,6 +9,7 @@ on:
       - "docs/algohar-v2-product-spec.md"
       - "docs/ip-clean-room.md"
       - "docs/launch-readiness.md"
+      - "docs/payment-entitlement-durability.md"
       - ".github/workflows/algohar-v2.yml"
   push:
     branches:
@@ -17,6 +18,7 @@ on:
       - "v2/**"
       - "docs/ip-clean-room.md"
       - "docs/launch-readiness.md"
+      - "docs/payment-entitlement-durability.md"
       - ".github/workflows/algohar-v2.yml"
 
 concurrency:
@@ -32,7 +34,7 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: v2
@@ -50,11 +52,17 @@ jobs:
         run: npm run verify:algorithms
       - name: Verify algorithm semantics
         run: npm run verify:semantics
-      - name: Verify payment entitlement contract
+      - name: Verify payment and transactional outbox contracts
         run: npm run verify:payments
+      - name: Verify mastery and spaced-review contract
+        run: npm run verify:learning
       - name: Typecheck
         run: npm run typecheck
       - name: Lint
         run: npm run lint
       - name: Production build
         run: npm run build
+      - name: Install Chromium for product QA
+        run: npx playwright install --with-deps chromium
+      - name: Desktop and mobile product QA
+        run: npm run test:e2e

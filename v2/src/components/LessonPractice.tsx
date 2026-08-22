@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { track } from "@/lib/analytics";
 import { practiceBySlug, type PracticeQuestion } from "@/lib/practice";
+import { dueReviewSlugs, markPracticePassed, readProgress } from "@/lib/progress";
 
 function complexityQuestion(slug: string, correct: string): PracticeQuestion {
   const pool = [correct, "O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n²)"];
@@ -27,16 +28,41 @@ export function LessonPractice({ slug, timeComplexity }: { slug: string; timeCom
     [concept, slug, timeComplexity],
   );
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [passed, setPassed] = useState<Record<number, boolean>>({});
 
   if (!questions.length) return null;
 
   function choose(questionIndex: number, optionIndex: number) {
-    if (answers[questionIndex] !== undefined) return;
+    if (passed[questionIndex]) return;
     const question = questions[questionIndex];
     const correct = optionIndex === question.correctIndex;
+    const nextPassed = correct ? { ...passed, [questionIndex]: true } : passed;
     setAnswers((current) => ({ ...current, [questionIndex]: optionIndex }));
+    if (correct) setPassed(nextPassed);
     track("practice_attempt", { slug, question: questionIndex + 1, correct });
     if (correct) track("practice_correct", { slug, question: questionIndex + 1 });
+
+    if (correct && questions.every((_, index) => nextPassed[index])) {
+      const before = readProgress();
+      const wasMastered = before.mastered.includes(slug);
+      const wasDue = dueReviewSlugs(before).includes(slug);
+      const after = markPracticePassed(slug);
+      if (!wasMastered && after.mastered.includes(slug)) {
+        track("lesson_mastered", { slug });
+      } else if (wasMastered && wasDue) {
+        track("review_completed", { slug, streak: after.review[slug]?.streak ?? 1 });
+      } else {
+        track("practice_set_passed", { slug, visualized: after.visualized.includes(slug) });
+      }
+    }
+  }
+
+  function retry(questionIndex: number) {
+    setAnswers((current) => {
+      const next = { ...current };
+      delete next[questionIndex];
+      return next;
+    });
   }
 
   return (
@@ -46,13 +72,14 @@ export function LessonPractice({ slug, timeComplexity }: { slug: string; timeCom
           <span className="eyebrow">ЗАКРЕПИ МОДЕЛЬ</span>
           <h2>Два коротких checkpoint-вопроса</h2>
         </div>
-        <p>Если ответ не получается объяснить своими словами, вернись к симуляции и найди шаг, который доказывает инвариант.</p>
+        <p>Урок считается освоенным только после полного trace и двух верных checkpoint-ответов. Ошибка — повод ещё раз восстановить инвариант, а не просто посмотреть процент.</p>
       </div>
       <div className="practice-grid">
         {questions.map((question, questionIndex) => {
           const selected = answers[questionIndex];
           const revealed = selected !== undefined;
           const correct = selected === question.correctIndex;
+          const questionPassed = Boolean(passed[questionIndex]);
           return (
             <article className="practice-question" key={question.prompt}>
               <span className="practice-number">0{questionIndex + 1}</span>
@@ -65,12 +92,12 @@ export function LessonPractice({ slug, timeComplexity }: { slug: string; timeCom
                     "practice-option",
                     isSelected ? "practice-selected" : "",
                     isCorrect ? "practice-correct" : "",
-                    revealed && isSelected && !isCorrect ? "practice-wrong" : "",
+                    revealed && isSelected && !correct ? "practice-wrong" : "",
                   ].filter(Boolean).join(" ");
                   return (
                     <button
                       className={className}
-                      disabled={revealed}
+                      disabled={revealed || questionPassed}
                       key={option}
                       onClick={() => choose(questionIndex, optionIndex)}
                       type="button"
@@ -84,6 +111,7 @@ export function LessonPractice({ slug, timeComplexity }: { slug: string; timeCom
               {revealed ? (
                 <div className={`practice-feedback ${correct ? "practice-feedback-correct" : "practice-feedback-wrong"}`} role="status">
                   <strong>{correct ? "Верно." : "Не совсем."}</strong> {question.explanation}
+                  {!correct ? <button className="button button-ghost" type="button" onClick={() => retry(questionIndex)}>Попробовать ещё раз</button> : null}
                 </div>
               ) : null}
             </article>

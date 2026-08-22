@@ -10,22 +10,25 @@
     "typecheck": "tsc --noEmit",
     "verify:algorithms": "tsx scripts/verify-algorithms.ts",
     "verify:semantics": "tsx scripts/verify-semantic-coverage.ts && tsx scripts/verify-range-dsu-oracles.ts",
-    "verify:payments": "tsx scripts/verify-payment-entitlement.ts",
+    "verify:payments": "tsx scripts/verify-payment-entitlement.ts && tsx scripts/verify-payment-ledger.ts",
+    "verify:learning": "tsx scripts/verify-learning-progress.ts",
     "verify:clean-room": "node scripts/verify-clean-room.mjs",
-    "check": "npm run verify:clean-room && npm run verify:algorithms && npm run verify:semantics && npm run verify:payments && npm run typecheck && npm run lint && npm run build"
+    "test:e2e": "playwright test",
+    "check": "npm run verify:clean-room && npm run verify:algorithms && npm run verify:semantics && npm run verify:payments && npm run verify:learning && npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
-    "next": "^16.0.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "next": "16.3.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "eslint": "^9.17.0",
-    "eslint-config-next": "^16.0.0",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "@playwright/test": "1.62.1",
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.1",
+    "tsx": "4.23.12",
+    "typescript": "5.9.3"
   }
 }

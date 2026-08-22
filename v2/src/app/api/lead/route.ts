@@ -1,7 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const MAX_BODY_BYTES = 4_096;
+
+type LeadPayload = {
+  contact?: unknown;
+  goal?: unknown;
+  source?: unknown;
+};
+
+function sameOrigin(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  return !origin || origin === request.nextUrl.origin;
+}
+
+async function boundedJson(request: NextRequest) {
+  const contentLength = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) return { error: "payload_too_large" as const };
+  const raw = await request.text();
+  if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) return { error: "payload_too_large" as const };
+  try {
+    return { value: JSON.parse(raw) as LeadPayload };
+  } catch {
+    return { error: "invalid_json" as const };
+  }
+}
+
 export async function POST(request: NextRequest) {
-  const body = await request.json().catch(() => null) as null | { contact?: unknown; goal?: unknown; source?: unknown };
+  if (!sameOrigin(request)) {
+    return NextResponse.json({ error: "cross_origin_request" }, { status: 403 });
+  }
+
+  const parsed = await boundedJson(request);
+  if ("error" in parsed) {
+    return NextResponse.json(
+      { error: parsed.error },
+      { status: parsed.error === "payload_too_large" ? 413 : 400 },
+    );
+  }
+
+  const body = parsed.value;
   const contact = typeof body?.contact === "string" ? body.contact.trim().slice(0, 160) : "";
   const goal = typeof body?.goal === "string" ? body.goal.trim().slice(0, 400) : "";
   const source = typeof body?.source === "string" ? body.source.trim().slice(0, 80) : "unknown";
@@ -19,7 +56,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers,
     body: JSON.stringify({ contact, goal, source, occurredAt: new Date().toISOString() }),
-    signal: AbortSignal.timeout(5000),
+    signal: AbortSignal.timeout(5_000),
   }).catch(() => undefined);
   if (!response?.ok) return NextResponse.json({ error: "lead_delivery_failed" }, { status: 502 });
   return NextResponse.json({ ok: true, configured: true });
