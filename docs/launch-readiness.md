@@ -13,7 +13,7 @@
 - [x] Wrong checkpoint answers can be retried after explanatory feedback.
 - [x] A bounded 1/3/7/14/30-day spaced-review heuristic exists and is explicitly documented as a product hypothesis, not an outcome claim.
 - [x] Automated production-build browser smoke QA is wired for desktop and mobile Chromium profiles.
-- [ ] Current branch/master browser QA has a green CI run after the latest product changes.
+- [x] Current master browser QA is source-backed by AlgoHar V2 CI run #51 on exact PR head `05900fd5ec1b1f13dcbab9af7a3db9c4c7120a66`; its tree `2c5aceb3dffc594dd8109951b4b96f2b822023da` is identical to merged master `dfb8dfc0f0f68389256a1fb9e5d24051ada8a9aa`.
 - [ ] Live production QA on representative desktop and mobile devices after owned HTTPS deployment.
 - [ ] Human/independent correctness review for every advanced algorithm trace.
 
