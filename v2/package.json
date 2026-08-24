@@ -12,9 +12,10 @@
     "verify:semantics": "tsx scripts/verify-semantic-coverage.ts && tsx scripts/verify-range-dsu-oracles.ts",
     "verify:payments": "tsx scripts/verify-payment-entitlement.ts && tsx scripts/verify-payment-ledger.ts",
     "verify:learning": "tsx scripts/verify-learning-progress.ts",
+    "verify:growth": "tsx scripts/verify-growth-seo.ts",
     "verify:clean-room": "node scripts/verify-clean-room.mjs",
     "test:e2e": "playwright test",
-    "check": "npm run verify:clean-room && npm run verify:algorithms && npm run verify:semantics && npm run verify:payments && npm run verify:learning && npm run typecheck && npm run lint && npm run build"
+    "check": "npm run verify:clean-room && npm run verify:algorithms && npm run verify:semantics && npm run verify:payments && npm run verify:learning && npm run verify:growth && npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
     "next": "16.3.1",
