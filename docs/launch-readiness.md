@@ -67,6 +67,8 @@ See `payment-entitlement-durability.md` for the required transaction/outbox and 
 
 ## Marketing gate
 
+- [x] Public growth/SEO discovery has an executable contract covering canonical HTTPS sitemap URLs, every catalog lesson exactly once, required public funnel pages, no tracking parameters/fragments, crawler exclusion for `/api/`, and non-thin lesson search summaries.
+
 Paid acquisition remains zero until commercial, payment and analytics gates pass. Organic founder/SEO distribution may begin once the public free surface is deployed and privacy/seller disclosures are adequate for the data actually collected.
 
 ## Evidence boundary
