@@ -56,6 +56,8 @@ jobs:
         run: npm run verify:payments
       - name: Verify mastery and spaced-review contract
         run: npm run verify:learning
+      - name: Verify growth and SEO contract
+        run: npm run verify:growth
       - name: Typecheck
         run: npm run typecheck
       - name: Lint
