@@ -18,8 +18,10 @@ const allowed = new Set([
 
 const MAX_BODY_BYTES = 12_288;
 const MAX_PROPERTIES_BYTES = 8_192;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 type AnalyticsPayload = {
+  eventId?: string;
   event?: string;
   properties?: unknown;
   path?: string;
@@ -30,6 +32,12 @@ function normalizeOccurredAt(value: unknown) {
   if (typeof value !== "string") return new Date().toISOString();
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
+}
+
+function normalizeEventId(value: unknown) {
+  if (value === undefined) return randomUUID();
+  if (typeof value !== "string" || !UUID_PATTERN.test(value)) return null;
+  return value.toLowerCase();
 }
 
 function normalizeProperties(value: unknown) {
@@ -77,6 +85,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid_event" }, { status: 400 });
   }
 
+  const eventId = normalizeEventId(payload.eventId);
+  if (!eventId) return NextResponse.json({ error: "invalid_event_id" }, { status: 400 });
+
   const occurredAt = normalizeOccurredAt(payload.occurredAt);
   if (!occurredAt) return NextResponse.json({ error: "invalid_occurred_at" }, { status: 400 });
 
@@ -84,7 +95,7 @@ export async function POST(request: NextRequest) {
   if (!properties) return NextResponse.json({ error: "invalid_properties" }, { status: 400 });
 
   const event = {
-    id: randomUUID(),
+    id: eventId,
     event: payload.event,
     properties,
     path: typeof payload.path === "string" ? payload.path.slice(0, 240) : undefined,
