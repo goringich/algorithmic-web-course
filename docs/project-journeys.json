@@ -1,0 +1,45 @@
+{
+  "schema_version": "2026-08-25.project-journeys.v1",
+  "project": "algohar",
+  "rules": {
+    "outcomes_are_explicit": true,
+    "source_presence_is_not_runtime_acceptance": true,
+    "payment_provider_truth_required_for_paid_success": true,
+    "route_inventory_must_not_invent_outcomes": true,
+    "private_payload_evidence_forbidden": true
+  },
+  "journeys": [
+    {
+      "id": "free-first-learning-value",
+      "outcome": "A learner can open a real algorithm, control its visualization and reach a meaningful practice checkpoint in the first learning session.",
+      "evidence": ["docs/product-manifest.json", "docs/algohar-v2-product-spec.md"],
+      "steps": [
+        {"id": "landing", "ui_route": "/", "expected_state": "visual learning method and free entry are visible"},
+        {"id": "playground", "ui_route": "/playground", "expected_state": "learner can select and manipulate a free algorithm visualization"},
+        {"id": "simulation", "method": "POST", "route": "/api/simulate/:slug", "expected_state": "server-visible simulation request can return the selected algorithm trace when the route is used"},
+        {"id": "course", "ui_route": "/course/:slug", "expected_state": "lesson combines visualization, explanation, complexity and practice"}
+      ]
+    },
+    {
+      "id": "learning-evidence-loop",
+      "outcome": "A learner interaction can produce aggregate activation/practice evidence without treating browser activity alone as retained learning success.",
+      "evidence": ["docs/product-manifest.json", "docs/business-model.md"],
+      "steps": [
+        {"id": "course", "ui_route": "/course/:slug", "expected_state": "learner performs a real lesson or practice interaction"},
+        {"id": "events", "method": "POST", "route": "/api/events", "expected_state": "allowed aggregate learning event is accepted when configured"},
+        {"id": "return", "ui_route": "/learn", "expected_state": "later learning-session state is distinguishable from first-session activation"}
+      ]
+    },
+    {
+      "id": "paid-entitlement-evidence-chain",
+      "outcome": "A paid course entitlement may be activated only after authoritative external payment evidence exists; source/UI state alone cannot claim a sale.",
+      "evidence": ["docs/product-manifest.json", "docs/payment-entitlement-durability.md", "docs/launch-readiness.md"],
+      "steps": [
+        {"id": "pricing", "ui_route": "/pricing", "expected_state": "commercial offer and current external checkout readiness are represented truthfully"},
+        {"id": "external-payment", "expected_state": "approved payment provider returns authoritative verified payment evidence; until then this step is blocked_external"},
+        {"id": "entitlement", "method": "POST", "route": "/api/entitlement/activate", "expected_state": "server-side entitlement is issued only from accepted payment truth"},
+        {"id": "paid-course", "ui_route": "/course/:slug", "expected_state": "paid lesson trace access reflects server-side entitlement rather than client-only state"}
+      ]
+    }
+  ]
+}
