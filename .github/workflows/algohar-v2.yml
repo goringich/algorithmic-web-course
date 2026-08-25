@@ -10,6 +10,8 @@ on:
       - "docs/ip-clean-room.md"
       - "docs/launch-readiness.md"
       - "docs/payment-entitlement-durability.md"
+      - "docs/project-twin.json"
+      - "docs/project-journeys.json"
       - ".github/workflows/algohar-v2.yml"
   push:
     branches:
@@ -19,6 +21,8 @@ on:
       - "docs/ip-clean-room.md"
       - "docs/launch-readiness.md"
       - "docs/payment-entitlement-durability.md"
+      - "docs/project-twin.json"
+      - "docs/project-journeys.json"
       - ".github/workflows/algohar-v2.yml"
 
 concurrency:
@@ -44,6 +48,22 @@ jobs:
         with:
           node-version: "22"
           package-manager-cache: false
+      - name: Verify Project Intelligence producer contracts
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs')
+          const twin = JSON.parse(fs.readFileSync('../docs/project-twin.json', 'utf8'))
+          const journeys = JSON.parse(fs.readFileSync('../docs/project-journeys.json', 'utf8'))
+          const requiredFalse = ['raw_http_bodies', 'raw_http_headers', 'cookies', 'authorization', 'customer_rows', 'private_messages']
+          if (!twin || typeof twin !== 'object' || !twin.surfaces || !twin.privacy) throw new Error('invalid project twin')
+          for (const key of requiredFalse) {
+            if (twin.privacy[key] !== false) throw new Error(`unsafe project twin privacy field: ${key}`)
+          }
+          if (!journeys || !Array.isArray(journeys.journeys) || journeys.journeys.length < 3) throw new Error('explicit project journeys required')
+          for (const journey of journeys.journeys) {
+            if (!journey.id || !journey.outcome || !Array.isArray(journey.steps) || journey.steps.length === 0) throw new Error('invalid project journey')
+          }
+          NODE
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Verify commercial clean-room boundary
