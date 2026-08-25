@@ -1,0 +1,41 @@
+{
+  "schema_version": "2026-08-25.project-twin.v2",
+  "project": "algohar",
+  "surfaces": {
+    "code": {"sources": ["v2/src", "v2/scripts"]},
+    "code_intelligence": {
+      "scip_index": ".ai/index.scip",
+      "status": "optional_compiler_accurate_projection_not_yet_generated",
+      "fallback": "central Project Reality Graph source adapters"
+    },
+    "ui": {
+      "route_roots": ["v2/src/app"],
+      "primary_routes": ["/", "/playground", "/learn", "/course/:slug", "/pricing", "/privacy", "/terms"]
+    },
+    "api": {
+      "source_roots": ["v2/src/app/api"],
+      "operations": ["/api/simulate/:slug", "/api/events", "/api/lead", "/api/entitlement/activate"]
+    },
+    "data": {
+      "sources": ["v2/src/lib"],
+      "note": "Do not infer a durable learner database from source layout; persistent server-side state remains evidence-gated."
+    },
+    "tests": {"sources": ["v2/src", "v2/scripts", ".github/workflows/algohar-v2.yml"]},
+    "journeys": {"manifest": "docs/project-journeys.json"},
+    "runtime": {
+      "trace_metadata": [],
+      "service_names": ["algohar-v2"],
+      "status": "runtime_trace_producer_not_declared"
+    }
+  },
+  "privacy": {
+    "raw_http_bodies": false,
+    "raw_http_headers": false,
+    "cookies": false,
+    "authorization": false,
+    "customer_rows": false,
+    "private_messages": false,
+    "learner_private_data": false,
+    "raw_payment_data": false
+  }
+}
