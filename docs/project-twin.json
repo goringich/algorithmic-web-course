@@ -33,6 +33,8 @@
     "raw_http_headers": false,
     "cookies": false,
     "authorization": false,
+    "customer_rows": false,
+    "private_messages": false,
     "learner_private_data": false,
     "raw_payment_data": false
   }
