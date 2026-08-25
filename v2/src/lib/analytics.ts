@@ -66,6 +66,7 @@ export function track(event: AnalyticsEvent, properties: Record<string, string |
   if (typeof window === "undefined") return;
   const attribution = currentAttribution();
   const payload = {
+    eventId: globalThis.crypto.randomUUID(),
     event,
     properties: {
       ...properties,
