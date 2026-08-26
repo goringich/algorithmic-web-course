@@ -64,8 +64,8 @@ jobs:
             if (!journey.id || !journey.outcome || !Array.isArray(journey.steps) || journey.steps.length === 0) throw new Error('invalid project journey')
           }
           NODE
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
       - name: Verify commercial clean-room boundary
         run: npm run verify:clean-room
       - name: Verify algorithm catalog
