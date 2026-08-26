@@ -30,7 +30,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   NEXT_TELEMETRY_DISABLED: "1"
@@ -44,8 +44,6 @@ jobs:
         working-directory: v2
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -66,20 +64,8 @@ jobs:
             if (!journey.id || !journey.outcome || !Array.isArray(journey.steps) || journey.steps.length === 0) throw new Error('invalid project journey')
           }
           NODE
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
-      - name: Commit generated V2 lockfile
-        if: github.event_name == 'pull_request'
-        working-directory: .
-        run: |
-          if git ls-files --error-unmatch v2/package-lock.json >/dev/null 2>&1; then
-            exit 0
-          fi
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add v2/package-lock.json
-          git commit -m 'chore: lock V2 dependency graph'
-          git push origin HEAD:${{ github.head_ref }}
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
       - name: Verify commercial clean-room boundary
         run: npm run verify:clean-room
       - name: Verify algorithm catalog
