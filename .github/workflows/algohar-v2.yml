@@ -66,6 +66,13 @@ jobs:
           NODE
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Export generated dependency lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: algohar-v2-package-lock
+          path: v2/package-lock.json
+          if-no-files-found: error
+          retention-days: 1
       - name: Verify commercial clean-room boundary
         run: npm run verify:clean-room
       - name: Verify algorithm catalog
