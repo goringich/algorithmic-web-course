@@ -1,0 +1,39 @@
+{
+  "schema_version": "2026-08-30.product-autonomy-profile.v1",
+  "product_id": "algohar",
+  "title": "AlgoHar",
+  "target_level": "A5_exception_only_owner",
+  "status": "not_verified",
+  "maintenance_release_authority": "merge_only",
+  "notification_mode": "exception_only",
+  "measured": {
+    "routine_owner_touches_30d": null,
+    "routine_owner_minutes_7d": null,
+    "support_cases_needing_owner_30d": null,
+    "autonomous_incidents_resolved_30d": null,
+    "incidents_total_30d": null,
+    "gross_margin_status": "unknown"
+  },
+  "domains": {
+    "runtime_observability": {"status": "unknown", "evidence": [], "next_action": "Verify deployed health, release identity and funnel/payment observability without sensitive leakage.", "authority": "system"},
+    "incident_detection": {"status": "unknown", "evidence": [], "next_action": "Verify production incident detection and deduplication.", "authority": "system"},
+    "defect_triage": {"status": "unknown", "evidence": [], "next_action": "Verify incidents can be correlated to V2 component, severity and evidence-bounded cause.", "authority": "system"},
+    "safe_source_remediation": {"status": "unknown", "evidence": [], "next_action": "Adopt bounded tested source-fix flow through repository gates.", "authority": "system"},
+    "maintenance_release": {"status": "unknown", "evidence": [], "next_action": "Keep maintenance authority merge-only until a bounded release profile is explicitly approved.", "authority": "system"},
+    "rollback_recovery": {"status": "unknown", "evidence": ["docs/product-manifest.json"], "next_action": "Verify rollback and recovery against actual hosting/payment deployment.", "authority": "system"},
+    "backup_restore": {"status": "unknown", "evidence": [], "next_action": "Define and test backup/restore once durable account/payment/progress state exists.", "authority": "system"},
+    "security_continuous": {"status": "unknown", "evidence": ["docs/security-passport.json"], "next_action": "Keep security passport current and bind exact release evidence.", "authority": "system"},
+    "dependency_maintenance": {"status": "unknown", "evidence": [], "next_action": "Establish reproducible lock/provenance/SBOM and current vulnerability review.", "authority": "system"},
+    "customer_support": {"status": "unknown", "evidence": [], "next_action": "Define standard support path and exception escalation before paid launch.", "authority": "system"},
+    "billing_reconciliation": {"status": "unknown", "evidence": ["docs/launch-readiness.md"], "next_action": "Connect approved payment webhook/reconciliation to durable idempotent ledger before accepting money.", "authority": "system"},
+    "delivery_fulfillment": {"status": "unknown", "evidence": [], "next_action": "Verify authoritative payment to durable entitlement to usable paid lesson end-to-end.", "authority": "system"},
+    "retention_renewal": {"status": "unknown", "evidence": [], "next_action": "Measure real learner return/retention after live launch.", "authority": "system"},
+    "acquisition_distribution": {"status": "unknown", "evidence": ["docs/product-manifest.json"], "next_action": "Keep paid acquisition disabled until commercial/payment/analytics gates pass; use approved organic channels only.", "authority": "system"},
+    "analytics_experiments": {"status": "unknown", "evidence": ["docs/launch-readiness.md"], "next_action": "Provision durable analytics and verify attributed funnel end-to-end.", "authority": "system"},
+    "content_seo": {"status": "unknown", "evidence": ["docs/launch-readiness.md"], "next_action": "Verify deployed canonical sitemap and public SEO surfaces before treating this as operational.", "authority": "system"},
+    "cost_margin_control": {"status": "unknown", "evidence": [], "next_action": "Measure hosting/provider/support cost against verified revenue after launch.", "authority": "system"},
+    "learning_feedback": {"status": "unknown", "evidence": [], "next_action": "Feed verified learner/support/payment outcomes into existing learning authorities without raw PII.", "authority": "system"},
+    "owner_attention": {"status": "unknown", "evidence": [], "next_action": "Measure routine owner touches and surface only consequential exceptions.", "authority": "system"}
+  },
+  "rule": "This profile records adoption targets, not operational evidence. Unknown remains unknown until current runtime/business evidence exists."
+}
