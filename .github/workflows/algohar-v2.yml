@@ -5,6 +5,8 @@ on:
   pull_request:
     paths:
       - "v2/**"
+      - ".gitignore"
+      - "BackEnd/.env"
       - "docs/product-manifest.json"
       - "docs/algohar-v2-product-spec.md"
       - "docs/ip-clean-room.md"
@@ -12,17 +14,26 @@ on:
       - "docs/payment-entitlement-durability.md"
       - "docs/project-twin.json"
       - "docs/project-journeys.json"
+      - "docs/release-profile.json"
+      - "docs/security-passport.json"
+      - "docs/autonomy-profile.json"
       - ".github/workflows/algohar-v2.yml"
   push:
     branches:
       - "master"
     paths:
       - "v2/**"
+      - ".gitignore"
+      - "BackEnd/.env"
+      - "docs/product-manifest.json"
       - "docs/ip-clean-room.md"
       - "docs/launch-readiness.md"
       - "docs/payment-entitlement-durability.md"
       - "docs/project-twin.json"
       - "docs/project-journeys.json"
+      - "docs/release-profile.json"
+      - "docs/security-passport.json"
+      - "docs/autonomy-profile.json"
       - ".github/workflows/algohar-v2.yml"
 
 concurrency:
@@ -64,6 +75,48 @@ jobs:
             if (!journey.id || !journey.outcome || !Array.isArray(journey.steps) || journey.steps.length === 0) throw new Error('invalid project journey')
           }
           NODE
+      - name: Verify release security and autonomy adoption
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs')
+          const release = JSON.parse(fs.readFileSync('../docs/release-profile.json', 'utf8'))
+          const security = JSON.parse(fs.readFileSync('../docs/security-passport.json', 'utf8'))
+          const autonomy = JSON.parse(fs.readFileSync('../docs/autonomy-profile.json', 'utf8'))
+          const gateStates = new Set(['pass', 'fail', 'unknown', 'stale', 'not_applicable'])
+          const autonomyStates = new Set(['pass', 'fail', 'unknown', 'stale', 'not_applicable', 'verified'])
+
+          if (release.product_id !== 'algohar') throw new Error('release profile product mismatch')
+          if (release.release_authority !== 'repository_owned') throw new Error('release authority must remain repository-owned')
+          if (!release.current_release || typeof release.current_release.feature_freeze !== 'boolean') throw new Error('release feature-freeze state required')
+          if (typeof release.current_release.candidate_sha !== 'string') throw new Error('release candidate sha state required')
+          if (!release.current_release.candidate_sha && !release.current_release.blocker) throw new Error('missing candidate must remain blocked')
+          if (release.external_release_requested === true && !release.current_release.candidate_sha) throw new Error('external release cannot be requested without candidate sha')
+
+          if (security.product_id !== 'algohar') throw new Error('security passport product mismatch')
+          if (security.security_tier !== 'payments_or_privileged_actions') throw new Error('payments security tier required')
+          if (!security.gates || typeof security.gates !== 'object') throw new Error('security gates required')
+          for (const required of ['exact_head_ci', 'independent_security_review', 'live_post_deploy_security_probe']) {
+            if (!security.gates[required]) throw new Error(`missing security gate: ${required}`)
+          }
+          for (const [id, gate] of Object.entries(security.gates)) {
+            if (!gate || typeof gate !== 'object' || !gateStates.has(gate.status)) throw new Error(`invalid security gate state: ${id}`)
+            if (gate.status === 'pass' && !String(gate.evidence || '').trim()) throw new Error(`passing security gate lacks evidence: ${id}`)
+            if (!String(gate.next_action || '').trim()) throw new Error(`security gate lacks next action: ${id}`)
+          }
+
+          if (autonomy.product_id !== 'algohar') throw new Error('autonomy profile product mismatch')
+          if (autonomy.target_level !== 'A5_exception_only_owner') throw new Error('autonomy target mismatch')
+          if (!autonomy.domains || typeof autonomy.domains !== 'object' || Object.keys(autonomy.domains).length === 0) throw new Error('autonomy domains required')
+          for (const [id, domain] of Object.entries(autonomy.domains)) {
+            if (!domain || typeof domain !== 'object' || !autonomyStates.has(domain.status)) throw new Error(`invalid autonomy domain state: ${id}`)
+            if (!Array.isArray(domain.evidence)) throw new Error(`autonomy evidence must be an array: ${id}`)
+            if (!String(domain.next_action || '').trim()) throw new Error(`autonomy domain lacks next action: ${id}`)
+          }
+          NODE
+          if git -C .. ls-files | grep -Eq '(^|/)\.env($|\.)'; then
+            echo 'tracked env file detected' >&2
+            exit 1
+          fi
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
       - name: Verify commercial clean-room boundary
