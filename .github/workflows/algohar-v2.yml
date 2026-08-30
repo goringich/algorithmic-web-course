@@ -113,8 +113,10 @@ jobs:
             if (!String(domain.next_action || '').trim()) throw new Error(`autonomy domain lacks next action: ${id}`)
           }
           NODE
-          if git -C .. ls-files | grep -Eq '(^|/)\.env($|\.)'; then
-            echo 'tracked env file detected' >&2
+          tracked_env="$(git -C .. ls-files | grep -E '(^|/)\.env($|\.)' | grep -Ev '\.(example|sample|template)$' || true)"
+          if [[ -n "${tracked_env}" ]]; then
+            echo 'tracked non-template env file detected' >&2
+            printf '%s\n' "${tracked_env}" >&2
             exit 1
           fi
       - name: Install locked dependencies
