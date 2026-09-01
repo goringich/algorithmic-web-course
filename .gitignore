@@ -1,3 +1,15 @@
 node_modules
 algohack-project
 *storybook.log
+
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+*.pem
+*.key
+id_rsa
+id_ed25519
