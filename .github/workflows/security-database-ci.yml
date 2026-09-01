@@ -1,0 +1,43 @@
+name: Security Database CI
+
+on:
+  pull_request:
+    paths:
+      - "BackEnd/pkg/database/connection.go"
+      - "BackEnd/.env.example"
+      - ".gitignore"
+      - ".github/workflows/security-database-ci.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "BackEnd/pkg/database/connection.go"
+      - "BackEnd/.env.example"
+      - ".gitignore"
+      - ".github/workflows/security-database-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: BackEnd
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: BackEnd/go.mod
+          cache-dependency-path: BackEnd/go.sum
+      - name: Compile and test
+        run: go test ./...
+      - name: Verify production guard contract
+        run: |
+          test ! -e .env
+          grep -q 'POSTGRES_SSLMODE=disable is forbidden in production' pkg/database/connection.go
+          grep -q '^\.env$' ../.gitignore
