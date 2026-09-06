@@ -1,0 +1,35 @@
+{
+  "schema_version": "2026-09-04.product-autonomy.v1",
+  "product": "algorithmic-web-course",
+  "status": "not_verified",
+  "autonomy_level": "A0_manual",
+  "maintenance_release_authority": "merge_only",
+  "bounded_auto_release_preapproved": false,
+  "generated_artifact_is_evidence": false,
+  "domains": {
+    "runtime_observability": "unknown",
+    "incident_detection": "unknown",
+    "defect_triage": "unknown",
+    "safe_source_remediation": "unknown",
+    "maintenance_release": "unknown",
+    "rollback_recovery": "unknown",
+    "backup_restore": "unknown",
+    "continuous_security": "unknown",
+    "dependency_maintenance": "unknown",
+    "customer_support": "unknown",
+    "billing_reconciliation": "unknown",
+    "delivery_fulfillment": "unknown",
+    "retention_renewal": "unknown",
+    "acquisition_distribution": "unknown",
+    "analytics_experiments": "unknown",
+    "content_seo": "unknown",
+    "cost_margin_control": "unknown",
+    "learning_feedback": "unknown",
+    "owner_attention": "unknown"
+  },
+  "metrics": {
+    "routine_owner_touches_30d": null,
+    "routine_owner_minutes_7d": null,
+    "support_cases_needing_owner_30d": null
+  }
+}
