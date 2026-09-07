@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { algorithms, freeAlgorithms } from "../src/lib/algorithms";
 import { curriculum } from "../src/lib/curriculum";
+import { hasRenderableMath, isMathTextSupported, normalizeMathSource, splitMathText, tokenizeMathSource } from "../src/lib/mathNotation";
 import { practiceBySlug } from "../src/lib/practice";
 import type { AlgorithmStep } from "../src/lib/types";
 
@@ -51,6 +52,17 @@ assert.equal(new Set(curriculumSlugs).size, curriculumSlugs.length, "curriculum 
 assert.deepEqual([...curriculumSlugs].sort(), [...slugs].sort(), "curriculum must cover every algorithm exactly once");
 assert.deepEqual(Object.keys(practiceBySlug).sort(), [...slugs].sort(), "every algorithm must have a concept checkpoint");
 
+assert.equal(normalizeMathSource("n^2"), "n²", "math notation must normalize simple exponents");
+assert(hasRenderableMath("O(n log n)"), "legacy Big-O notation must remain renderable during migration");
+assert(hasRenderableMath("Сложность: $O(n^2)$"), "inline delimited formulas must be renderable");
+assert(hasRenderableMath("$$O((V+E) log V)$$"), "display formulas with nested parentheses must be renderable");
+assert(hasRenderableMath("$O(\\alpha(n))$"), "supported Greek notation must be renderable");
+assert(isMathTextSupported("Depends on heuristic"), "plain explanatory complexity text must remain valid");
+assert(!isMathTextSupported("Сложность: $O(n)"), "unclosed math delimiter must fail validation");
+assert(!isMathTextSupported("O(n"), "unbalanced legacy Big-O notation must fail validation");
+assert.equal(splitMathText("До $O(n)$ после").length, 3, "mixed prose must preserve text around formulas");
+assert(tokenizeMathSource("O(n²)").some((token) => token.kind === "identifier" && token.value === "n" && token.exponent === "2"), "math tokenizer must preserve exponents structurally");
+
 for (const algorithm of algorithms) {
   assert(algorithm.summary.trim().length >= 20, `${algorithm.slug} summary is too shallow`);
   assert(algorithm.intuition.trim().length >= 20, `${algorithm.slug} intuition is too shallow`);
@@ -58,6 +70,8 @@ for (const algorithm of algorithms) {
   assert(algorithm.pseudocode.length >= 3, `${algorithm.slug} pseudocode is too short`);
   assert(algorithm.complexity.time.trim().length > 0, `${algorithm.slug} has no time complexity`);
   assert(algorithm.complexity.space.trim().length > 0, `${algorithm.slug} has no space complexity`);
+  assert(isMathTextSupported(algorithm.complexity.time), `${algorithm.slug} time complexity contains unsupported math notation`);
+  assert(isMathTextSupported(algorithm.complexity.space), `${algorithm.slug} space complexity contains unsupported math notation`);
 
   const practice = practiceBySlug[algorithm.slug];
   assert(practice.prompt.trim().length >= 20, `${algorithm.slug} practice prompt is too shallow`);
@@ -114,4 +128,4 @@ assert.equal(kmpFinal?.metrics?.start, 4, "KMP canonical pattern must match at i
 const segmentFinal = requireAlgorithm("segment-tree").buildSteps().at(-1);
 assert.equal(segmentFinal?.items.filter((item) => item.state === "active").length, 3, "segment-tree canonical query must decompose into three active segments");
 
-console.log(`AlgoHar verification passed: ${algorithms.length} algorithms, ${curriculum.length} modules, ${freeAlgorithms.length} free simulations, ${Object.keys(practiceBySlug).length} concept checkpoints, advanced semantic checks.`);
+console.log(`AlgoHar verification passed: ${algorithms.length} algorithms, ${curriculum.length} modules, ${freeAlgorithms.length} free simulations, ${Object.keys(practiceBySlug).length} concept checkpoints, math notation contract, advanced semantic checks.`);

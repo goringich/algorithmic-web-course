@@ -5,6 +5,7 @@ import { hasFullEntitlement } from "@/lib/entitlement";
 import { lessonNeighbors } from "@/lib/curriculum";
 import { LessonAnalytics } from "@/components/LessonAnalytics";
 import { LessonPractice } from "@/components/LessonPractice";
+import { MathText } from "@/components/MathText";
 import { Visualizer } from "@/components/Visualizer";
 
 export function generateStaticParams() {
@@ -38,7 +39,10 @@ export default async function CourseLesson({ params }: { params: Promise<{ slug:
           <h1>{algorithm.title}</h1>
           <p>{algorithm.summary}</p>
         </div>
-        <div className="complexity-card"><span>Время</span><strong>{algorithm.complexity.time}</strong><span>Память</span><strong>{algorithm.complexity.space}</strong></div>
+        <div className="complexity-card">
+          <span>Время</span><strong><MathText>{algorithm.complexity.time}</MathText></strong>
+          <span>Память</span><strong><MathText>{algorithm.complexity.space}</MathText></strong>
+        </div>
       </div>
       <div className="lesson-grid">
         <aside className="theory-panel panel">

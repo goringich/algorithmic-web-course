@@ -25,6 +25,20 @@ test("free lesson exposes a real controllable trace", async ({ page }) => {
   await expectNoHorizontalOverflow(page);
 });
 
+test("math notation renders semantically without mobile page overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/course/binary-search");
+
+  const complexityMath = page.locator(".complexity-card math");
+  await expect(complexityMath).toHaveCount(2);
+  await expect(page.locator('.complexity-card .math-expression[aria-label="O(log n)"]')).toBeVisible();
+  await expect(page.locator('.complexity-card .math-expression[aria-label="O(1)"]')).toBeVisible();
+
+  const checkpointMath = page.locator(".lesson-practice math");
+  expect(await checkpointMath.count()).toBeGreaterThan(0);
+  await expectNoHorizontalOverflow(page);
+});
+
 test("paid lesson payload stays behind the server entitlement gate", async ({ page }) => {
   await page.goto("/course/segment-tree");
   await expect(page.getByRole("heading", { level: 1, name: "Дерево отрезков" })).toBeVisible();

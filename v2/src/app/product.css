@@ -29,9 +29,10 @@
 .practice-number { color: #7165ab; font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .practice-question h3 { min-height: 48px; margin: 8px 0 16px; font-size: 16px; line-height: 1.45; }
 .practice-options { display: grid; gap: 8px; }
-.practice-option { width: 100%; min-height: 46px; padding: 9px 12px; display: grid; grid-template-columns: 26px 1fr; gap: 9px; align-items: center; text-align: left; color: #c7d0e1; border: 1px solid var(--line); border-radius: 11px; background: #0a1120; cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
+.practice-option { width: 100%; min-height: 46px; padding: 9px 12px; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 9px; align-items: center; text-align: left; color: #c7d0e1; border: 1px solid var(--line); border-radius: 11px; background: #0a1120; cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
 .practice-option:not(:disabled):hover { transform: translateY(-1px); border-color: rgba(124, 92, 255, .45); }
-.practice-option > span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: #8895ad; background: rgba(148, 163, 184, .08); font-size: 10px; font-weight: 800; }
+.practice-option > span:first-child { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: #8895ad; background: rgba(148, 163, 184, .08); font-size: 10px; font-weight: 800; }
+.practice-option-copy { min-width: 0; }
 .practice-option:disabled { cursor: default; }
 .practice-selected { border-color: rgba(124, 92, 255, .55); }
 .practice-correct { border-color: rgba(80, 223, 154, .65); background: rgba(80, 223, 154, .08); }
@@ -39,6 +40,29 @@
 .practice-feedback { margin-top: 12px; padding: 12px 13px; border-radius: 10px; font-size: 12px; line-height: 1.6; }
 .practice-feedback-correct { color: #a8edc9; background: rgba(80, 223, 154, .07); border: 1px solid rgba(80, 223, 154, .16); }
 .practice-feedback-wrong { color: #ffc0cd; background: rgba(255, 107, 138, .06); border: 1px solid rgba(255, 107, 138, .14); }
+
+.math-expression {
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
+  align-items: baseline;
+  vertical-align: -0.12em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.math-expression math { flex: 0 0 auto; font-size: 1.05em; white-space: nowrap; }
+.math-expression-display { display: flex; width: 100%; margin: 10px 0; padding-bottom: 2px; }
+.math-expression-display math { margin-inline: auto; }
+.math-source-fallback { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+.complexity-card strong { min-width: 0; }
+.complexity-card strong .math-expression { width: 100%; justify-content: flex-end; }
+.card-footer > span:last-child { min-width: 0; max-width: 62%; }
+.card-footer .math-expression { justify-content: flex-end; }
+.practice-option-copy .math-expression { width: 100%; }
+.practice-feedback .math-expression { max-width: 100%; }
 
 .lesson-nav { margin-top: 24px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .lesson-nav-card { min-height: 94px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(13, 19, 36, 0.72); display: flex; flex-direction: column; justify-content: center; gap: 7px; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
@@ -58,4 +82,7 @@
   .lesson-nav { grid-template-columns: 1fr; }
   .lesson-nav-next { text-align: left; align-items: flex-start; }
   .lesson-practice { padding: 22px 18px; }
+  .math-expression { scrollbar-width: none; }
+  .math-expression::-webkit-scrollbar { display: none; }
+  .complexity-card strong .math-expression { justify-content: flex-start; }
 }

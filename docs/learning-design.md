@@ -26,6 +26,22 @@ Research basis:
 
 These sources justify testing retrieval as part of the course. They do **not** prove AlgoHar's current checkpoints improve algorithm-learning outcomes; that requires learner evidence.
 
+## Mathematical notation and mobile reading
+
+Mathematical notation is learning content, not decorative monospace text. Learners must be able to distinguish identifiers, operators and exponents without mentally parsing a programming-style approximation.
+
+The V2 rendering contract is:
+
+1. learner-facing mathematical expressions render through the shared `MathText` / `MathExpression` path;
+2. native MathML is the rendered representation, with a readable source label for assistive technology;
+3. existing complexity strings such as `O(n log n)` remain supported while content is migrated incrementally;
+4. new prose that mixes text and formulas should delimit formulas with `$...$`; display expressions may use `$$...$$`;
+5. unsupported notation must fail visibly as source text rather than disappear or execute as HTML;
+6. mathematical expressions must remain contained on narrow screens; a long expression may scroll horizontally inside its own region instead of forcing page-level horizontal overflow;
+7. lesson cards, lesson complexity summaries and complexity checkpoints must use the same renderer so the learner sees one notation system throughout retrieval practice.
+
+The supported source grammar is deliberately small and deterministic. Extend the parser and its verification cases when a lesson genuinely needs new notation; do not introduce arbitrary HTML rendering for formulas.
+
 ## Spaced review
 
 After first mastery, the browser schedules a lightweight review. Successful due reviews advance through the initial heuristic:

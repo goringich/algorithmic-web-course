@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { MathText } from "@/components/MathText";
 import { track } from "@/lib/analytics";
 import { practiceBySlug, type PracticeQuestion } from "@/lib/practice";
 import { dueReviewSlugs, markPracticePassed, readProgress } from "@/lib/progress";
@@ -103,14 +104,14 @@ export function LessonPractice({ slug, timeComplexity }: { slug: string; timeCom
                       type="button"
                     >
                       <span>{String.fromCharCode(65 + optionIndex)}</span>
-                      {option}
+                      <span className="practice-option-copy"><MathText>{option}</MathText></span>
                     </button>
                   );
                 })}
               </div>
               {revealed ? (
                 <div className={`practice-feedback ${correct ? "practice-feedback-correct" : "practice-feedback-wrong"}`} role="status">
-                  <strong>{correct ? "Верно." : "Не совсем."}</strong> {question.explanation}
+                  <strong>{correct ? "Верно." : "Не совсем."}</strong>{" "}<MathText>{question.explanation}</MathText>
                   {!correct ? <button className="button button-ghost" type="button" onClick={() => retry(questionIndex)}>Попробовать ещё раз</button> : null}
                 </div>
               ) : null}
