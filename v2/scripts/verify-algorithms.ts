@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { algorithms, freeAlgorithms } from "../src/lib/algorithms";
 import { curriculum } from "../src/lib/curriculum";
-import { hasRenderableMath, normalizeMathSource, splitMathText, tokenizeMathSource } from "../src/lib/mathNotation";
+import { hasRenderableMath, isMathTextSupported, normalizeMathSource, splitMathText, tokenizeMathSource } from "../src/lib/mathNotation";
 import { practiceBySlug } from "../src/lib/practice";
 import type { AlgorithmStep } from "../src/lib/types";
 
@@ -57,6 +57,9 @@ assert(hasRenderableMath("O(n log n)"), "legacy Big-O notation must remain rende
 assert(hasRenderableMath("Сложность: $O(n^2)$"), "inline delimited formulas must be renderable");
 assert(hasRenderableMath("$$O((V+E) log V)$$"), "display formulas with nested parentheses must be renderable");
 assert(hasRenderableMath("$O(\\alpha(n))$"), "supported Greek notation must be renderable");
+assert(isMathTextSupported("Depends on heuristic"), "plain explanatory complexity text must remain valid");
+assert(!isMathTextSupported("Сложность: $O(n)"), "unclosed math delimiter must fail validation");
+assert(!isMathTextSupported("O(n"), "unbalanced legacy Big-O notation must fail validation");
 assert.equal(splitMathText("До $O(n)$ после").length, 3, "mixed prose must preserve text around formulas");
 assert(tokenizeMathSource("O(n²)").some((token) => token.kind === "identifier" && token.value === "n" && token.exponent === "2"), "math tokenizer must preserve exponents structurally");
 
@@ -67,8 +70,8 @@ for (const algorithm of algorithms) {
   assert(algorithm.pseudocode.length >= 3, `${algorithm.slug} pseudocode is too short`);
   assert(algorithm.complexity.time.trim().length > 0, `${algorithm.slug} has no time complexity`);
   assert(algorithm.complexity.space.trim().length > 0, `${algorithm.slug} has no space complexity`);
-  assert(hasRenderableMath(algorithm.complexity.time), `${algorithm.slug} time complexity cannot be rendered by MathText`);
-  assert(hasRenderableMath(algorithm.complexity.space), `${algorithm.slug} space complexity cannot be rendered by MathText`);
+  assert(isMathTextSupported(algorithm.complexity.time), `${algorithm.slug} time complexity contains unsupported math notation`);
+  assert(isMathTextSupported(algorithm.complexity.space), `${algorithm.slug} space complexity contains unsupported math notation`);
 
   const practice = practiceBySlug[algorithm.slug];
   assert(practice.prompt.trim().length >= 20, `${algorithm.slug} practice prompt is too shallow`);
