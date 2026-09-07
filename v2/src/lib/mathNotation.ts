@@ -81,7 +81,7 @@ export function splitMathText(value: string): MathTextSegment[] {
     cursor = end;
   }
 
-  return segments.filter((segment) => segment.value?.length !== 0);
+  return segments.filter((segment) => segment.kind === "math" || segment.value.length !== 0);
 }
 
 export function normalizeMathSource(source: string) {
