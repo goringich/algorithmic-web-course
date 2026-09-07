@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MathText } from "@/components/MathText";
 import type { AlgorithmDefinition } from "@/lib/types";
 
 const difficultyLabel = {
@@ -20,7 +21,7 @@ export function AlgorithmCard({ algorithm }: { algorithm: AlgorithmDefinition })
       <p>{algorithm.summary}</p>
       <div className="card-footer">
         <span>{difficultyLabel[algorithm.difficulty]}</span>
-        <span>{algorithm.complexity.time}</span>
+        <span><MathText>{algorithm.complexity.time}</MathText></span>
       </div>
     </Link>
   );
