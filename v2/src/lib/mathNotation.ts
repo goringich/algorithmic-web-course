@@ -132,3 +132,13 @@ export function hasRenderableMath(value: string) {
   const mathSegments = splitMathText(value).filter((segment) => segment.kind === "math");
   return mathSegments.length > 0 && mathSegments.every((segment) => isSupportedMathSource(segment.source));
 }
+
+export function isMathTextSupported(value: string) {
+  const segments = splitMathText(value);
+  const mathSegments = segments.filter((segment) => segment.kind === "math");
+  const hasUnparsedMathSyntax = segments.some(
+    (segment) => segment.kind === "text" && (segment.value.includes("$") || segment.value.includes("O(")),
+  );
+
+  return !hasUnparsedMathSyntax && mathSegments.every((segment) => isSupportedMathSource(segment.source));
+}
