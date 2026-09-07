@@ -24,7 +24,11 @@ export function MathExpression({ source, display = false }: { source: string; di
   if (!isSupportedMathSource(source)) return <span className="math-source-fallback">{source}</span>;
 
   return (
-    <span className={`math-expression ${display ? "math-expression-display" : "math-expression-inline"}`} aria-label={source}>
+    <span
+      aria-label={source}
+      className={`math-expression ${display ? "math-expression-display" : "math-expression-inline"}`}
+      role="math"
+    >
       <math aria-hidden="true" display={display ? "block" : "inline"}>
         <mrow>{tokenizeMathSource(source).map(renderToken)}</mrow>
       </math>
