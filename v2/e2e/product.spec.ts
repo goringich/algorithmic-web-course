@@ -67,6 +67,36 @@ test("mastery UI distinguishes trace completion from learned material", async ({
   await expectNoHorizontalOverflow(page);
 });
 
+test("adaptive learning coach prioritizes review and unfinished mastery evidence", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("algohar-v2-progress", JSON.stringify({
+      opened: ["linear-search", "binary-search", "stack"],
+      visualized: ["linear-search", "binary-search"],
+      practicePassed: ["linear-search", "stack"],
+      mastered: ["linear-search"],
+      review: {
+        "linear-search": {
+          streak: 1,
+          lastPassedAt: "2026-08-20T00:00:00.000Z",
+          dueAt: "2026-08-21T00:00:00.000Z",
+        },
+      },
+      lastLesson: "binary-search",
+    }));
+  });
+
+  await page.goto("/learn");
+  const coach = page.locator(".learning-coach");
+  await expect(coach.getByRole("heading", { name: "Фокус на ближайшую сессию" })).toBeVisible();
+  const actions = coach.locator(".learning-action");
+  await expect(actions).toHaveCount(4);
+  await expect(actions.nth(0).getByRole("link", { name: "Повторить" })).toHaveAttribute("href", "/course/linear-search");
+  await expect(actions.nth(1).getByRole("link", { name: "Закрыть checkpoint" })).toHaveAttribute("href", "/course/binary-search");
+  await expect(actions.nth(2).getByRole("link", { name: "Дойти до конца" })).toHaveAttribute("href", "/course/stack");
+  await expect(actions.nth(3).getByRole("link", { name: "Начать урок" })).toHaveAttribute("href", "/course/queue");
+  await expectNoHorizontalOverflow(page);
+});
+
 test("analytics accepts mastery events but rejects cross-origin and oversized intake", async ({ request }) => {
   const mastery = await request.post("/api/events", {
     data: { event: "lesson_mastered", properties: { slug: "binary-search" }, occurredAt: "2026-08-21T12:00:00.000Z" },
