@@ -121,7 +121,7 @@ export function buildLearningPlan(
   const nowMs = typeof now === "string" ? Date.parse(now) : now.getTime();
   const nextReviewAt = mastered
     .map((slug) => progress.review[slug]?.dueAt)
-    .filter((dueAt): dueAt is string => Boolean(dueAt) && Date.parse(dueAt) > nowMs)
+    .filter((dueAt): dueAt is string => typeof dueAt === "string" && Date.parse(dueAt) > nowMs)
     .sort()[0];
 
   return {
