@@ -1,5 +1,6 @@
 import { AlgorithmCard } from "@/components/AlgorithmCard";
 import { CourseProgress } from "@/components/CourseProgress";
+import { LearningCoach } from "@/components/LearningCoach";
 import { algorithmBySlug } from "@/lib/algorithms";
 import { courseOrder, curriculum, totalLessons } from "@/lib/curriculum";
 
@@ -14,6 +15,7 @@ export default function LearnPage() {
         <p>Маршрут построен от инвариантов и базовых контейнеров к диапазонам, графам и строковым алгоритмам.</p>
       </div>
       <CourseProgress allowedSlugs={courseOrder} />
+      <LearningCoach allowedSlugs={courseOrder} />
       <div className="module-list">
         {curriculum.map((module) => (
           <section className="module-section" key={module.id}>
