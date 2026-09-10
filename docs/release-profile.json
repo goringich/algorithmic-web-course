@@ -1,0 +1,17 @@
+{
+  "schema_version": "2026-08-30.release-profile.v1",
+  "product_id": "algohar",
+  "security_tier": "payments_or_privileged_actions",
+  "status": "scaffolded",
+  "external_release_requested": false,
+  "public_url": "",
+  "release_authority": "repository_owned",
+  "production_mutation": "owner_or_existing_release_authority_only",
+  "current_release": {
+    "scope": "AlgoHar V2 under v2/",
+    "feature_freeze": true,
+    "candidate_sha": "",
+    "blocker": "Production seller/payment/domain/runtime evidence is incomplete; see docs/launch-readiness.md."
+  },
+  "rule": "Source and CI readiness do not imply production release. Release remains blocked until applicable security, payment, domain, runtime and live acceptance evidence is current."
+}
